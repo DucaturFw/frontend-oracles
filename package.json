@@ -1,7 +1,7 @@
 {
-  "name": "neoexplorer",
+  "name": "ducatur-oreacles-frontend",
   "version": "0.0.1",
-  "description": "Neo Explorer",
+  "description": "Ducatur oracles frontend",
   "main": "index.js",
   "scripts": {
     "start": "node bin/index.js",
