@@ -2,39 +2,40 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Dropdown } from 'semantic-ui-react'
-const data =[
-  { key: 'EN', value: 'EN', text: 'English' },
-  { key: 'RU', value: 'RU', text: 'Russia' },
+const data = [
+    { key: 'EN', value: 'EN', text: 'English' },
+    { key: 'RU', value: 'RU', text: 'Russia' },
 ]
 class Footer extends React.Component {
     render() {
         return (
             <Wrap>
                 <Title>
-                    Oracles Framework 
+                    Oracles Framework
                 </Title>
-               
-                <Right>
-                <Menu>
-                    <StyledLink
-                        to={'/'}
 
-                    >
-                        New Contract
+                <Right>
+                    <Menu>
+                        <StyledLink
+                            to={'/'}
+
+                        >
+                            New Contract
                     </StyledLink>
-                    <StyledLink
-                        to={'/'}
-                    >
-                        My Contracts
+                        <StyledLink
+                            to={'/'}
+                        >
+                            My Contracts
                     </StyledLink>
-                    <StyledLink
-                        to={'/'}
-                    >
-                      Contacts
+                        <StyledLink
+                            to={'/'}
+                        >
+                            Contacts
                     </StyledLink>
-                </Menu>
-                <StyledDropdown  search selection options ={data} />
-                  </Right>
+                    </Menu>
+                        <StyledDropdown size="mini"  selection options={data} />
+
+                </Right>
             </Wrap>
         );
     }
@@ -45,7 +46,6 @@ const Wrap = styled.div`
     background-color: #FFFFFF;
     height: 100px;
     display: flex;
-    margin-bottom:40px;
     font-size: 16px;
 `;
 
@@ -61,7 +61,7 @@ const Menu = styled.div`
  flex-direction: row; 
  padding: 20px;
 `;
-const Right =  styled.div`
+const Right = styled.div`
 display:flex;
 flex-direction: row; 
 align-items: center;
@@ -69,10 +69,15 @@ padding: 20px ;
 justify-content: flex-end;
 flex: 0 0 80%;
 `;
+
 const StyledDropdown = styled(Dropdown)`
-background-color:red;
-color:#4E508B;
+&&& {
+background-color:#AACAFF;
+color:#352E6C;
+border-radius: 5px;
+}
 `;
+
 const StyledLink = styled(Link)`
     color: ${props => (props.active ? '#8BE7FF' : '#6987B9')};
     padding-left:20px;
