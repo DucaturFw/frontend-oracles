@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
-const Maincontent = styled.div`
-    height: 80%;
-    display: flex;
-    flex-direction:row;
-    justify-content: center;
-    align-items: flex-start;
+const MainContent = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 `;
-export default Maincontent;
+export default MainContent;
