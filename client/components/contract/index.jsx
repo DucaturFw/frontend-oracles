@@ -2,20 +2,17 @@ import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import FA from 'react-fontawesome';
 import file from './file.png';
-//import Dispute from '../modals/dispute';
+import Dispute from '../modals/dispute';
 
 class Contract extends React.Component {
-  state = { preloader: true };
+  state = { preloader: true, dispute: false };
   componentWillMount() {
     this.setState({ preloader: false });
   }
 
-  // onMenuClick = e => {
-  //   this.setState(state => ({
-  //     ...state,
-  //     [e]: !state[e]
-  //   }));
-  // };
+  onDisputeClick = () => {
+    this.setState({ dispute: true });
+  };
   render() {
     if (this.state.preloader) {
       return (
@@ -32,6 +29,8 @@ class Contract extends React.Component {
           <h2>Contract #40432</h2>
         </Title>
         <Wrap>
+          <Dispute showPopup={this.state.dispute} />
+
           <Wrap2>
             <StepBlock>
               <TitleField>
@@ -98,7 +97,7 @@ class Contract extends React.Component {
               </File>
             </FilesBlock>
             <ButtonsBlock>
-              <ButtonOpenDispute>Открыть диспут</ButtonOpenDispute>
+              <ButtonOpenDispute onClick={() => this.onDisputeClick()}>Открыть диспут</ButtonOpenDispute>
               <ButtonCloseContract>Завершить контракт</ButtonCloseContract>
             </ButtonsBlock>
           </Wrap2>
@@ -133,7 +132,10 @@ const Title = styled.div`
   justify-content: center;
   color: #352e6c;
   font-weight: 500;
-  font-size: 22px;
+  line-height: 36px;
+  font-size: 36px;
+  letter-spacing: 1.28571px;
+  margin-top: 15px;
 `;
 const StepBlock = styled.div`
   display: flex;
@@ -241,6 +243,7 @@ width:183px
 height:45px;
 align-self:center;
 margin-right:10px;
+
 `;
 const ButtonCloseContract = styled.button`
 display:flex;
@@ -253,4 +256,5 @@ border-radius: 22.5px;
 width:220px
 height:45px;
 align-self:center;
+
 `;

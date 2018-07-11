@@ -6,7 +6,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 const data = [
   {
     number: 1,
-    client: 'Ivan Ivanovich ',
+    client: 'Ivan Ivanovich',
     executer: 'ИП Иванов',
     starttime: '01/01/2018',
     endtime: '01/01/2018',
@@ -226,9 +226,7 @@ class Notifications extends React.Component {
             <TableHeaderColumn dataSort dataField="number">
               #
             </TableHeaderColumn>
-            <TableHeaderColumn dataSort dataField="client" isKey={true}>
-              Заказчик
-            </TableHeaderColumn>
+
             <TableHeaderColumn dataField="executer" dataSort>
               Исполнитель
             </TableHeaderColumn>
@@ -279,11 +277,7 @@ const Title = styled.div`
   letter-spacing: 1.28571px;
   margin-top: 15px;
 `;
-const TitleFilter = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+const TitleFilter = styled.span`
   font-weight: 500;
   font-size: 18px;
   letter-spacing: 0.642857px;

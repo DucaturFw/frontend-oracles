@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Dropdown } from 'semantic-ui-react';
-
+import Select from 'react-select';
 const data = [{ key: 'EN', value: 'EN', text: 'English' }, { key: 'RU', value: 'RU', text: 'Russia' }];
 class Footer extends React.Component {
   render() {

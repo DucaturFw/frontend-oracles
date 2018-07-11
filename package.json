@@ -1,7 +1,7 @@
 {
-  "name": "ducatur-oreacles-frontend",
+  "name": "ducatur-courts-frontend",
   "version": "0.0.1",
-  "description": "Ducatur oracles frontend",
+  "description": "Ducatur courts frontend",
   "main": "index.js",
   "scripts": {
     "start": "node bin/index.js",
@@ -66,9 +66,11 @@
     "react-particles-js": "^2.2.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
+    "react-select": "^1.2.1",
     "reactstrap": "^6.2.0",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
+    "reset-css": "^4.0.1",
     "semantic-ui-calendar-react": "^0.6.0",
     "semantic-ui-css": "^2.3.2",
     "semantic-ui-react": "^0.81.3",

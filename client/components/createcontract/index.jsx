@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import FA from 'react-fontawesome';
 import { Dropdown, Checkbox } from 'semantic-ui-react';
-
+import scan from './scan.png';
 import { DateInput } from 'semantic-ui-calendar-react';
 const data1 = [{ key: '1', value: '1', text: 'Бобо' }, { key: '2', value: '2', text: 'Горо' }];
 const data2 = [{ key: '1', value: '1', text: 'ИП Чебурекова' }, { key: '1', value: '1', text: 'Ип Шаурмечная' }];
@@ -71,7 +71,11 @@ class CreateContract extends React.Component {
               <Answer>?</Answer>
             </StagesBlock>
             <MaterialBlock>
-              <ButtonaddMaterial>+</ButtonaddMaterial>
+              <ButtonaddMaterial>
+                <a>
+                  <img src={scan} />
+                </a>
+              </ButtonaddMaterial>
             </MaterialBlock>
             <ButtonCreateContract>Создать контракт -></ButtonCreateContract>
           </Wrap2>
@@ -107,7 +111,9 @@ const Title = styled.div`
   justify-content: center;
   color: #352e6c;
   font-weight: 500;
-  font-size: 22px;
+  line-height: 36px;
+  font-size: 36px;
+  letter-spacing: 1.28571px;
   margin-top: 15px;
 `;
 const TitleField = styled.span`
@@ -240,6 +246,7 @@ border-radius: 18.5px;
 width:300px
 height:40px;
 align-self:center;
+
 `;
 const ButtonaddMaterial = styled.button`
 display:flex;
@@ -248,7 +255,7 @@ color: #CFCFCF;
 justify-content: center;
 align-items: center;
 background: #FFFFFF;
-border: 4px dotted black; 
+border: 4px dashed #CFCFCF; 
 width:65px
 height:65px;
 align-self:center;
@@ -267,4 +274,5 @@ border-radius: 18.5px;
 width:225px
 height:45px;
 align-self:center;
+
 `;

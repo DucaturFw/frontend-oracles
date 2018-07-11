@@ -5,6 +5,7 @@ import 'semantic-ui-css/semantic.min.css';
 import theme from './styles/theme';
 import './styles/styles.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'reset-css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import Container from './components/container/index';
 import Header from './components/header';
@@ -13,6 +14,8 @@ import MainContent from './components/maincontent/index';
 import CreateContract from './components/createcontract/index';
 import ContractList from './components/contractlist/index';
 import Contract from './components/contract/index';
+import Account from './components/account/index';
+import Notifications from './components/notifications/index';
 export default class App extends Component {
   render() {
     return (
@@ -25,6 +28,7 @@ export default class App extends Component {
                 <Route exact path="/" component={CreateContract} />
                 <Route exact path="/mycontracts" component={ContractList} />
                 <Route exact path="/contract" component={Contract} />
+                <Route exact path="/account" component={Account} />
               </MainContent>
               <Footer />
             </Container>
