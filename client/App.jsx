@@ -29,6 +29,7 @@ export default class App extends Component {
                 <Route exact path="/mycontracts" component={ContractList} />
                 <Route exact path="/contract" component={Contract} />
                 <Route exact path="/account" component={Account} />
+                <Route exact path="/notifications" component={Notifications} />
               </MainContent>
               <Footer />
             </Container>

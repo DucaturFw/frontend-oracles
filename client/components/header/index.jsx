@@ -31,7 +31,7 @@ const Wrap = styled.div`
   background-color: #ffffff;
   height: 100px;
   display: flex;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 `;
 
 const Logo = styled.div`

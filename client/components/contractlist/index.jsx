@@ -2,206 +2,19 @@ import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import FA from 'react-fontawesome';
 import { Dropdown } from 'semantic-ui-react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-const data = [
-  {
-    number: 1,
-    client: 'Ivan Ivanovich ',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  },
-  {
-    number: 1,
-    client: 'Ivan Ivanovich',
-    executer: 'ИП Иванов',
-    starttime: '01/01/2018',
-    endtime: '01/01/2018',
-    dispute: '01/01/2018',
-    status: 'Ожидание'
-  }
-];
-class Notifications extends React.Component {
-  state = { preloader: true };
+import { fetchContracts } from '../../actions/mycontracts';
+const data = [];
+class ContractList extends React.Component {
   componentWillMount() {
-    this.setState({ preloader: false });
+    this.props.fetchContracts();
   }
 
   render() {
-    if (this.state.preloader) {
+    const { contracts } = this.props;
+    if (this.props.preloader) {
       return (
         <Wrap>
           <LoadingWrap>
@@ -222,8 +35,8 @@ class Notifications extends React.Component {
             <StyledDropdown size="mini" search selection options={data} />
             <StyledDropdown size="mini" search selection options={data} />
           </FilterBlock>
-          <BootstrapTable height="200px" width="300px" data={data}>
-            <TableHeaderColumn dataSort dataField="number">
+          <BootstrapTable height="200px" width="300px" data={contracts}>
+            <TableHeaderColumn dataSort dataField="id">
               #
             </TableHeaderColumn>
             <TableHeaderColumn dataSort dataField="client" isKey={true}>
@@ -242,7 +55,7 @@ class Notifications extends React.Component {
               Диспут
             </TableHeaderColumn>
             <TableHeaderColumn dataSort dataField="status">
-              Статус
+              Отвественный
             </TableHeaderColumn>
           </BootstrapTable>
         </Wrap>
@@ -251,7 +64,16 @@ class Notifications extends React.Component {
   }
 }
 
-export default Notifications;
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchContracts }, dispatch);
+const mapStateToProps = state => ({
+  preloader: state.mycontracts.preloader,
+  contracts: state.mycontracts.contracts
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchtoProps
+)(ContractList);
 const LoadingWrap = styled.div`
   height: 400px;
   text-align: center;

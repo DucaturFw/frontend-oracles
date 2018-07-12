@@ -178,6 +178,7 @@ const TimeContract = styled.div`
 const Item = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
 `;
 const Responsible = styled.div`
   display: flex;
