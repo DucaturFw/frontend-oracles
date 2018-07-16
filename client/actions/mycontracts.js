@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { FETCH_CONTRACTS_START, FETCH_CONTRACTS_SUCCESS, FETCH_CONTRACTS_FAILED } from '../constant/mycontracts-const';
-
+const host = require('../config').host;
 export function fetchContracts() {
   return dispatch => {
     dispatch({ type: FETCH_CONTRACTS_START });
     axios
-      .get('http://18.191.139.227/contracts/', {
+      .get(`${host}/contracts/`, {
         headers: {
           Authorization: 'Basic ' + Buffer.from('duc@duc.duc:12345678a').toString('base64')
         }
@@ -28,18 +28,11 @@ function mapperArray(array) {
   array.forEach((item, index) => {
     result.push({
       id: item.id,
-      client:
-        item[index].party[0].name && item[index].party[0].family_name
-          ? `${item[index].party[0].name}   ${item[index].party[0].family_name}`
-          : '',
-      executer:
-        item[index].party[0].name && item[index].party[0].family_name
-          ? `${item[index].party[0].name}   ${item[index].party[0].family_name}`
-          : '',
-      starttime: item.stages[0].start ? item.stages[0].start : ''
-
-      //  owner: item.stages
+      client: item.party.length > 0 ? `${item.party['0'].name}   ${item.party['0'].family_name}` : '',
+      executer: item.party.length > 0 ? `${item.party['1'].name}   ${item.party['1'].family_name}` : '',
+      starttime: item.stages.length > 0 ? item.stages[0].start : ''
     });
   });
+
   return result;
 }
