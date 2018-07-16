@@ -14,7 +14,7 @@ import MainContent from './components/maincontent/index';
 import CreateContract from './components/createcontract/index';
 import ContractList from './components/contractlist/index';
 import Contract from './components/contract/index';
-import Account from './components/account/index';
+import UserInfo from './components/userinfo/index';
 import Notifications from './components/notifications/index';
 export default class App extends Component {
   render() {
@@ -28,7 +28,7 @@ export default class App extends Component {
                 <Route exact path="/" component={CreateContract} />
                 <Route exact path="/mycontracts" component={ContractList} />
                 <Route exact path="/contract" component={Contract} />
-                <Route exact path="/account" component={Account} />
+                <Route exact path="/account" component={UserInfo} />
                 <Route exact path="/notifications" component={Notifications} />
               </MainContent>
               <Footer />

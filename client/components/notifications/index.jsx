@@ -2,7 +2,9 @@ import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import FA from 'react-fontawesome';
 import Notification from '../modals/notification';
-//import up from
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { fetchNotifications } from '../../actions/notifications';
 const data = [
   { text: 'Оповещение', time: '01/08/2018' },
   { text: 'Оповещение', time: '01/08/2018' },
@@ -14,9 +16,9 @@ const data = [
   { text: 'Оповещение', time: '01/08/2018' }
 ];
 class Notifications extends React.Component {
-  state = { preloader: true, notification: false };
+  state = { notification: false };
   componentWillMount() {
-    this.setState({ preloader: false });
+    this.props.fetchNotifications();
   }
 
   get labels() {
@@ -44,7 +46,7 @@ class Notifications extends React.Component {
     );
   }
   render() {
-    if (this.state.preloader) {
+    if (this.props.preloader) {
       return (
         <Wrap>
           <LoadingWrap>
@@ -66,7 +68,16 @@ class Notifications extends React.Component {
   }
 }
 
-export default Notifications;
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchNotifications }, dispatch);
+const mapStateToProps = state => ({
+  preloader: state.notifications.preloader,
+  contracts: state.notifications.notifications
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchtoProps
+)(Notifications);
 const LoadingWrap = styled.div`
   height: 400px;
   text-align: center;

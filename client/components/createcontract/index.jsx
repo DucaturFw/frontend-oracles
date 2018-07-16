@@ -1,21 +1,53 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import FA from 'react-fontawesome';
-import { Dropdown, Checkbox } from 'semantic-ui-react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Dropdown, Checkbox, Form } from 'semantic-ui-react';
 import scan from './scan.png';
 import { DateInput } from 'semantic-ui-calendar-react';
-const data1 = [{ key: '1', value: '1', text: 'Бобо' }, { key: '2', value: '2', text: 'Горо' }];
-const data2 = [{ key: '1', value: '1', text: 'ИП Чебурекова' }, { key: '1', value: '1', text: 'Ип Шаурмечная' }];
-const data3 = [{ key: '1', value: '1', text: 'Заказчик' }, { key: '1', value: '1', text: 'Исполнитель' }];
+import { fetchUsers } from '../../actions/createcontract';
 
 class CreateContract extends React.Component {
-  state = { preloader: true };
+  state = {
+    client: '',
+    executer: '',
+    responsible: '',
+    startcontract: '',
+    startdispute: ''
+  };
   componentWillMount() {
-    this.setState({ preloader: false });
+    this.props.fetchUsers();
   }
 
+  createArrayResponsible = () => {
+    return [
+      {
+        key: 0,
+        value: this.state.client,
+        text: this.state.client
+      },
+      {
+        key: 1,
+        value: this.state.executer,
+        text: this.state.executer
+      }
+    ];
+  };
+  changeStartContract = (event, { value }) => {
+    this.setState({
+      startcontract: value
+    });
+  };
+  changeStartDispute = (event, { value }) => {
+    this.setState({
+      startdispute: value
+    });
+  };
+
   render() {
-    if (this.state.preloader) {
+    const { users } = this.props;
+    if (this.props.preloader) {
       return (
         <Wrap>
           <LoadingWrap>
@@ -30,62 +62,102 @@ class CreateContract extends React.Component {
           <h2>CREATE NEW CONTRACT</h2>
         </Title>
         <Wrap>
-          <Wrap2>
-            <ClientExecutorBlock>
-              <Client>
-                <TitleField>Заказчик</TitleField>
-                <StyledDropdown size="mini" search selection options={data1} />
-                <StyledCheckbox label="Я заказчик" />
-              </Client>
-              <Executor>
-                <TitleField>Исполнитель</TitleField>
-                <StyledDropdown size="mini" search selection options={data2} />
-                <StyledCheckbox label="Я исполнитель" />
-              </Executor>
-            </ClientExecutorBlock>
-            <StagesBlock>
-              <TitleSegment>CТАДИИ КОНТРАКТА</TitleSegment>
-              <Answer>?</Answer>
-            </StagesBlock>
-            <Stage>Этап 1 </Stage>
-            <StagesContractBlock>
-              <ContractText>
-                <TitleField>Начало действия контракта</TitleField>
-                <TitleField>Дата допущения открытия диспута</TitleField>
-              </ContractText>
-              <TimeContract>
-                <StyledDateInput />
-                <StyledDateInput />
-              </TimeContract>
-              <Responsible>
-                <Item>
-                  <TitleField>Отвественный</TitleField>
-                  <StyledDropdown2 size="mini" search selection options={data3} />
-                </Item>
-              </Responsible>
-            </StagesContractBlock>
+          <Form>
+            <Wrap2>
+              <ClientExecutorBlock>
+                <Client>
+                  <TitleField>Заказчик</TitleField>
+                  <StyledDropdown
+                    size="mini"
+                    onChange={(event, data) => {
+                      this.setState({ client: data.value });
+                    }}
+                    search
+                    selection
+                    options={users}
+                  />
+                  <StyledCheckbox label="Я заказчик" />
+                </Client>
+                <Executor>
+                  <TitleField>Исполнитель</TitleField>
+                  <StyledDropdown
+                    onChange={(event, data) => {
+                      this.setState({
+                        executer: data.value
+                      });
+                    }}
+                    size="mini"
+                    search
+                    selection
+                    options={users}
+                  />
+                  <StyledCheckbox label="Я исполнитель" />
+                </Executor>
+              </ClientExecutorBlock>
+              <StagesBlock>
+                <TitleSegment>CТАДИИ КОНТРАКТА</TitleSegment>
+                <Answer>?</Answer>
+              </StagesBlock>
+              <Stage>Этап 1 </Stage>
+              <StagesContractBlock>
+                <ContractText>
+                  <TitleField>Начало действия контракта</TitleField>
+                  <TitleField>Дата допущения открытия диспута</TitleField>
+                </ContractText>
+                <TimeContract>
+                  <StyledDateInput value={this.state.startcontract} onChange={this.changeStartContract} />
+                  <StyledDateInput value={this.state.startdispute} onChange={this.changeStartDispute} />
+                </TimeContract>
+                <Responsible>
+                  <Item>
+                    <TitleField>Отвественный</TitleField>
+                    <StyledDropdown2
+                      size="mini"
+                      onChange={(event, data) => {
+                        this.setState({
+                          responsible: data.value
+                        });
+                      }}
+                      search
+                      selection
+                      options={this.createArrayResponsible()}
+                    />
+                  </Item>
+                </Responsible>
+              </StagesContractBlock>
 
-            <ButtonaddStage>+ Добавить стадию контрактка</ButtonaddStage>
-            <StagesBlock>
-              <TitleSegment>МАТЕРИАЛЫ КОНТРАКТА</TitleSegment>
-              <Answer>?</Answer>
-            </StagesBlock>
-            <MaterialBlock>
-              <ButtonaddMaterial>
-                <a>
-                  <img src={scan} />
-                </a>
-              </ButtonaddMaterial>
-            </MaterialBlock>
-            <ButtonCreateContract>Создать контракт -></ButtonCreateContract>
-          </Wrap2>
+              <ButtonaddStage>+ Добавить стадию контрактка</ButtonaddStage>
+              <StagesBlock>
+                <TitleSegment>МАТЕРИАЛЫ КОНТРАКТА</TitleSegment>
+                <Answer>?</Answer>
+              </StagesBlock>
+              <MaterialBlock>
+                <ButtonaddMaterial>
+                  <a>
+                    <img src={scan} />
+                  </a>
+                </ButtonaddMaterial>
+              </MaterialBlock>
+              <ButtonCreateContract>Создать контракт -></ButtonCreateContract>
+            </Wrap2>
+          </Form>
         </Wrap>
       </Fragment>
     );
   }
 }
 
-export default CreateContract;
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUsers }, dispatch);
+const mapStateToProps = state => ({
+  preloader: state.createcontract.preloader,
+  users: state.createcontract.users
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchtoProps
+)(CreateContract);
+
 const LoadingWrap = styled.div`
   height: 400px;
   text-align: center;

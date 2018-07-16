@@ -1,16 +1,18 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import FA from 'react-fontawesome';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { fetchUserInfo } from '../../actions/userinfo';
 import doc from './doc.png';
 import scan from './scan.png';
-class Contract extends React.Component {
-  state = { preloader: true };
+class Account extends React.Component {
   componentWillMount() {
-    this.setState({ preloader: false });
+    this.props.fetchUserInfo();
   }
 
   render() {
-    if (this.state.preloader) {
+    if (this.props.preloader) {
       return (
         <Wrap>
           <LoadingWrap>
@@ -32,37 +34,49 @@ class Contract extends React.Component {
               </Segment>
               <Item>
                 <TitleField>
-                  <b>Физическое лицо </b>
+                  <b>Имя</b>
                 </TitleField>
-                <StyledInput placeholder="Ваш ФИО" />
+                <StyledInput placeholder="Введите ваше имя" />
               </Item>
 
               <Item>
                 <TitleField>
-                  <b>Инн </b>
+                  <b>Фамилия </b>
                 </TitleField>
-                <StyledInput placeholder="Ваш ИНН" />
+                <StyledInput placeholder="Введите вашу фамилию" />
               </Item>
 
               <Item>
                 <TitleField>
-                  <b>Детали </b>
+                  <b>Email </b>
                 </TitleField>
-                <StyledInput placeholder="Какая-то информация" />
+                <StyledInput placeholder="Введите ваш email" />
               </Item>
 
               <Item>
                 <TitleField>
-                  <b>Детали </b>
+                  <b>Eth account</b>
                 </TitleField>
-                <StyledInput placeholder="Какая-то информация" />
+                <StyledInput placeholder="Введите ваш eth аккаунт" />
               </Item>
 
               <Item>
                 <TitleField>
-                  <b>Детали</b>
+                  <b>Имя организации</b>
                 </TitleField>
-                <StyledInput placeholder="Какая-то информация" />
+                <StyledInput placeholder="Введите имя организации" />
+              </Item>
+              <Item>
+                <TitleField>
+                  <b>ИНН</b>
+                </TitleField>
+                <StyledInput placeholder="Введите ваш ИНН" />
+              </Item>
+              <Item>
+                <TitleField>
+                  <b>Рассчётный счет</b>
+                </TitleField>
+                <StyledInput placeholder="Введите ваш расчётный счёт" />
               </Item>
             </Block>
             <Block>
@@ -78,7 +92,6 @@ class Contract extends React.Component {
                 </File>
                 <File>
                   <ButtonaddMaterial>
-                    {' '}
                     <a>
                       <img src={scan} />
                     </a>
@@ -99,7 +112,16 @@ class Contract extends React.Component {
   }
 }
 
-export default Contract;
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUserInfo }, dispatch);
+const mapStateToProps = state => ({
+  preloader: state.userinfo.preloader,
+  contracts: state.userinfo.userinfo
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchtoProps
+)(Account);
 const LoadingWrap = styled.div`
   height: 400px;
   text-align: center;
