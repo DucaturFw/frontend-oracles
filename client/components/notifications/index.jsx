@@ -8,25 +8,25 @@ import moment from 'moment';
 import { fetchNotifications } from '../../actions/notifications';
 import eventtypes from './eventtypes';
 import icon from './oval.png';
-
+import icongrey from './icongrey.png';
 class Notifications extends React.Component {
-  state = { notification: false, eventText: '' };
+  state = { showPopup: false, eventText: '' };
   componentWillMount() {
     this.props.fetchNotifications();
   }
-
+  closePopup = () => {
+    this.setState({ showPopup: false });
+  };
   labels = () => {
     return this.props.notifications.map(item => {
       let date = moment(new Date(item.creation_date)).format('YYYY/MM/DD');
       return (
-        <TableRow>
+        <TableRow seen={item.seen}>
           <RowNotification>
-            <RowNotificationIcon>
-              <img src={icon} />
-            </RowNotificationIcon>
+            <RowNotificationIcon>{item.seen ? <img src={icon} /> : <img src={icongrey} />}</RowNotificationIcon>
             <RowNotificationText
               onClick={() => {
-                this.setState({ eventText: eventtypes[item.event_type], notification: true });
+                this.setState({ eventText: eventtypes[item.event_type], showPopup: true });
               }}
             >
               {eventtypes[item.event_type]}
@@ -49,13 +49,25 @@ class Notifications extends React.Component {
     }
     return (
       <Fragment>
-        <Notification eventText={this.state.eventText} showPopup={this.state.notification} />
+        <Notification
+          eventText={this.state.eventText}
+          close={() => {
+            this.closePopup();
+          }}
+          showPopup={this.state.showPopup}
+        />
         <Title>
           <h2>ОПОВЕЩЕНИЯ</h2>
         </Title>
 
         <Wrap>
-          <TableBlock>{this.labels()}</TableBlock>
+          <TableBlock>
+            <TableName>
+              <b>Оповещение</b>
+              <b>Дата</b>
+            </TableName>
+            {this.labels()}
+          </TableBlock>
         </Wrap>
       </Fragment>
     );
@@ -111,7 +123,18 @@ const TableBlock = styled.div`
   border-radius: 10px;
   padding: 10px;
 `;
+const TableName = styled.div`
+  margin-right: 40px;
+  margin-left: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  border-bottom: 1px solid #dfe0e1;
+  font-weight: 500;
+`;
 const TableRow = styled.div`
+  color: ${props => (props.seen ? 'rgba(40, 47, 54, 0.467873)' : 'black')};
   margin-right: 40px;
   margin-left: 40px;
   display: flex;

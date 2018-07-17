@@ -3,11 +3,8 @@ import styled from 'styled-components';
 import { Form, TextArea } from 'semantic-ui-react';
 
 export default class Dispute extends Component {
-  state = {
-    showPopup: this.props.showPopup
-  };
   render() {
-    if (!this.state.showPopup) return null;
+    if (!this.props.showPopup) return null;
     return (
       <Wrapper>
         <Container>
@@ -21,12 +18,18 @@ export default class Dispute extends Component {
           <ButtonBlock>
             <ButtonCancel
               onClick={() => {
-                this.setState({ showPopup: false });
+                this.props.close();
               }}
             >
               Отмена
             </ButtonCancel>
-            <ButtonOpenDispute>Открыть диспут</ButtonOpenDispute>
+            <ButtonOpenDispute
+              onClick={() => {
+                this.props.close();
+              }}
+            >
+              Открыть диспут
+            </ButtonOpenDispute>
           </ButtonBlock>
         </Container>
       </Wrapper>
@@ -47,6 +50,7 @@ const Wrapper = styled.div`
   right: 0px;
   left: 0px;
   bottom: 0px;
+  z-index: 1;
 `;
 
 const Container = styled.div`

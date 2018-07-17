@@ -5,13 +5,16 @@ import file from './file.png';
 import Dispute from '../modals/dispute';
 
 class Contract extends React.Component {
-  state = { preloader: true, dispute: false };
+  state = { preloader: true, showPopup: false };
   componentWillMount() {
     this.setState({ preloader: false });
   }
 
   onDisputeClick = () => {
-    this.setState({ dispute: true });
+    this.setState({ showPopup: true });
+  };
+  closePopup = () => {
+    this.setState({ showPopup: false });
   };
   render() {
     if (this.state.preloader) {
@@ -29,7 +32,12 @@ class Contract extends React.Component {
           <h2>Contract #40432</h2>
         </Title>
         <Wrap>
-          <Dispute showPopup={this.state.dispute} />
+          <Dispute
+            showPopup={this.state.showPopup}
+            close={() => {
+              this.closePopup();
+            }}
+          />
 
           <Wrap2>
             <StepBlock>

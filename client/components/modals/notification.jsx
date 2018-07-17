@@ -2,12 +2,8 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 export default class Notification extends Component {
-  state = {
-    showPopup: this.props.showPopup
-  };
-
   render() {
-    if (!this.state.showPopup) return null;
+    if (!this.props.showPopup) return null;
     return (
       <Wrapper>
         <Container>
@@ -19,7 +15,7 @@ export default class Notification extends Component {
           <ButtonBlock>
             <ButtonCancel
               onClick={() => {
-                this.setState({ showPopup: false });
+                this.props.close();
               }}
             >
               Ок
@@ -44,6 +40,7 @@ const Wrapper = styled.div`
   right: 0px;
   left: 0px;
   bottom: 0px;
+  z-index: 1;
 `;
 
 const Container = styled.div`
@@ -74,6 +71,7 @@ const DataTitle = styled.div`
   font-size: 14px;
   color: rgba(40, 47, 54, 0.8);
   margin-top: 20px;
+  margin-bottomom: 20px;
 `;
 const TextBlock = styled.div`
   display: flex;
