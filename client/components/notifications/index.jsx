@@ -4,47 +4,39 @@ import FA from 'react-fontawesome';
 import Notification from '../modals/notification';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { fetchNotifications } from '../../actions/notifications';
-const data = [
-  { text: 'Оповещение', time: '01/08/2018' },
-  { text: 'Оповещение', time: '01/08/2018' },
-  { text: 'Оповещение', time: '01/08/2018' },
-  { text: 'Оповещение', time: '01/08/2018' },
-  { text: 'Оповещение', time: '01/08/2018' },
-  { text: 'Оповещение', time: '01/08/2018' },
-  { text: 'Оповещение', time: '01/08/2018' },
-  { text: 'Оповещение', time: '01/08/2018' }
-];
+import eventtypes from './eventtypes';
+import icon from './oval.png';
+
 class Notifications extends React.Component {
-  state = { notification: false };
+  state = { notification: false, eventText: '' };
   componentWillMount() {
     this.props.fetchNotifications();
   }
 
-  get labels() {
-    return (
-      <TableBlock>
-        <Table>
-          <thead>
-            <tr>
-              <Cells>Address</Cells>
-              <Cells>Tokens</Cells>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, idx) => {
-              return (
-                <tr key={idx}>
-                  <CellItem>{item.text}</CellItem>
-                  <CellItem>{item.data}</CellItem>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-      </TableBlock>
-    );
-  }
+  labels = () => {
+    return this.props.notifications.map(item => {
+      let date = moment(new Date(item.creation_date)).format('YYYY/MM/DD');
+      return (
+        <TableRow>
+          <RowNotification>
+            <RowNotificationIcon>
+              <img src={icon} />
+            </RowNotificationIcon>
+            <RowNotificationText
+              onClick={() => {
+                this.setState({ eventText: eventtypes[item.event_type], notification: true });
+              }}
+            >
+              {eventtypes[item.event_type]}
+            </RowNotificationText>
+          </RowNotification>
+          <RowDate>{date} </RowDate>
+        </TableRow>
+      );
+    });
+  };
   render() {
     if (this.props.preloader) {
       return (
@@ -57,12 +49,14 @@ class Notifications extends React.Component {
     }
     return (
       <Fragment>
-        <Notification showPopup={false} />
+        <Notification eventText={this.state.eventText} showPopup={this.state.notification} />
         <Title>
-          <h2>Contracts List</h2>
+          <h2>ОПОВЕЩЕНИЯ</h2>
         </Title>
-        <Test />
-        <Wrap>{this.labels}</Wrap>
+
+        <Wrap>
+          <TableBlock>{this.labels()}</TableBlock>
+        </Wrap>
       </Fragment>
     );
   }
@@ -71,7 +65,7 @@ class Notifications extends React.Component {
 const mapDispatchtoProps = dispatch => bindActionCreators({ fetchNotifications }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.notifications.preloader,
-  contracts: state.notifications.notifications
+  notifications: state.notifications.notifications
 });
 
 export default connect(
@@ -108,32 +102,31 @@ const Title = styled.div`
 `;
 
 const TableBlock = styled.div`
-  width: 100%;
-  border: 1px solid #dfe0e1;
-  padding: 10px;
-  margin-right: 15px;
-  margin-bottom: 15px;
+  width: 90%;
+  background: #ffffff;
+  box-shadow: 0px 15px 40px rgba(163, 171, 186, 0.4);
+  border-radius: 5px;
+  margin: 20px 20px 40px 20px;
+
   border-radius: 10px;
+  padding: 10px;
 `;
-
-const Table = styled.table`
-  width: 100%;
-`;
-const Test = styled.span`
-border: 2px solid rgba(40, 47, 54, 0.5);
-transform: matrix(1, 0, 0, -1, 0, 0)
-width:2px;
-heuight:2px;
-`;
-const Cells = styled.td`
-  padding: 6px;
-  font-size: 12px;
-`;
-const CellFilter = styled.div`
+const TableRow = styled.div`
+  margin-right: 40px;
+  margin-left: 40px;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  border-bottom: 1px solid #dfe0e1;
 `;
-
-const CellItem = styled(Cells)`
-  border-top: 1px solid #dfe0e1;
+const RowNotification = styled.div`
+  display: flex;
+`;
+const RowNotificationIcon = styled.div``;
+const RowNotificationText = styled.div`
+  margin-left: 10px;
+`;
+const RowDate = styled.div`
+  color: rgba(40, 47, 54, 0.8);
 `;

@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Dropdown, Checkbox, Form } from 'semantic-ui-react';
 import scan from './scan.png';
+import row from './row.png';
+
 import { DateInput } from 'semantic-ui-calendar-react';
 import { fetchUsers } from '../../actions/createcontract';
 
@@ -12,9 +14,7 @@ class CreateContract extends React.Component {
   state = {
     client: '',
     executer: '',
-    responsible: '',
-    startcontract: '',
-    startdispute: ''
+    stages: [{ start: '', dispute_start_allowed: '', owner: '' }]
   };
   componentWillMount() {
     this.props.fetchUsers();
@@ -34,17 +34,81 @@ class CreateContract extends React.Component {
       }
     ];
   };
-  changeStartContract = (event, { value }) => {
-    this.setState({
-      startcontract: value
-    });
-  };
-  changeStartDispute = (event, { value }) => {
-    this.setState({
-      startdispute: value
-    });
-  };
+  // changeStartContract = (event, { value }, index) => {
+  //   let array = this.state.stages;
+  //   array[index].start = value;
+  //   this.setState({
+  //     stages: array
+  //   });
+  // };
+  // changeStartDisputeAlloved = (event, { value }, index) => {
+  //   let array = this.state.stages;
+  //   array[index].startdispute = value;
+  //   this.setState({
+  //     stages: array
+  //   });
+  // };
 
+  addstage = () => {
+    const array = this.state.stages;
+    array.push({ start: '', dispute_start_allowed: '', owner: '' });
+    this.setState({ stages: array });
+  };
+  createstage = () => {
+    return this.state.stages.map((item, index) => {
+      return (
+        <Fragment>
+          <Stage>Этап {index + 1} </Stage>
+          <StagesContractBlock>
+            <ContractText>
+              <TitleField>Начало действия контракта</TitleField>
+              <TitleField>Дата допущения открытия диспута</TitleField>
+            </ContractText>
+            <TimeContract>
+              <StyledDateInput
+                value={this.state.stages[index].start}
+                onChange={(event, { value }) => {
+                  let array = this.state.stages;
+                  array[index].start = value;
+                  this.setState({
+                    stages: array
+                  });
+                }}
+              />
+              <StyledDateInput
+                value={this.state.stages[index].startdispute}
+                onChange={(event, { value }) => {
+                  let array = this.state.stages;
+                  array[index].startdispute = value;
+                  this.setState({
+                    stages: array
+                  });
+                }}
+              />
+            </TimeContract>
+            <Responsible>
+              <Item>
+                <TitleField>Отвественный</TitleField>
+                <StyledDropdown2
+                  size="mini"
+                  search
+                  selection
+                  onChange={(event, data) => {
+                    let array = this.state.stages;
+                    array[index].owner = data.value;
+                    this.setState({
+                      stages: array
+                    });
+                  }}
+                  options={this.createArrayResponsible()}
+                />
+              </Item>
+            </Responsible>
+          </StagesContractBlock>
+        </Fragment>
+      );
+    });
+  };
   render() {
     const { users } = this.props;
     if (this.props.preloader) {
@@ -98,35 +162,15 @@ class CreateContract extends React.Component {
                 <TitleSegment>CТАДИИ КОНТРАКТА</TitleSegment>
                 <Answer>?</Answer>
               </StagesBlock>
-              <Stage>Этап 1 </Stage>
-              <StagesContractBlock>
-                <ContractText>
-                  <TitleField>Начало действия контракта</TitleField>
-                  <TitleField>Дата допущения открытия диспута</TitleField>
-                </ContractText>
-                <TimeContract>
-                  <StyledDateInput value={this.state.startcontract} onChange={this.changeStartContract} />
-                  <StyledDateInput value={this.state.startdispute} onChange={this.changeStartDispute} />
-                </TimeContract>
-                <Responsible>
-                  <Item>
-                    <TitleField>Отвественный</TitleField>
-                    <StyledDropdown2
-                      size="mini"
-                      onChange={(event, data) => {
-                        this.setState({
-                          responsible: data.value
-                        });
-                      }}
-                      search
-                      selection
-                      options={this.createArrayResponsible()}
-                    />
-                  </Item>
-                </Responsible>
-              </StagesContractBlock>
 
-              <ButtonaddStage>+ Добавить стадию контрактка</ButtonaddStage>
+              {this.createstage()}
+              <ButtonaddStage
+                onClick={() => {
+                  this.addstage();
+                }}
+              >
+                + Добавить стадию контрактка
+              </ButtonaddStage>
               <StagesBlock>
                 <TitleSegment>МАТЕРИАЛЫ КОНТРАКТА</TitleSegment>
                 <Answer>?</Answer>
@@ -138,7 +182,9 @@ class CreateContract extends React.Component {
                   </a>
                 </ButtonaddMaterial>
               </MaterialBlock>
-              <ButtonCreateContract>Создать контракт -></ButtonCreateContract>
+              <ButtonCreateContract>
+                Создать контракт <img src={row} />
+              </ButtonCreateContract>
             </Wrap2>
           </Form>
         </Wrap>
@@ -304,7 +350,7 @@ const StyledCheckbox = styled(Checkbox)`
 
 const StyledDateInput = styled(DateInput)`
 padding:5px
-  width: 100px;
+  width: 150px;
 `;
 const ButtonaddStage = styled.button`
 margin-top:20px

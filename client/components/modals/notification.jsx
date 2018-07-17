@@ -5,6 +5,7 @@ export default class Notification extends Component {
   state = {
     showPopup: this.props.showPopup
   };
+
   render() {
     if (!this.state.showPopup) return null;
     return (
@@ -13,10 +14,7 @@ export default class Notification extends Component {
           <Title>Оповещение</Title>
           <DataTitle>11/08/2018</DataTitle>
           <TextBlock>
-            <p>
-              Сообщаем вам что диспут успешно открыт. Сообщаем вам что диспут успешно открыт. Сообщаем вам что диспут
-              успешно открыт. Сообщаем вам что диспут успешно открыт.{' '}
-            </p>
+            <p>{this.props.eventText}</p>
           </TextBlock>
           <ButtonBlock>
             <ButtonCancel

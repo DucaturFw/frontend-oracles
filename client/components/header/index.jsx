@@ -18,7 +18,9 @@ class Header extends React.Component {
         </Menu>
         <Right>
           <Name>Ivan Ivanovich</Name>
-          <Notification>15</Notification>
+          <Notification>
+            <NotificationLink to={'/notifications'}>15</NotificationLink>
+          </Notification>
           <img src={iconmenu} />
         </Right>
       </Wrap>
@@ -79,6 +81,14 @@ const StyledLink = styled(Link)`
   &:hover,
   &:active {
     color: #6987b9;
+    text-decoration: none;
+  }
+`;
+const NotificationLink = styled(Link)`
+  color: ${props => (props.active ? '#ffffff' : '#ffffff')};
+  &:hover,
+  &:active {
+    color: #ffffff;
     text-decoration: none;
   }
 `;
