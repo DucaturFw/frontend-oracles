@@ -8,8 +8,9 @@ class Footer extends React.Component {
   render() {
     return (
       <Wrap>
-        <Title>Oracles Framework</Title>
-
+        <Left>
+          <Title>Oracles Framework</Title>
+        </Left>
         <Right>
           <Menu>
             <StyledLink to="/">New Contract</StyledLink>
@@ -28,12 +29,15 @@ const Wrap = styled.div`
   background-color: #ffffff;
   height: 100px;
   display: flex;
+  justify-content: space-between;
   font-size: 16px;
 `;
-
+const Left = styled.div`
+  display: flex;
+`;
 const Title = styled.span`
   display: flex;
-  padding: 20px 0px 20px 50px;
+  padding: 30px 0px 0px 60px;
   flex: 0 0 250px;
   font-size: 20px;
   color: #352e6c;
@@ -48,6 +52,7 @@ const Right = styled.div`
   flex-direction: row;
   align-items: center;
   padding: 20px;
+  margin-right: 20px;
   justify-content: flex-end;
   flex: 0 0 75%;
 `;

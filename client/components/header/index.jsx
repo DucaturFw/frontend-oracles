@@ -7,17 +7,21 @@ class Header extends React.Component {
   render() {
     return (
       <Wrap>
-        <Logo>
-          <a href="https://ducatur.com/">
-            <img src={ducatur} />
-          </a>
-        </Logo>
-        <Menu>
-          <StyledLink to={'/'}>New Contract</StyledLink>
-          <StyledLink to={'/mycontracts'}>My Contracts</StyledLink>
-        </Menu>
+        <Left>
+          <Logo>
+            <a href="https://ducatur.com/">
+              <img src={ducatur} />
+            </a>
+          </Logo>
+          <Menu>
+            <StyledLink to={'/'}>New Contract</StyledLink>
+            <StyledLink to={'/mycontracts'}>My Contracts</StyledLink>
+          </Menu>
+        </Left>
         <Right>
-          <Name>Ivan Ivanovich</Name>
+          <Name>
+            <UserInfoLink to={'/userinfo'}> Ivan Ivanovich </UserInfoLink>
+          </Name>
           <Notification>
             <NotificationLink to={'/notifications'}>15</NotificationLink>
           </Notification>
@@ -33,13 +37,16 @@ const Wrap = styled.div`
   background-color: #ffffff;
   height: 100px;
   display: flex;
+  justify-content: space-between;
   margin-bottom: 20px;
 `;
-
+const Left = styled.div`
+  display: flex;
+`;
 const Logo = styled.div`
-  padding-top: 5px;
-  padding-left: 30px;
-  flex: 0 0 200px;
+  display: flex;
+  align-items: center;
+  padding: 0px 0px 0px 60px;
 `;
 const Menu = styled.div`
   display: flex;
@@ -53,8 +60,8 @@ const Right = styled.div`
   flex-direction: row;
   align-items: center;
   padding: 20px;
+  margin-right: 20px;
   justify-content: flex-end;
-  flex: 0 0 55%;
 `;
 const Name = styled.span`
   display: inline-block;
@@ -77,6 +84,7 @@ const Notification = styled.span`
 
 const StyledLink = styled(Link)`
   color: ${props => (props.active ? '#8BE7FF' : '#6987B9')};
+  margin-left: 20px;
   padding-left: 20px;
   &:hover,
   &:active {
@@ -85,10 +93,18 @@ const StyledLink = styled(Link)`
   }
 `;
 const NotificationLink = styled(Link)`
-  color: ${props => (props.active ? '#ffffff' : '#ffffff')};
+  color: #ffffff;
   &:hover,
   &:active {
     color: #ffffff;
+    text-decoration: none;
+  }
+`;
+const UserInfoLink = styled(Link)`
+  color: black;
+  &:hover,
+  &:active {
+    color: black;
     text-decoration: none;
   }
 `;

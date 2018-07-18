@@ -124,7 +124,7 @@ const LoadingWrap = styled.div`
 
 const Wrap = styled.div`
   width: 60rem;
-  height: 20rem;
+  min-height: 20rem;
   background: #ffffff;
   display: block;
   margin-top: 20px;

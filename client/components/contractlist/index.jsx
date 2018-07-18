@@ -82,7 +82,7 @@ const LoadingWrap = styled.div`
 
 const Wrap = styled.div`
   width: 60rem;
-  height: 20rem;
+  min-height: 20rem;
   background: #ffffff;
   display: flex;
   flex-direction: column;

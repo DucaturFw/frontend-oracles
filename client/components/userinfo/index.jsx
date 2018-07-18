@@ -7,6 +7,15 @@ import { fetchUserInfo } from '../../actions/userinfo';
 import doc from './doc.png';
 import scan from './scan.png';
 class Account extends React.Component {
+  state = {
+    name: '',
+    family_name: '',
+    email: '',
+    eth_account: '',
+    organization_name: '',
+    tax_num: '',
+    payment_num: ''
+  };
   componentWillMount() {
     this.props.fetchUserInfo();
   }

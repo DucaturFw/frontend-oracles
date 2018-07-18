@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
+import FileInput from '@team-griffin/react-file-input';
 import FA from 'react-fontawesome';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -14,7 +15,8 @@ class CreateContract extends React.Component {
   state = {
     client: '',
     executer: '',
-    stages: [{ start: '', dispute_start_allowed: '', owner: '' }]
+    stages: [{ start: '', dispute_start_allowed: '', owner: '' }],
+    filename: ''
   };
   componentWillMount() {
     this.props.fetchUsers();
@@ -34,21 +36,6 @@ class CreateContract extends React.Component {
       }
     ];
   };
-  // changeStartContract = (event, { value }, index) => {
-  //   let array = this.state.stages;
-  //   array[index].start = value;
-  //   this.setState({
-  //     stages: array
-  //   });
-  // };
-  // changeStartDisputeAlloved = (event, { value }, index) => {
-  //   let array = this.state.stages;
-  //   array[index].startdispute = value;
-  //   this.setState({
-  //     stages: array
-  //   });
-  // };
-
   addstage = () => {
     const array = this.state.stages;
     array.push({ start: '', dispute_start_allowed: '', owner: '' });
@@ -176,12 +163,21 @@ class CreateContract extends React.Component {
                 <Answer>?</Answer>
               </StagesBlock>
               <MaterialBlock>
-                <ButtonaddMaterial>
-                  <a>
-                    <img src={scan} />
-                  </a>
-                </ButtonaddMaterial>
+                <FileInput
+                  id={'test'}
+                  value={[{ name: this.state.filename }]}
+                  button={
+                    <ButtonaddMaterial>
+                      <img src={scan} />
+                    </ButtonaddMaterial>
+                  }
+                  onChange={e => {
+                    this.setState({ filename: e.target.files[0].name });
+                    console.log(e.target.files[0]);
+                  }}
+                />
               </MaterialBlock>
+
               <ButtonCreateContract>
                 Создать контракт <img src={row} />
               </ButtonCreateContract>
@@ -212,7 +208,7 @@ const LoadingWrap = styled.div`
 
 const Wrap = styled.div`
   width: 60rem;
-  height: 20rem;
+  min-height: 20rem;
   background: #ffffff;
   display: block;
   margin-top: 20px;
