@@ -8,12 +8,14 @@ import {
 } from '../constant/createcontract-const';
 const host = require('../config').host;
 export function fetchUsers() {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const login = getState().login.login;
+    const password = getState().login.password;
     dispatch({ type: FETCH_USERS_START });
     axios
       .get(`${host}/users/`, {
         headers: {
-          Authorization: 'Basic ' + Buffer.from('duc@duc.duc:12345678a').toString('base64')
+          Authorization: 'Basic ' + Buffer.from(`${login}:${password}`).toString('base64')
         }
       })
       .then(res => {

@@ -6,12 +6,14 @@ import {
 } from '../constant/notifications-consts';
 const host = require('../config').host;
 export function fetchNotifications() {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const login = getState().login.login;
+    const password = getState().login.password;
     dispatch({ type: FETCH_NOTIFICATIONS_START });
     axios
       .get(`${host}/events/`, {
         headers: {
-          Authorization: 'Basic ' + Buffer.from('duc@duc.duc:12345678a').toString('base64')
+          Authorization: 'Basic ' + Buffer.from(`${login}:${password}`).toString('base64')
         }
       })
       .then(res => {

@@ -4,7 +4,7 @@ const initialState = {
   preloader: false,
   users: []
 };
-export default function transactionReducer(state = initialState, action) {
+export default function createContractReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_USERS_START:
       return { ...state, preloader: true };

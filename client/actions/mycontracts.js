@@ -2,12 +2,14 @@ import axios from 'axios';
 import { FETCH_CONTRACTS_START, FETCH_CONTRACTS_SUCCESS, FETCH_CONTRACTS_FAILED } from '../constant/mycontracts-const';
 const host = require('../config').host;
 export function fetchContracts() {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const login = getState().login.login;
+    const password = getState().login.password;
     dispatch({ type: FETCH_CONTRACTS_START });
     axios
       .get(`${host}/contracts/`, {
         headers: {
-          Authorization: 'Basic ' + Buffer.from('duc@duc.duc:12345678a').toString('base64')
+          Authorization: 'Basic ' + Buffer.from(`${login}:${password}`).toString('base64')
         }
       })
       .then(res => {

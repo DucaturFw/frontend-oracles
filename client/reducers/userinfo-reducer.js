@@ -4,7 +4,7 @@ const initialState = {
   preloader: false,
   userinfo: []
 };
-export default function transactionReducer(state = initialState, action) {
+export default function userInfoReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_USERINFO_START:
       return { ...state, preloader: true };

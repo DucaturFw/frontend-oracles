@@ -8,7 +8,7 @@ const initialState = {
   preloader: false,
   notifications: []
 };
-export default function transactionReducer(state = initialState, action) {
+export default function notificationReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_NOTIFICATIONS_START:
       return { ...state, preloader: true };
