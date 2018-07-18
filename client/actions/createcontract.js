@@ -9,13 +9,14 @@ import {
 const host = require('../config').host;
 export function fetchUsers() {
   return (dispatch, getState) => {
-    const login = getState().login.login;
-    const password = getState().login.password;
+    // const login = getState().login.login;
+    // const password = getState().login.password;
+    const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_USERS_START });
     axios
       .get(`${host}/users/`, {
         headers: {
-          Authorization: 'Basic ' + Buffer.from(`${login}:${password}`).toString('base64')
+          Authorization: 'Basic ' + hash
         }
       })
       .then(res => {

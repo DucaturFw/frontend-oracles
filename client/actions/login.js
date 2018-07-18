@@ -23,6 +23,7 @@ export function authorization(login, password) {
           password: password
         });
         localStorage.setItem('login', 'true');
+        localStorage.setItem('hash', `${Buffer.from(`${login}:${password}`).toString('base64')}`);
         history.push('/createcontract');
       })
 

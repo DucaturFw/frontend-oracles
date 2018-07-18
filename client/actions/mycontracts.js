@@ -3,13 +3,14 @@ import { FETCH_CONTRACTS_START, FETCH_CONTRACTS_SUCCESS, FETCH_CONTRACTS_FAILED 
 const host = require('../config').host;
 export function fetchContracts() {
   return (dispatch, getState) => {
-    const login = getState().login.login;
-    const password = getState().login.password;
+    // const login = getState().login.login;
+    // const password = getState().login.password;
+    const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_CONTRACTS_START });
     axios
       .get(`${host}/contracts/`, {
         headers: {
-          Authorization: 'Basic ' + Buffer.from(`${login}:${password}`).toString('base64')
+          Authorization: 'Basic ' + hash
         }
       })
       .then(res => {
@@ -31,7 +32,7 @@ function mapperArray(array) {
     result.push({
       id: item.id,
       client: item.party.length > 0 ? `${item.party['0'].name}   ${item.party['0'].family_name}` : '',
-      executer: item.party.length > 0 ? `${item.party['1'].name}   ${item.party['1'].family_name}` : '',
+      executer: item.party.length > 1 ? `${item.party['1'].name}   ${item.party['1'].family_name}` : '',
       starttime: item.stages.length > 0 ? item.stages[0].start : ''
     });
   });
