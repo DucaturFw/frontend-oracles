@@ -3,14 +3,14 @@ import {
   FETCH_USERS_START,
   FETCH_USERS_SUCCESS,
   FETCH_USERS_FAILED,
-  CHANGE_CLIENT,
-  CHANGE_EXECUTER
+  SEND_FILE_IPFS_START,
+  SEND_FILE_IPFS_SUCCESS,
+  SEND_FILE_IPFS_FAILED
 } from '../constant/createcontract-const';
+import ipfs from '../utils/ipfs';
 const host = require('../config').host;
 export function fetchUsers() {
-  return (dispatch, getState) => {
-    // const login = getState().login.login;
-    // const password = getState().login.password;
+  return dispatch => {
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_USERS_START });
     axios
@@ -29,6 +29,22 @@ export function fetchUsers() {
         });
       })
       .catch(err => dispatch({ type: FETCH_USERS_FAILED }));
+  };
+}
+
+export function sendFileIpfs(event) {
+  return dispatch => {
+    dispatch({ type: SEND_FILE_IPFS_START });
+    // const hash = localStorage.getItem('hash');
+    const file = event.target.files[0];
+    let reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = () => this.convertToBuffer(reader);
+    const buffer = Buffer.from(reader.result);
+    ipfs.add(buffer, (err, ipfsHash) => {
+      //  dispatch({type:SEND_FILE_IPFS_FAILED});
+      console.log(err, ipfsHash);
+    });
   };
 }
 
