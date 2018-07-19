@@ -16,7 +16,6 @@ export function authorization(login, password) {
       })
       .then(res => {
         console.log(res);
-        console.log(res.data);
         dispatch({
           type: USER_LOGIN_SUCCESS,
           login: login,

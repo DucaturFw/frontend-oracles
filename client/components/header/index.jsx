@@ -2,8 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ducatur from './logo.png';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { fetchUserInfo } from '../../actions/userinfo';
 import iconmenu from './iconmenu.png';
+
 class Header extends React.Component {
+  componentWillMount() {
+    this.props.fetchUserInfo();
+  }
+
   render() {
     return (
       <Wrap>
@@ -20,7 +28,9 @@ class Header extends React.Component {
         </Left>
         <Right>
           <Name>
-            <UserInfoLink to={'/userinfo'}> Ivan Ivanovich </UserInfoLink>
+            <UserInfoLink to={'/userinfo'}>
+              {this.props.name} {this.props.family_name}
+            </UserInfoLink>
           </Name>
           <Notification>
             <NotificationLink to={'/notifications'}>15</NotificationLink>
@@ -31,7 +41,17 @@ class Header extends React.Component {
     );
   }
 }
-export default Header;
+
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUserInfo }, dispatch);
+const mapStateToProps = state => ({
+  name: state.userinfo.userinfo.name,
+  family_name: state.userinfo.userinfo.family_name
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchtoProps
+)(Header);
 
 const Wrap = styled.div`
   background-color: #ffffff;

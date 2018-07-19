@@ -2,7 +2,7 @@ import { FETCH_USERINFO_START, FETCH_USERINFO_SUCCESS, FETCH_USERINFO_FAILED } f
 
 const initialState = {
   preloader: false,
-  userinfo: []
+  userinfo: {}
 };
 export default function userInfoReducer(state = initialState, action) {
   switch (action.type) {
@@ -12,7 +12,7 @@ export default function userInfoReducer(state = initialState, action) {
       return {
         ...state,
         preloader: false,
-        USERINFO: action.payload
+        userinfo: action.payload
       };
     case FETCH_USERINFO_FAILED:
       return { ...state, preloader: false };

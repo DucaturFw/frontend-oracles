@@ -7,8 +7,9 @@ export function fetchContracts() {
     // const password = getState().login.password;
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_CONTRACTS_START });
+    if (!getState().userinfo.userinfo.id) { dispatch({ type: FETCH_CONTRACTS_FAILED }); return; };
     axios
-      .get(`${host}/contracts/`, {
+      .get(`${host}/contracts/?party__in=${getState().userinfo.userinfo.id}`, {
         headers: {
           Authorization: 'Basic ' + hash
         }

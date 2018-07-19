@@ -44,7 +44,7 @@ class CreateContract extends React.Component {
   createstage = () => {
     return this.state.stages.map((item, index) => {
       return (
-        <Fragment>
+        <Fragment key={index}>
           <Stage>Этап {index + 1} </Stage>
           <StagesContractBlock>
             <ContractText>
@@ -156,7 +156,7 @@ class CreateContract extends React.Component {
                   this.addstage();
                 }}
               >
-                + Добавить стадию контрактка
+                + Добавить стадию контракта
               </ButtonaddStage>
               <StagesBlock>
                 <TitleSegment>МАТЕРИАЛЫ КОНТРАКТА</TitleSegment>

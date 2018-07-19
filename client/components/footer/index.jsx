@@ -9,15 +9,14 @@ class Footer extends React.Component {
     return (
       <Wrap>
         <Left>
-          <Title>Oracles Framework</Title>
+          <Title>Dispute Resolution Machine</Title>
         </Left>
         <Right>
           <Menu>
-            <StyledLink to="/">New Contract</StyledLink>
-            <StyledLink to="/">My Contracts</StyledLink>
-            <StyledLink to="/">Contacts</StyledLink>
+            <StyledLink to="/createcontract">Новый Контракт</StyledLink>
+            <StyledLink to="/mycontracts">Мои Контракты</StyledLink>
           </Menu>
-          <StyledDropdown size="mini" selection options={data} />
+          {/*<StyledDropdown size="mini" selection options={data} />*/}
         </Right>
       </Wrap>
     );
