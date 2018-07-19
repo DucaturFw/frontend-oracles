@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import FA from 'react-fontawesome';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { updateUserInfo, fetchUserInfo } from '../../actions/userinfo';
+import { updateUserInfo } from '../../actions/userinfo';
 import doc from './doc.png';
 import scan from './scan.png';
 class Account extends React.Component {
@@ -26,7 +26,6 @@ class Account extends React.Component {
 
   saveInfo = () => {
     this.props.updateUserInfo(this.state);
-    this.props.fetchUserInfo();
   };
   mapToState = props => {
     this.setState({
@@ -185,7 +184,7 @@ class Account extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ updateUserInfo, fetchUserInfo }, dispatch);
+const mapDispatchtoProps = dispatch => bindActionCreators({ updateUserInfo }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.userinfo.preloader,
   name: state.userinfo.userinfo.name,

@@ -5,7 +5,7 @@ import Notification from '../modals/notification';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { fetchNotifications } from '../../actions/notifications';
+import { fetchNotifications, updateNotifications } from '../../actions/notifications';
 import eventtypes from './eventtypes';
 import icon from './oval.png';
 import icongrey from './icongrey.png';
@@ -18,12 +18,12 @@ class Notifications extends React.Component {
     this.setState({ showPopup: false });
   };
   labels = () => {
-    return this.props.notifications.map(item => {
+    return this.props.notifications.map((item, index) => {
       let date = moment(new Date(item.creation_date)).format('YYYY/MM/DD');
       return (
-        <TableRow seen={item.seen}>
+        <TableRow key={index} seen={item.seen}>
           <RowNotification>
-            <RowNotificationIcon>{item.seen ? <img src={icon} /> : <img src={icongrey} />}</RowNotificationIcon>
+            <RowNotificationIcon>{item.seen ? <img src={icongrey} /> : <img src={icon} />}</RowNotificationIcon>
             <RowNotificationText
               onClick={() => {
                 this.setState({ eventText: eventtypes[item.event_type], showPopup: true });
@@ -59,7 +59,11 @@ class Notifications extends React.Component {
         <Title>
           <h2>ОПОВЕЩЕНИЯ</h2>
         </Title>
-
+        <button
+          onClick={() => {
+            this.props.updateNotifications();
+          }}
+        />
         <Wrap>
           <TableBlock>
             <TableName>
@@ -74,7 +78,7 @@ class Notifications extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ fetchNotifications }, dispatch);
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchNotifications, updateNotifications }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.notifications.preloader,
   notifications: state.notifications.notifications

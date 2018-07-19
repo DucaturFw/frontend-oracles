@@ -84,13 +84,13 @@ export function updateUserInfo(state) {
 
         .then(res => {
           console.log(res);
-
-          dispatch({
-            type: UPDATE_USERINFO_SUCCESS
-          });
         });
     } catch (err) {
       dispatch({ type: UPDATE_USERINFO_FAILED });
     }
+    dispatch({
+      type: UPDATE_USERINFO_SUCCESS
+    });
+    dispatch(fetchUserInfo());
   };
 }
