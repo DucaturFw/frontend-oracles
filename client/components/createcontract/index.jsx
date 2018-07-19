@@ -9,7 +9,7 @@ import scan from './scan.png';
 import row from './row.png';
 
 import { DateInput } from 'semantic-ui-calendar-react';
-import { fetchUsers } from '../../actions/createcontract';
+import { fetchUsers, sendFileIpfs } from '../../actions/createcontract';
 
 class CreateContract extends React.Component {
   state = {
@@ -41,6 +41,7 @@ class CreateContract extends React.Component {
     array.push({ start: '', dispute_start_allowed: '', owner: '' });
     this.setState({ stages: array });
   };
+
   createstage = () => {
     return this.state.stages.map((item, index) => {
       return (
@@ -173,7 +174,7 @@ class CreateContract extends React.Component {
                   }
                   onChange={e => {
                     this.setState({ filename: e.target.files[0].name });
-                    console.log(e.target.files[0]);
+                    this.props.sendFileIpfs(e);
                   }}
                 />
               </MaterialBlock>
@@ -189,7 +190,7 @@ class CreateContract extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUsers }, dispatch);
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUsers, sendFileIpfs }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.createcontract.preloader,
   users: state.createcontract.users
