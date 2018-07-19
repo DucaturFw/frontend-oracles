@@ -5,10 +5,14 @@ import {
   FETCH_USERS_FAILED,
   SEND_FILE_IPFS_START,
   SEND_FILE_IPFS_SUCCESS,
-  SEND_FILE_IPFS_FAILED
+  SEND_FILE_IPFS_FAILED,
+  POST_CONTRACT_FAILED, POST_CONTRACT_START, POST_CONTRACT_SUCCESS
 } from '../constant/createcontract-const';
 import ipfs from '../utils/ipfs';
+import { push } from 'connected-react-router';
+
 const host = require('../config').host;
+
 export function fetchUsers() {
   return dispatch => {
     const hash = localStorage.getItem('hash');
@@ -29,6 +33,28 @@ export function fetchUsers() {
         });
       })
       .catch(err => dispatch({ type: FETCH_USERS_FAILED }));
+  };
+}
+
+export function postNewContract(data) {
+  return dispatch => {
+    const hash = localStorage.getItem('hash');
+    dispatch({ type: POST_CONTRACT_START });
+    axios
+      .post(`${host}/contracts/`, {
+        headers: {
+          Authorization: 'Basic ' + hash
+        }
+      })
+      .then(res => {
+        console.log(res.data);
+        dispatch({
+          type: POST_CONTRACT_SUCCESS,
+          payload: res.data
+        });
+        dispatch(push(`/contracts/${res.data.id}`));
+      })
+      .catch(err => dispatch({ type: POST_CONTRACT_FAILED }));
   };
 }
 

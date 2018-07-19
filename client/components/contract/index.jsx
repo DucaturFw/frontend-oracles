@@ -3,21 +3,27 @@ import styled from 'styled-components';
 import FA from 'react-fontawesome';
 import file from './file.png';
 import Dispute from '../modals/dispute';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { loadData } from '../../actions/contract';
 
 class Contract extends React.Component {
-  state = { preloader: true, showPopup: false };
+  state = { showPopup: false };
+
   componentWillMount() {
-    this.setState({ preloader: false });
+    this.props.loadData(this.props.match.params.id);
   }
 
   onDisputeClick = () => {
     this.setState({ showPopup: true });
   };
+
   closePopup = () => {
     this.setState({ showPopup: false });
   };
+
   render() {
-    if (this.state.preloader) {
+    if (!this.props.contract.id) {
       return (
         <Wrap>
           <LoadingWrap>
@@ -26,10 +32,11 @@ class Contract extends React.Component {
         </Wrap>
       );
     }
+
     return (
       <Fragment>
         <Title>
-          <h2>Contract #40432</h2>
+          <h2>Contract #{this.props.contract.id}</h2>
         </Title>
         <Wrap>
           <Dispute
@@ -42,7 +49,7 @@ class Contract extends React.Component {
           <Wrap2>
             <StepBlock>
               <TitleField>
-                <b>Заключение контракта</b>
+                <b>Контракт</b>
               </TitleField>
               <Galochka />
               <StepText>Начало работы</StepText>
@@ -57,35 +64,41 @@ class Contract extends React.Component {
               <Item>
                 <TitleField>
                   <b>Заказчик: </b>
-                  Ivan Ivanovich (Вы)
+                  {this.props.contract.party[0].info.organization_name}
                 </TitleField>
               </Item>
-              <Item>
-                <TitleField>
-                  <b>Испонитель: </b>
-                  ООО “Рога и Копыта”
-                </TitleField>
-              </Item>
+              {this.props.contract.party.length > 1 && (
+                <Item>
+                  <TitleField>
+                    <b>Испонитель: </b>
+                    {this.props.contract.party[1].info.organization_name}
+                  </TitleField>
+                </Item>
+              )}
             </Block>
             <StagesBlock>
               <TitleSegment> Стадии контракта</TitleSegment>
               <Answer>?</Answer>
             </StagesBlock>
-            <Stage>Этап 1</Stage>
-            <Block>
-              <Item>
-                <TitleField>
-                  <b>Начало действия контракта: </b>
-                  25/08/2018
-                </TitleField>
-              </Item>
-              <Item>
-                <TitleField>
-                  <b>Дата допущения открытия диспута: </b>
-                  25/08/2018
-                </TitleField>
-              </Item>
-            </Block>
+            {this.props.contract.stages.map((stage, idx) => {
+              return (
+                <Block>
+                  <Stage>Этап {idx + 1}</Stage>
+                  <Item>
+                    <TitleField>
+                      <b>Начало действия: </b>
+                      {stage.start}
+                    </TitleField>
+                  </Item>
+                  <Item>
+                    <TitleField>
+                      <b>Дата допущения открытия диспута: </b>
+                      {stage.dispute_start_allowed}
+                    </TitleField>
+                  </Item>
+                </Block>
+              );
+            })}
             <StagesBlock>
               <TitleSegment>МАТЕРИАЛЫ КОНТРАКТА</TitleSegment>
               <Answer>?</Answer>
@@ -115,7 +128,16 @@ class Contract extends React.Component {
   }
 }
 
-export default Contract;
+const mapDispatchtoProps = dispatch => bindActionCreators({ loadData }, dispatch);
+const mapStateToProps = state => ({
+  contract: state.contract.contract
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchtoProps
+)(Contract);
+
 const LoadingWrap = styled.div`
   height: 400px;
   text-align: center;

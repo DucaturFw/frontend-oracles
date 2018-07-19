@@ -33,7 +33,7 @@ class Header extends React.Component {
             </UserInfoLink>
           </Name>
           <Notification>
-            <NotificationLink to={'/notifications'}>15</NotificationLink>
+            <NotificationLink to={'/notifications'}>0</NotificationLink>
           </Notification>
           <img src={iconmenu} />
         </Right>

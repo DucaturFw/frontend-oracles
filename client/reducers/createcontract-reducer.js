@@ -4,7 +4,10 @@ import {
   FETCH_USERS_FAILED,
   SEND_FILE_IPFS_START,
   SEND_FILE_IPFS_SUCCESS,
-  SEND_FILE_IPFS_FAILED
+  SEND_FILE_IPFS_FAILED,
+  POST_CONTRACT_START,
+  POST_CONTRACT_SUCCESS,
+  POST_CONTRACT_FAILED
 } from '../constant/createcontract-const';
 
 const initialState = {
@@ -22,6 +25,16 @@ export default function createContractReducer(state = initialState, action) {
         users: action.payload
       };
     case FETCH_USERS_FAILED:
+      return { ...state, preloader: false };
+    case POST_CONTRACT_START:
+      return { ...state, preloader: true };
+    case POST_CONTRACT_SUCCESS:
+      return {
+        ...state,
+        preloader: false,
+        contract: action.payload
+      };
+    case POST_CONTRACT_FAILED:
       return { ...state, preloader: false };
     case SEND_FILE_IPFS_START:
       return state;

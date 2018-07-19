@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import { BrowserRouter, Router, Route, Switch, Redirect } from 'react-router-dom';
+import { Router, Route, Redirect } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { configureStore } from './store';
 import history from './store/history';
 import { ThemeProvider } from 'styled-components';
 import { connect } from 'react-redux';
@@ -19,6 +21,9 @@ import Contract from './components/contract/index';
 import UserInfo from './components/userinfo/index';
 import Notifications from './components/notifications/index';
 import Login from './components/login/index';
+import { ConnectedRouter } from 'connected-react-router';
+
+const store = configureStore();
 
 class App extends Component {
   render() {
@@ -26,28 +31,26 @@ class App extends Component {
     //  if(localStorage.getItem('login') === 'true')
     return (
       <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <Router history={history}>
-            {authenticated || localStorage.getItem('login') == 'true' ? (
-              <Container>
-                <Header />
-                <MainContent>
-                  <Route exact path="/createcontract" component={CreateContract} />
-                  <Route exact path="/mycontracts" component={ContractList} />
-                  <Route exact path="/contract" component={Contract} />
-                  <Route exact path="/userinfo" component={UserInfo} />
-                  <Route exact path="/notifications" component={Notifications} />
-                </MainContent>
-                <Footer />
-              </Container>
-            ) : (
-              <Fragment>
-                <Route exact path="/login" component={Login} />
-                <Redirect to="/login" />
-              </Fragment>
-            )}
-          </Router>
-        </BrowserRouter>
+        <ConnectedRouter history={history}>
+          {authenticated || localStorage.getItem('login') == 'true' ? (
+            <Container>
+              <Header />
+              <MainContent>
+                <Route exact path="/createcontract" component={CreateContract} />
+                <Route exact path="/mycontracts" component={ContractList} />
+                <Route path="/contract/:id" component={Contract} />
+                <Route exact path="/userinfo" component={UserInfo} />
+                <Route exact path="/notifications" component={Notifications} />
+              </MainContent>
+              <Footer />
+            </Container>
+          ) : (
+            <Fragment>
+              <Route exact path="/register" component={UserInfo} />
+              <Route component={Login} />
+            </Fragment>
+          )}
+        </ConnectedRouter>
       </ThemeProvider>
     );
   }
@@ -56,4 +59,14 @@ const mapStateToProps = state => ({
   authenticated: state.login.authenticated
 });
 
-export default connect(mapStateToProps)(App);
+const ConnApp = connect(mapStateToProps)(App);
+
+const WrapApp = () => {
+  return (
+    <Provider store={store}>
+      <ConnApp />
+    </Provider>
+  );
+};
+
+export default WrapApp;

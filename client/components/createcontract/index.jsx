@@ -9,7 +9,10 @@ import scan from './scan.png';
 import row from './row.png';
 
 import { DateInput } from 'semantic-ui-calendar-react';
-import { fetchUsers, sendFileIpfs } from '../../actions/createcontract';
+import {
+    fetchUsers, postNewContract,
+    sendFileIpfs
+} from '../../actions/createcontract';
 
 class CreateContract extends React.Component {
   state = {
@@ -41,6 +44,10 @@ class CreateContract extends React.Component {
     array.push({ start: '', dispute_start_allowed: '', owner: '' });
     this.setState({ stages: array });
   };
+
+  createContract = () => {
+    return null;
+  }
 
   createstage = () => {
     return this.state.stages.map((item, index) => {
@@ -179,7 +186,7 @@ class CreateContract extends React.Component {
                 />
               </MaterialBlock>
 
-              <ButtonCreateContract>
+              <ButtonCreateContract onClick={this.createContract}>
                 Создать контракт <img src={row} />
               </ButtonCreateContract>
             </Wrap2>
@@ -190,7 +197,7 @@ class CreateContract extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUsers, sendFileIpfs }, dispatch);
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUsers, sendFileIpfs, postNewContract }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.createcontract.preloader,
   users: state.createcontract.users

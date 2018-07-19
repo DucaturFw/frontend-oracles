@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { FETCH_CONTRACTS_START, FETCH_CONTRACTS_SUCCESS, FETCH_CONTRACTS_FAILED } from '../constant/mycontracts-const';
+import {
+  FETCH_CONTRACTS_START,
+  FETCH_CONTRACTS_SUCCESS,
+  FETCH_CONTRACTS_FAILED
+} from '../constant/mycontracts-const';
+
 const host = require('../config').host;
 export function fetchContracts() {
   return (dispatch, getState) => {
@@ -7,7 +12,10 @@ export function fetchContracts() {
     // const password = getState().login.password;
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_CONTRACTS_START });
-    if (!getState().userinfo.userinfo.id) { dispatch({ type: FETCH_CONTRACTS_FAILED }); return; };
+    if (!getState().userinfo.userinfo.id) {
+      dispatch({ type: FETCH_CONTRACTS_FAILED });
+      return;
+    }
     axios
       .get(`${host}/contracts/?party__in=${getState().userinfo.userinfo.id}`, {
         headers: {
