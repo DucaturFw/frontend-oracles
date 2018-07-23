@@ -3,11 +3,12 @@ import { FETCH_CONTRACTS_START, FETCH_CONTRACTS_SUCCESS, FETCH_CONTRACTS_FAILED 
 const host = require('../config').host;
 export function fetchContracts() {
   return (dispatch, getState) => {
-    // const login = getState().login.login;
-    // const password = getState().login.password;
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_CONTRACTS_START });
-    if (!getState().userinfo.userinfo.id) { dispatch({ type: FETCH_CONTRACTS_FAILED }); return; };
+    if (!getState().userinfo.userinfo.id) {
+      dispatch({ type: FETCH_CONTRACTS_FAILED });
+      return;
+    }
     axios
       .get(`${host}/contracts/?party__in=${getState().userinfo.userinfo.id}`, {
         headers: {
@@ -27,9 +28,9 @@ export function fetchContracts() {
   };
 }
 
-function mapperArray(array) {
+const mapperArray = array => {
   let result = [];
-  array.forEach((item, index) => {
+  array.forEach(item => {
     result.push({
       id: item.id,
       client: item.party.length > 0 ? `${item.party['0'].name}   ${item.party['0'].family_name}` : '',
@@ -39,4 +40,4 @@ function mapperArray(array) {
   });
 
   return result;
-}
+};

@@ -8,10 +8,8 @@ import {
   UPDATE_USERINFO_FAILED
 } from '../constant/userinfo-consts';
 const host = require('../config').host;
-export function fetchUserInfo() {
+export const fetchUserInfo = () => {
   return (dispatch, getState) => {
-    // const login = getState().login.login;
-    // const password = getState().login.password;
     if (getState().userinfo.userinfo.id) return;
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_USERINFO_START });
@@ -29,9 +27,9 @@ export function fetchUserInfo() {
       })
       .catch(err => dispatch({ type: FETCH_USERINFO_FAILED }));
   };
-}
+};
 
-export function updateUserInfo(state) {
+export const updateUserInfo = state => {
   return (dispatch, getState) => {
     console.log(state);
     const userid = getState().userinfo.userinfo.id;
@@ -93,4 +91,4 @@ export function updateUserInfo(state) {
     });
     dispatch(fetchUserInfo());
   };
-}
+};

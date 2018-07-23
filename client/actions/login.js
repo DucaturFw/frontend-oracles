@@ -2,11 +2,8 @@ import { USER_LOGIN_START, USER_LOGIN_FAILED, USER_LOGIN_SUCCESS } from '../cons
 import history from '../store/history';
 import axios from 'axios';
 const host = require('../config').host;
-export function authorization(login, password) {
+export const authorization = (login, password) => {
   return dispatch => {
-    // login = 'duc@duc.duc';
-
-    // password = '12345678a';
     dispatch({ type: USER_LOGIN_START });
     axios
       .get(`${host}/users/self/`, {
@@ -28,4 +25,4 @@ export function authorization(login, password) {
 
       .catch(err => dispatch({ type: USER_LOGIN_FAILED }));
   };
-}
+};

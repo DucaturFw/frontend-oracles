@@ -9,14 +9,15 @@ import scan from './scan.png';
 import row from './row.png';
 
 import { DateInput } from 'semantic-ui-calendar-react';
-import { fetchUsers, sendFileIpfs } from '../../actions/createcontract';
+import { fetchUsers, sendFileIpfs, createcontract } from '../../actions/createcontract';
 
 class CreateContract extends React.Component {
   state = {
     client: '',
     executer: '',
     stages: [{ start: '', dispute_start_allowed: '', owner: '' }],
-    filename: ''
+    filename: '',
+    buffer: ''
   };
   componentWillMount() {
     this.props.fetchUsers();
@@ -41,7 +42,24 @@ class CreateContract extends React.Component {
     array.push({ start: '', dispute_start_allowed: '', owner: '' });
     this.setState({ stages: array });
   };
-
+  captureFile = event => {
+    // event.stopPropagation();
+    // event.preventDefault();
+    this.setState({ filename: event.target.files[0].name });
+    const file = event.target.files[0];
+    let reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = () => this.convertToBuffer(reader);
+  };
+  convertToBuffer = async reader => {
+    //file is converted to a buffer for upload to IPFS
+    const buffer = await Buffer.from(reader.result);
+    //set this buffer -using es6 syntax
+    this.props.sendFileIpfs(buffer);
+  };
+  createcontract = () => {
+    this.props.createcontract();
+  };
   createstage = () => {
     return this.state.stages.map((item, index) => {
       return (
@@ -172,14 +190,11 @@ class CreateContract extends React.Component {
                       <img src={scan} />
                     </ButtonaddMaterial>
                   }
-                  onChange={e => {
-                    this.setState({ filename: e.target.files[0].name });
-                    this.props.sendFileIpfs(e);
-                  }}
+                  onChange={this.captureFile}
                 />
               </MaterialBlock>
 
-              <ButtonCreateContract>
+              <ButtonCreateContract onClick={this.createcontract}>
                 Создать контракт <img src={row} />
               </ButtonCreateContract>
             </Wrap2>
@@ -190,7 +205,7 @@ class CreateContract extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUsers, sendFileIpfs }, dispatch);
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUsers, sendFileIpfs, createcontract }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.createcontract.preloader,
   users: state.createcontract.users

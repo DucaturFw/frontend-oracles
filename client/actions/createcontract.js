@@ -5,11 +5,16 @@ import {
   FETCH_USERS_FAILED,
   SEND_FILE_IPFS_START,
   SEND_FILE_IPFS_SUCCESS,
-  SEND_FILE_IPFS_FAILED
+  SEND_FILE_IPFS_FAILED,
+  CREATE_CONTRACT_START,
+  CREATE_CONTRACT_SUCCESS,
+  CREATE_CONTRACT_FAILED
 } from '../constant/createcontract-const';
 import ipfs from '../utils/ipfs';
+import web3 from '../utils/contract/web3';
+import storehash from '../utils/contract/index';
 const host = require('../config').host;
-export function fetchUsers() {
+export const fetchUsers = () => {
   return dispatch => {
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_USERS_START });
@@ -30,25 +35,47 @@ export function fetchUsers() {
       })
       .catch(err => dispatch({ type: FETCH_USERS_FAILED }));
   };
-}
+};
 
-export function sendFileIpfs(event) {
-  return dispatch => {
+export const sendFileIpfs = buffer => {
+  return async dispatch => {
     dispatch({ type: SEND_FILE_IPFS_START });
-    // const hash = localStorage.getItem('hash');
-    const file = event.target.files[0];
-    let reader = new window.FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onloadend = () => this.convertToBuffer(reader);
-    const buffer = Buffer.from(reader.result);
+    console.log(buffer);
     ipfs.add(buffer, (err, ipfsHash) => {
-      //  dispatch({type:SEND_FILE_IPFS_FAILED});
-      console.log(err, ipfsHash);
+      if (err) {
+        dispatch({ type: SEND_FILE_IPFS_FAILED });
+        return;
+      }
+      dispatch({ type: SEND_FILE_IPFS_SUCCESS, hash: ipfsHash[0].hash });
+      console.log(ipfsHash);
     });
   };
-}
+};
 
-function mapperArray(array) {
+export const createcontract = () => {
+  return async (dispatch, getState) => {
+    const hash = getState().createcontract.hash;
+    // const accounts = await web3.eth.getAccounts();
+    // dispatch({ type: CREATE_CONTRACT_START });
+    // console.log('Sending from Metamask account: ' + accounts[0]);
+    // //obtain contract address from storehash.js
+    // const ethAddress = await storehash.options.address;
+    // storehash.methods.sendHash('').send(
+    //   {
+    //     from: accounts[0]
+    //   },
+    //   (error, transactionHash) => {
+    //     console.log(transactionHash);
+    //     if (error) {
+    //       dispatch({ type: CREATE_CONTRACT_FAILED });
+    //       return;
+    //     }
+    //     dispatch({ type: CREATE_CONTRACT_SUCCESS });
+    //   }
+    // );
+  };
+};
+const mapperArray = array => {
   let result = [];
   array.forEach((item, index) => {
     result.push({
@@ -59,4 +86,4 @@ function mapperArray(array) {
   });
 
   return result;
-}
+};

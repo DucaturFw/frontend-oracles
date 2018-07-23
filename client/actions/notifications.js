@@ -10,7 +10,7 @@ import {
 
 const host = require('../config').host;
 
-export function fetchNotifications() {
+export const fetchNotifications = () => {
   return (dispatch, getState) => {
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_NOTIFICATIONS_START });
@@ -29,9 +29,9 @@ export function fetchNotifications() {
       })
       .catch(err => dispatch({ type: FETCH_NOTIFICATIONS_FAILED }));
   };
-}
+};
 
-export function updateNotifications() {
+export const updateNotifications = () => {
   return (dispatch, getState) => {
     const hash = localStorage.getItem('hash');
     const notifications = getState().notifications.notifications.filter(item => item.seen === false);
@@ -64,4 +64,4 @@ export function updateNotifications() {
     dispatch({ type: UPDATE_NOTIFICATIONS_SUCCESS });
     dispatch(fetchNotifications());
   };
-}
+};
