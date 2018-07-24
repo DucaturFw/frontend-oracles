@@ -13,7 +13,8 @@ export default function loginReducer(state = initialState, action) {
       return {
         ...state,
         id: action.id,
-        preloader: false
+        preloader: false,
+        error: false
       };
     case FETCH_CONTRACT_FAILED:
       return { ...state, preloader: false, error: true };
