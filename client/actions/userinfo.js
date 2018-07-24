@@ -9,11 +9,11 @@ import {
 } from '../constant/userinfo-consts';
 const host = require('../config').host;
 export const fetchUserInfo = () => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     if (getState().userinfo.userinfo.id) return;
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_USERINFO_START });
-    axios
+    await axios
       .get(`${host}/users/self`, {
         headers: {
           Authorization: 'Basic ' + hash

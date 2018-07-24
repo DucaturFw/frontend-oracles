@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import FA from 'react-fontawesome';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { fetchContract } from '../../actions/contract';
 import file from './file.png';
 import Dispute from '../modals/dispute';
 
 class Contract extends React.Component {
-  state = { preloader: true, showPopup: false };
-  componentWillMount() {
-    this.setState({ preloader: false });
-  }
+  state = { showPopup: false };
 
   onDisputeClick = () => {
     this.setState({ showPopup: true });
@@ -17,7 +17,7 @@ class Contract extends React.Component {
     this.setState({ showPopup: false });
   };
   render() {
-    if (this.state.preloader) {
+    if (this.props.preloader) {
       return (
         <Wrap>
           <LoadingWrap>
@@ -26,10 +26,13 @@ class Contract extends React.Component {
         </Wrap>
       );
     }
+// if(this.props.match.params.id)
+//      this.props.fetchContract(this.props.match.params);
+
     return (
       <Fragment>
         <Title>
-          <h2>Contract #40432</h2>
+          <h2>Contract #{this.props.id}</h2>
         </Title>
         <Wrap>
           <Dispute
@@ -115,7 +118,16 @@ class Contract extends React.Component {
   }
 }
 
-export default Contract;
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchContract }, dispatch);
+const mapStateToProps = state => ({
+  preloader: state.contract.preloader,
+  id: state.contract.id
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchtoProps
+)(Contract);
 const LoadingWrap = styled.div`
   height: 400px;
   text-align: center;

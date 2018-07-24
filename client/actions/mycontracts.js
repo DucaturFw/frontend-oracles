@@ -5,12 +5,14 @@ export function fetchContracts() {
   return (dispatch, getState) => {
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_CONTRACTS_START });
-    if (!getState().userinfo.userinfo.id) {
-      dispatch({ type: FETCH_CONTRACTS_FAILED });
-      return;
-    }
+
+    // if (!getState().userinfo.userinfo.id) {
+    //   dispatch({ type: FETCH_CONTRACTS_FAILED });
+    //   return;
+    // }
+
     axios
-      .get(`${host}/contracts/?party__in=${getState().userinfo.userinfo.id}`, {
+      .get(`${host}/contracts/?in_party=1`, {
         headers: {
           Authorization: 'Basic ' + hash
         }
@@ -18,7 +20,6 @@ export function fetchContracts() {
       .then(res => {
         console.log(res.data);
         const result = mapperArray(res.data);
-        console.log(result);
         dispatch({
           type: FETCH_CONTRACTS_SUCCESS,
           payload: result
@@ -29,15 +30,20 @@ export function fetchContracts() {
 }
 
 const mapperArray = array => {
-  let result = [];
-  array.forEach(item => {
-    result.push({
+  let result = array.map(item => {
+    return {
       id: item.id,
-      client: item.party.length > 0 ? `${item.party['0'].name}   ${item.party['0'].family_name}` : '',
-      executer: item.party.length > 1 ? `${item.party['1'].name}   ${item.party['1'].family_name}` : '',
+      client: item.in_party.length > 0 ? `${item.in_party[0].name}   ${item.in_party[0].family_name}` : '',
+      executer: item.in_party.length > 1 ? `${item.in_party[0].name}   ${item.in_party[0].family_name}` : '',
       starttime: item.stages.length > 0 ? item.stages[0].start : ''
-    });
+    };
   });
 
   return result;
 };
+
+// const redirectToContract = (row) =>{
+//   dispach=>{
+
+//   }
+// }
