@@ -12,7 +12,7 @@ import {
 } from '../constant/createcontract-const';
 import ipfs from '../utils/ipfs';
 import web3 from '../utils/contract/web3';
-import storehash from '../utils/contract/index';
+import storehash from '../utils/contract/storage';
 const host = require('../config').host;
 export const fetchUsers = () => {
   return dispatch => {
@@ -55,24 +55,24 @@ export const sendFileIpfs = buffer => {
 export const createcontract = () => {
   return async (dispatch, getState) => {
     const hash = getState().createcontract.hash;
-    // const accounts = await web3.eth.getAccounts();
-    // dispatch({ type: CREATE_CONTRACT_START });
-    // console.log('Sending from Metamask account: ' + accounts[0]);
-    // //obtain contract address from storehash.js
-    // const ethAddress = await storehash.options.address;
-    // storehash.methods.sendHash('').send(
-    //   {
-    //     from: accounts[0]
-    //   },
-    //   (error, transactionHash) => {
-    //     console.log(transactionHash);
-    //     if (error) {
-    //       dispatch({ type: CREATE_CONTRACT_FAILED });
-    //       return;
-    //     }
-    //     dispatch({ type: CREATE_CONTRACT_SUCCESS });
-    //   }
-    // );
+    const account = web3.eth.defaultAccount;
+
+    dispatch({ type: CREATE_CONTRACT_START });
+    console.log('Sending from Metamask account: ' + account);
+    await web3.eth.getAccounts().then(res => console.log(res));
+    await storehash.methods.sendHash(hash).send(
+      {
+        from: account || '0xD6669D7f59f3733F21bbb6bD49b174a59Dfcc3Ce'
+      },
+      (error, transactionHash) => {
+        console.log(transactionHash);
+        if (error) {
+          dispatch({ type: CREATE_CONTRACT_FAILED });
+          return;
+        }
+        dispatch({ type: CREATE_CONTRACT_SUCCESS });
+      }
+    );
   };
 };
 const mapperArray = array => {
