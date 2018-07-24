@@ -8,6 +8,10 @@ import file from './file.png';
 import Dispute from '../modals/dispute';
 
 class Contract extends React.Component {
+  constructor(props) {
+    super(props);
+    props.fetchContract(props.match.params.id);
+  }
   state = { showPopup: false };
 
   onDisputeClick = () => {
@@ -26,9 +30,15 @@ class Contract extends React.Component {
         </Wrap>
       );
     }
-// if(this.props.match.params.id)
-//      this.props.fetchContract(this.props.match.params);
-
+    if (this.props.error) {
+      return (
+        <Wrap>
+          <LoadingWrap>
+            <h1>Не удалось загрузить контракт</h1>
+          </LoadingWrap>
+        </Wrap>
+      );
+    }
     return (
       <Fragment>
         <Title>
@@ -121,6 +131,7 @@ class Contract extends React.Component {
 const mapDispatchtoProps = dispatch => bindActionCreators({ fetchContract }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.contract.preloader,
+  error: state.contract.error,
   id: state.contract.id
 });
 

@@ -2,6 +2,7 @@ import { FETCH_CONTRACT_START, FETCH_CONTRACT_SUCCESS, FETCH_CONTRACT_FAILED } f
 
 const initialState = {
   preloader: false,
+  error: false,
   id: null
 };
 export default function loginReducer(state = initialState, action) {
@@ -15,7 +16,7 @@ export default function loginReducer(state = initialState, action) {
         preloader: false
       };
     case FETCH_CONTRACT_FAILED:
-      return { ...state, preloader: false };
+      return { ...state, preloader: false, error: true };
   }
   return state;
 }
