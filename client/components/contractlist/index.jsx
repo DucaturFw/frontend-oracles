@@ -9,10 +9,28 @@ import { fetchContracts } from '../../actions/mycontracts';
 
 const data = [];
 class ContractList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      contracts: [],
+      clients: [],
+      executers: []
+    };
+  }
   componentWillMount() {
     this.props.fetchContracts();
   }
+  componentWillReceiveProps(props) {
+    this.mapToState(props);
+  }
 
+  mapToState = props => {
+    this.setState({
+      contracts: props.contracts,
+      clients: props.clients,
+      executers: props.executers
+    });
+  };
   render() {
     const options = {
       onRowClick: row => {
@@ -37,10 +55,17 @@ class ContractList extends React.Component {
           <FilterBlock>
             <TitleFilter>Filter by </TitleFilter>
             <StyledDropdown size="mini" search selection options={data} />
-            <StyledDropdown size="mini" search selection options={data} />
-            <StyledDropdown size="mini" search selection options={data} />
+            <StyledDropdown size="mini" search selection options={this.state.clients} />
+            <StyledDropdown size="mini" search selection options={this.state.executers} />
+            <CreateContract
+              onClick={() => {
+                this.props.history.push('/create');
+              }}
+            >
+              + Создать новый контракт
+            </CreateContract>
           </FilterBlock>
-          <BootstrapTable options={options} height="200px" width="300px" data={this.props.contracts}>
+          <BootstrapTable options={options} height="200px" width="300px" data={this.state.contracts}>
             <TableHeaderColumn dataSort dataField="id">
               #
             </TableHeaderColumn>
@@ -72,7 +97,9 @@ class ContractList extends React.Component {
 const mapDispatchtoProps = dispatch => bindActionCreators({ fetchContracts }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.mycontracts.preloader,
-  contracts: state.mycontracts.contracts
+  contracts: state.mycontracts.contracts,
+  clients: state.mycontracts.clients,
+  executers: state.mycontracts.executers
 });
 
 export default connect(
@@ -86,7 +113,7 @@ const LoadingWrap = styled.div`
 `;
 
 const Wrap = styled.div`
-  width: 60rem;
+  max-width: 70rem;
   min-height: 20rem;
   background: #ffffff;
   display: flex;
@@ -128,6 +155,11 @@ const StyledDropdown = styled(Dropdown)`
     margin-left: 10px;
   }
 `;
-const StyledTable = styled(BootstrapTable)`
-  overflow-x: hidden;
+const CreateContract = styled.button`
+background: #3EA5F5;
+border-radius: 18.5px
+font-weight: 500;
+line-height: 20px;
+color: #FFFFFF;
+margin-left:10px;
 `;
