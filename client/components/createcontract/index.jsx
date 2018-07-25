@@ -79,7 +79,8 @@ class CreateContract extends React.Component {
         ...s,
         start: moment(s.start, 'DD-MM-YYYY').format('YYYY-MM-DD'),
         dispute_start_allowed: moment(s.dispute_start_allowed, 'DD-MM-YYYY').format('YYYY-MM-DD')
-      }))
+      })),
+      files: this.props.hash,
     };
 
     this.props.createContract(data);
@@ -96,9 +97,11 @@ class CreateContract extends React.Component {
   toggleclient = () => {
     this.setState({ idclient: this.props.myid });
   };
+
   toggleexcuter = () => {
     this.setState({ idexecuter: this.props.myid });
   };
+
   createstage = () => {
     return this.state.stages.map((item, index) => {
       return (
@@ -275,7 +278,8 @@ const mapStateToProps = state => ({
   users: state.createcontract.users,
   error: state.createcontract.error,
   loadingcontract: state.createcontract.loadingcontract,
-  myid: state.userinfo.userinfo.id
+  myid: state.userinfo.userinfo.id,
+  hash: state.createcontract.hash
 });
 
 export default connect(

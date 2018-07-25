@@ -42,11 +42,11 @@ export default function createContractReducer(state = initialState, action) {
     case CREATE_CONTRACT_FAILED:
       return { ...state, loadingcontract: false, error: action.payload || '' };
     case SEND_FILE_IPFS_START:
-      return state;
+      return { ...state, loadingcontract: true };
     case SEND_FILE_IPFS_SUCCESS:
-      return { ...state, hash: action.hash };
+      return { ...state, loadingcontract: false, hash: action.hash };
     case SEND_FILE_IPFS_FAILED:
-      return state;
+      return { ...state, loadingcontract: false, error: 'Failed to load to IPFS' };
   }
   return state;
 }

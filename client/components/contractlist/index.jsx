@@ -6,37 +6,28 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { fetchContracts } from '../../actions/mycontracts';
+import { push } from 'connected-react-router'
 
 const data = [];
+
 class ContractList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      contracts: [],
-      clients: [],
-      executers: []
-    };
-  }
+
   componentWillMount() {
-    this.props.fetchContracts();
-  }
-  componentWillReceiveProps(props) {
-    this.mapToState(props);
+    let res = this.props.fetchContracts();
+    if (!res) this.props.fetchContracts();
   }
 
-  mapToState = props => {
-    this.setState({
-      contracts: props.contracts,
-      clients: props.clients,
-      executers: props.executers
-    });
-  };
+  componentDidUpdate(prevProps) {
+    if (!prevProps.user_id && this.props.user_id) this.props.fetchContracts();
+  }
+
   render() {
     const options = {
       onRowClick: row => {
-        this.props.history.push(`/contract/${row.id}`);
+        this.props.dispatch(push(`/contracts/${row.id}`));
       }
     };
+
     if (this.props.preloader) {
       return (
         <Wrap>
@@ -46,6 +37,7 @@ class ContractList extends React.Component {
         </Wrap>
       );
     }
+
     return (
       <Fragment>
         <Title>
@@ -55,17 +47,17 @@ class ContractList extends React.Component {
           <FilterBlock>
             <TitleFilter>Filter by </TitleFilter>
             <StyledDropdown size="mini" search selection options={data} />
-            <StyledDropdown size="mini" search selection options={this.state.clients} />
-            <StyledDropdown size="mini" search selection options={this.state.executers} />
+            <StyledDropdown size="mini" search selection options={this.props.clients} />
+            <StyledDropdown size="mini" search selection options={this.props.executers} />
             <CreateContract
               onClick={() => {
-                this.props.history.push('/create');
+                this.props.dispatch(push('/create'));
               }}
             >
               + Создать новый контракт
             </CreateContract>
           </FilterBlock>
-          <BootstrapTable options={options} height="200px" width="300px" data={this.state.contracts}>
+          <BootstrapTable options={options} height="200px" width="300px" data={this.props.contracts}>
             <TableHeaderColumn dataSort dataField="id">
               #
             </TableHeaderColumn>
@@ -94,12 +86,13 @@ class ContractList extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ fetchContracts }, dispatch);
+const mapDispatchtoProps = dispatch => ({ dispatch, ...bindActionCreators({ fetchContracts }, dispatch) });
 const mapStateToProps = state => ({
   preloader: state.mycontracts.preloader,
   contracts: state.mycontracts.contracts,
   clients: state.mycontracts.clients,
-  executers: state.mycontracts.executers
+  executers: state.mycontracts.executers,
+  user_id: state.userinfo.userinfo.id
 });
 
 export default connect(

@@ -50,7 +50,7 @@ export const sendFileIpfs = buffer => {
         dispatch({ type: SEND_FILE_IPFS_FAILED });
         return;
       }
-      dispatch({ type: SEND_FILE_IPFS_SUCCESS, hash: ipfsHash[0].hash });
+      dispatch({ type:  SEND_FILE_IPFS_SUCCESS, hash: ipfsHash[0].hash });
       console.log(ipfsHash);
     });
   };
@@ -59,7 +59,7 @@ export const sendFileIpfs = buffer => {
 export const createContract = data => {
   return (dispatch, getState) => {
     const hash = getState().createcontract.hash;
-    data.files = hash;
+    data['files'] = hash;
     const loginHash = localStorage.getItem('hash');
     dispatch({ type: CREATE_CONTRACT_START });
     axios
