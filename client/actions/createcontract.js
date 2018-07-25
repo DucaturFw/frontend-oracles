@@ -81,22 +81,24 @@ export const createContract = data => {
           stages_dispute_starts.push(moment(s.dispute_start_allowed, 'YYYY-MM-DD').seconds());
           stages_owners.push(s.owner);
         });
-        await disputes.methods.openCase(res.data.id, party, stages_starts, stages_dispute_starts, stages_owners, hash).send(
-          {
-            from: account || '0xD6669D7f59f3733F21bbb6bD49b174a59Dfcc3Ce'
-          },
-          (error, transactionHash) => {
-            if (error) {
-              dispatch({ type: CREATE_CONTRACT_FAILED, payload: 'FAILED TO LOAD TO BLOCKCHAIN' });
-              return;
+        await disputes.methods
+          .openCase(res.data.id, party, stages_starts, stages_dispute_starts, stages_owners, hash)
+          .send(
+            {
+              from: account || '0xD6669D7f59f3733F21bbb6bD49b174a59Dfcc3Ce'
+            },
+            (error, transactionHash) => {
+              if (error) {
+                dispatch({ type: CREATE_CONTRACT_FAILED, payload: 'FAILED TO LOAD TO BLOCKCHAIN' });
+                return;
+              }
+              dispatch({
+                type: CREATE_CONTRACT_SUCCESS,
+                payload: res.data
+              });
+              dispatch(push(`/contracts/${res.data.id}`));
             }
-            dispatch({
-              type: CREATE_CONTRACT_SUCCESS,
-              payload: res.data
-            });
-            dispatch(push(`/contracts/${res.data.id}`));
-          }
-        );
+          );
       })
       .catch(err => {
         console.error(err);
