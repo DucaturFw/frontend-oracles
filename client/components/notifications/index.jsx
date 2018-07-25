@@ -17,9 +17,7 @@ class Notifications extends React.Component {
   closePopup = () => {
     this.setState({ showPopup: false });
   };
-  updateNotifications = () = {
-    this.props.updateNotifications();
-  }
+
   labels = () => {
     return this.props.notifications.map((item, index) => {
       let date = moment(new Date(item.creation_date)).format('YYYY/MM/DD');
