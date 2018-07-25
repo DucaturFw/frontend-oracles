@@ -59,7 +59,7 @@ class Login extends React.Component {
                   fluid
                   size="large"
                 >
-                  Login
+                  Вход
                 </Button>
               </Segment>
               {this.props.error ? (

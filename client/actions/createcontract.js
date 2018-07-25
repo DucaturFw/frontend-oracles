@@ -69,9 +69,9 @@ export const createContract = data => {
         }
       })
       .then(async res => {
-        const account = web3.eth.defaultAccount;
-        console.log('Sending from Metamask account: ' + account);
-        await web3.eth.getAccounts().then(res => console.log(res));
+        const accounts = await web3.eth.getAccounts();
+        console.log('Sending from Metamask account: ' + accounts[0]);
+
         let party = res.data.in_party.map(u => u.eth_account);
         let stages_starts = [],
           stages_dispute_starts = [],
@@ -85,7 +85,7 @@ export const createContract = data => {
           .openCase(res.data.id, party, stages_starts, stages_dispute_starts, stages_owners, hash)
           .send(
             {
-              from: account || '0xD6669D7f59f3733F21bbb6bD49b174a59Dfcc3Ce'
+              from: accounts[0]
             },
             (error, transactionHash) => {
               if (error) {

@@ -9,10 +9,7 @@ import scan from './scan.png';
 import row from './row.png';
 
 import { DateInput } from 'semantic-ui-calendar-react';
-import {
-    fetchUsers, createContract,
-    sendFileIpfs
-} from '../../actions/createcontract';
+import { fetchUsers, createContract, sendFileIpfs } from '../../actions/createcontract';
 import moment from 'moment';
 
 class CreateContract extends React.Component {
@@ -21,7 +18,6 @@ class CreateContract extends React.Component {
     executer: '',
     stages: [{ start: '', dispute_start_allowed: '', owner: '' }],
     filename: '',
-    loading: false,
     errorMsg: '',
     buffer: ''
   };
@@ -82,7 +78,7 @@ class CreateContract extends React.Component {
         dispute_start_allowed: moment(s.dispute_start_allowed, 'DD-MM-YYYY').format('YYYY-MM-DD')
       }))
     };
-    this.setState({ loading: true });
+
     this.props.createContract(data);
   };
 
@@ -178,7 +174,7 @@ class CreateContract extends React.Component {
             <Message.Header>{this.state.errorMsg || this.props.error}</Message.Header>
           </Message>
         )}
-        <Dimmer active={this.state.loading}>
+        <Dimmer active={this.props.loadingcontract}>
           <Loader indeterminate>Creating contract</Loader>
         </Dimmer>
         <Title>
@@ -262,7 +258,8 @@ const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUsers, sendFile
 const mapStateToProps = state => ({
   preloader: state.createcontract.preloader,
   users: state.createcontract.users,
-  error: state.createcontract.error
+  error: state.createcontract.error,
+  loadingcontract: state.createcontract.loadingcontract
 });
 
 export default connect(

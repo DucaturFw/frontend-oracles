@@ -25,6 +25,15 @@ import { ConnectedRouter } from 'connected-react-router';
 
 const store = configureStore();
 
+const Register = () => {
+  return (
+    <Container>
+      <MainContent>
+        <UserInfo />
+      </MainContent>
+    </Container>
+  );
+};
 class App extends Component {
   render() {
     const { authenticated } = this.props;
@@ -32,7 +41,7 @@ class App extends Component {
     return (
       <ThemeProvider theme={theme}>
         <ConnectedRouter history={history}>
-          {authenticated || localStorage.getItem('login').toString() === 'true' ? (
+          {authenticated || localStorage.getItem('login') ? (
             <Container>
               <Header />
               <MainContent>
@@ -46,8 +55,8 @@ class App extends Component {
             </Container>
           ) : (
             <Fragment>
-              <Route exact path="/register" component={UserInfo} />
-              <Route component={Login} />
+              <Route exact path="/register" component={Register} />
+              <Route exact path="/" component={Login} />
             </Fragment>
           )}
         </ConnectedRouter>
