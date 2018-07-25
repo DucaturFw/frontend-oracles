@@ -70,7 +70,7 @@ class Contract extends React.Component {
               <StepText>Завершение контракта</StepText>
             </StepBlock>
             <Block>
-              <Item>
+              <Item key={'ordered_by'}>
                 <TitleField>
                   <b>Заказчик: </b>
                   {this.props.contract.in_party.length > 0
@@ -79,7 +79,7 @@ class Contract extends React.Component {
                 </TitleField>
               </Item>
               {this.props.contract.in_party.length > 1 && (
-                <Item>
+                <Item key={'developed_by'}>
                   <TitleField>
                     <b>Испонитель: </b>
                     {this.props.contract.in_party[1].info.organization_name}
@@ -93,7 +93,7 @@ class Contract extends React.Component {
             </StagesBlock>
             {this.props.contract.stages.map((stage, idx) => {
               return (
-                <Block>
+                <Block key={idx}>
                   <Stage>Этап {idx + 1}</Stage>
                   <Item>
                     <TitleField>
