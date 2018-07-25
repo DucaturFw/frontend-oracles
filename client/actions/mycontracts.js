@@ -18,23 +18,46 @@ export function fetchContracts() {
       })
       .then(res => {
         console.log(res.data);
-        const result = mapperArray(res.data);
+        const table = mapperTable(res.data);
+        const clients = mapperFilterClient(res.data);
+        const executers = mapperFilterExecuter(res.data);
         dispatch({
           type: FETCH_CONTRACTS_SUCCESS,
-          payload: result
+          payload: table,
+          clients: clients,
+          executers: executers
         });
       })
       .catch(err => dispatch({ type: FETCH_CONTRACTS_FAILED }));
   };
 }
 
-const mapperArray = array => {
+const mapperTable = array => {
   return array.map(item => {
     return {
       id: item.id,
-      client: item.in_party.length > 0 ? `${item.in_party[0].name}   ${item.in_party[0].family_name}` : '',
-      executer: item.in_party.length > 1 ? `${item.in_party[0].name}   ${item.in_party[0].family_name}` : '',
+      client: item.in_party.length > 0 ? `${item.in_party[0].name} ${item.in_party[0].family_name}` : '',
+      executer: item.in_party.length > 1 ? `${item.in_party[0].name} ${item.in_party[0].family_name}` : '',
       starttime: item.stages.length > 0 ? item.stages[0].start : ''
+    };
+  });
+};
+
+const mapperFilterClient = array => {
+  return array.map(item => {
+    return {
+      id: item.id,
+      key: item.id,
+      text: item.in_party.length > 0 ? `${item.in_party[0].name} ${item.in_party[0].family_name}` : ''
+    };
+  });
+};
+const mapperFilterExecuter = array => {
+  return array.map(item => {
+    return {
+      id: item.id,
+      key: item.id,
+      text: item.in_party.length > 1 ? `${item.in_party[0].name} ${item.in_party[0].family_name}` : ''
     };
   });
 };

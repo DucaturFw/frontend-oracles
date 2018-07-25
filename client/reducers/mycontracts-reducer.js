@@ -2,7 +2,9 @@ import { FETCH_CONTRACTS_START, FETCH_CONTRACTS_SUCCESS, FETCH_CONTRACTS_FAILED 
 
 const initialState = {
   preloader: false,
-  contracts: []
+  contracts: [],
+  clients: [],
+  executers: []
 };
 export default function myContractsReducer(state = initialState, action) {
   switch (action.type) {
@@ -12,7 +14,9 @@ export default function myContractsReducer(state = initialState, action) {
       return {
         ...state,
         preloader: false,
-        contracts: action.payload
+        contracts: action.payload,
+        clients: action.clients,
+        executers: action.executers
       };
     case FETCH_CONTRACTS_FAILED:
       return { ...state, preloader: false };

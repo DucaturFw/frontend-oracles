@@ -24,7 +24,7 @@ import Login from './components/login/index';
 import { ConnectedRouter } from 'connected-react-router';
 
 const store = configureStore();
-
+window.store = store;
 const Register = () => {
   return (
     <Container>

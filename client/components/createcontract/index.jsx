@@ -13,14 +13,20 @@ import { fetchUsers, createContract, sendFileIpfs } from '../../actions/createco
 import moment from 'moment';
 
 class CreateContract extends React.Component {
-  state = {
-    client: '',
-    executer: '',
-    stages: [{ start: '', dispute_start_allowed: '', owner: '' }],
-    filename: '',
-    errorMsg: '',
-    buffer: ''
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      client: '',
+      executer: '',
+      stages: [{ start: '', dispute_start_allowed: '', owner: '' }],
+      filename: '',
+      errorMsg: '',
+      buffer: '',
+      myid: null,
+      idclient: null,
+      idexecuter: null
+    };
+  }
 
   componentWillMount() {
     this.props.fetchUsers();
@@ -37,8 +43,6 @@ class CreateContract extends React.Component {
   };
 
   captureFile = event => {
-    // event.stopPropagation();
-    // event.preventDefault();
     this.setState({ filename: event.target.files[0].name });
     const file = event.target.files[0];
     let reader = new window.FileReader();
@@ -49,7 +53,6 @@ class CreateContract extends React.Component {
   convertToBuffer = async reader => {
     //file is converted to a buffer for upload to IPFS
     const buffer = await Buffer.from(reader.result);
-    //set this buffer -using es6 syntax
     this.props.sendFileIpfs(buffer);
   };
 
@@ -90,6 +93,12 @@ class CreateContract extends React.Component {
     });
   };
 
+  toggleclient = () => {
+    this.setState({ idclient: this.props.myid });
+  };
+  toggleexcuter = () => {
+    this.setState({ idexecuter: this.props.myid });
+  };
   createstage = () => {
     return this.state.stages.map((item, index) => {
       return (
@@ -189,28 +198,34 @@ class CreateContract extends React.Component {
                   <StyledDropdown
                     size="mini"
                     onChange={(event, data) => {
-                      this.setState({ client: data.value });
+                      this.setState({
+                        client: data.value,
+                        idclient: data.value
+                      });
                     }}
+                    value={this.state.idclient}
                     search
                     selection
                     options={users}
                   />
-                  <StyledCheckbox label="Я заказчик" />
+                  <StyledCheckbox onChange={this.toggleclient} label="Я заказчик" />
                 </Client>
                 <Executor>
                   <TitleField>Исполнитель</TitleField>
                   <StyledDropdown
                     onChange={(event, data) => {
                       this.setState({
-                        executer: data.value
+                        executer: data.value,
+                        idexecuter: data.value
                       });
                     }}
+                    value={this.state.idexecuter}
                     size="mini"
                     search
                     selection
                     options={users}
                   />
-                  <StyledCheckbox label="Я исполнитель" />
+                  <StyledCheckbox onChange={this.toggleexcuter} label="Я исполнитель" />
                 </Executor>
               </ClientExecutorBlock>
               <StagesBlock>
@@ -259,7 +274,8 @@ const mapStateToProps = state => ({
   preloader: state.createcontract.preloader,
   users: state.createcontract.users,
   error: state.createcontract.error,
-  loadingcontract: state.createcontract.loadingcontract
+  loadingcontract: state.createcontract.loadingcontract,
+  myid: state.userinfo.userinfo.id
 });
 
 export default connect(
