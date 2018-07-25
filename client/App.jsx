@@ -28,11 +28,11 @@ const store = configureStore();
 class App extends Component {
   render() {
     const { authenticated } = this.props;
-    //  if(localStorage.getItem('login') === 'true')
+
     return (
       <ThemeProvider theme={theme}>
         <ConnectedRouter history={history}>
-          {authenticated || localStorage.getItem('login') == 'true' ? (
+          {authenticated || localStorage.getItem('login').toString() === 'true' ? (
             <Container>
               <Header />
               <MainContent>

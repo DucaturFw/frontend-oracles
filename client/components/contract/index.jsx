@@ -10,13 +10,10 @@ import { loadData } from '../../actions/contract';
 class Contract extends React.Component {
   constructor(props) {
     super(props);
-    props.fetchContract(props.match.params.id);
+    console.log(props);
+    props.loadData(props.match.params.id);
   }
   state = { showPopup: false };
-
-  componentWillMount() {
-    this.props.fetchContract(this.props.match.params.id);
-  }
 
   onDisputeClick = () => {
     this.setState({ showPopup: true });
@@ -78,14 +75,16 @@ class Contract extends React.Component {
               <Item>
                 <TitleField>
                   <b>Заказчик: </b>
-                  {this.props.contract.party[0].info.organization_name}
+                  {this.props.contract.in_party.length > 0
+                    ? this.props.contract.in_party[0].info.organization_name
+                    : ''}
                 </TitleField>
               </Item>
-              {this.props.contract.party.length > 1 && (
+              {this.props.contract.in_party.length > 1 && (
                 <Item>
                   <TitleField>
                     <b>Испонитель: </b>
-                    {this.props.contract.party[1].info.organization_name}
+                    {this.props.contract.in_party[1].info.organization_name}
                   </TitleField>
                 </Item>
               )}
