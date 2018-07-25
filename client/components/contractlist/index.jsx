@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { fetchContracts } from '../../actions/mycontracts';
+
 const data = [];
 class ContractList extends React.Component {
   componentWillMount() {
@@ -13,7 +14,11 @@ class ContractList extends React.Component {
   }
 
   render() {
-    const { contracts } = this.props;
+    const options = {
+      onRowClick: row => {
+        this.props.history.push(`/contract/${row.id}`);
+      }
+    };
     if (this.props.preloader) {
       return (
         <Wrap>
@@ -35,7 +40,7 @@ class ContractList extends React.Component {
             <StyledDropdown size="mini" search selection options={data} />
             <StyledDropdown size="mini" search selection options={data} />
           </FilterBlock>
-          <BootstrapTable height="200px" width="300px" data={contracts}>
+          <BootstrapTable options={options} height="200px" width="300px" data={this.props.contracts}>
             <TableHeaderColumn dataSort dataField="id">
               #
             </TableHeaderColumn>

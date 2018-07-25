@@ -6,14 +6,18 @@ import {
   SEND_FILE_IPFS_START,
   SEND_FILE_IPFS_SUCCESS,
   SEND_FILE_IPFS_FAILED,
-  POST_CONTRACT_FAILED, POST_CONTRACT_START, POST_CONTRACT_SUCCESS
+  CREATE_CONTRACT_START,
+  CREATE_CONTRACT_SUCCESS,
+  CREATE_CONTRACT_FAILED
 } from '../constant/createcontract-const';
 import ipfs from '../utils/ipfs';
+import web3 from '../utils/contract/web3';
 import { push } from 'connected-react-router';
+import storehash from '../utils/contract/storage';
 
 const host = require('../config').host;
 
-export function fetchUsers() {
+export const fetchUsers = () => {
   return dispatch => {
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_USERS_START });
@@ -34,47 +38,61 @@ export function fetchUsers() {
       })
       .catch(err => dispatch({ type: FETCH_USERS_FAILED }));
   };
-}
+};
 
-export function postNewContract(data) {
-  return dispatch => {
-    const hash = localStorage.getItem('hash');
-    dispatch({ type: POST_CONTRACT_START });
+export const sendFileIpfs = buffer => {
+  return async dispatch => {
+    dispatch({ type: SEND_FILE_IPFS_START });
+    console.log(buffer);
+    ipfs.add(buffer, (err, ipfsHash) => {
+      if (err) {
+        dispatch({ type: SEND_FILE_IPFS_FAILED });
+        return;
+      }
+      dispatch({ type: SEND_FILE_IPFS_SUCCESS, hash: ipfsHash[0].hash });
+      console.log(ipfsHash);
+    });
+  };
+};
+
+export const createContract = () => {
+  return (dispatch, getState) => {
+    const loginHash = localStorage.getItem('hash');
+    dispatch({ type: CREATE_CONTRACT_START });
     axios
       .post(`${host}/contracts/`, {
         headers: {
-          Authorization: 'Basic ' + hash
+          Authorization: 'Basic ' + loginHash
         }
       })
-      .then(res => {
-        console.log(res.data);
-        dispatch({
-          type: POST_CONTRACT_SUCCESS,
-          payload: res.data
-        });
-        dispatch(push(`/contracts/${res.data.id}`));
+      .then(async (res) => {
+        const hash = getState().createcontract.hash;
+        const account = web3.eth.defaultAccount;
+        console.log('Sending from Metamask account: ' + account);
+        await web3.eth.getAccounts().then(res => console.log(res));
+        await storehash.methods.sendHash(hash).send(
+          {
+            from: account || '0xD6669D7f59f3733F21bbb6bD49b174a59Dfcc3Ce'
+          },
+          (error, transactionHash) => {
+            if (error) {
+              dispatch({ type: CREATE_CONTRACT_FAILED });
+              return;
+            }
+            dispatch({
+              type: CREATE_CONTRACT_SUCCESS,
+              payload: res.data
+            });
+            dispatch(push(`/contracts/${res.data.id}`));
+          }
+        );
       })
-      .catch(err => dispatch({ type: POST_CONTRACT_FAILED }));
+      .catch(err => dispatch({ type: CREATE_CONTRACT_FAILED,
+        payload: "FAILED TO UPLOAD TO ETH" }));
   };
-}
+};
 
-export function sendFileIpfs(event) {
-  return dispatch => {
-    dispatch({ type: SEND_FILE_IPFS_START });
-    // const hash = localStorage.getItem('hash');
-    const file = event.target.files[0];
-    let reader = new window.FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onloadend = () => this.convertToBuffer(reader);
-    const buffer = Buffer.from(reader.result);
-    ipfs.add(buffer, (err, ipfsHash) => {
-      //  dispatch({type:SEND_FILE_IPFS_FAILED});
-      console.log(err, ipfsHash);
-    });
-  };
-}
-
-function mapperArray(array) {
+const mapperArray = array => {
   let result = [];
   array.forEach((item, index) => {
     result.push({
@@ -85,4 +103,4 @@ function mapperArray(array) {
   });
 
   return result;
-}
+};

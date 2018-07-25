@@ -1,7 +1,10 @@
 import {
   FETCH_NOTIFICATIONS_START,
   FETCH_NOTIFICATIONS_SUCCESS,
-  FETCH_NOTIFICATIONS_FAILED
+  FETCH_NOTIFICATIONS_FAILED,
+  UPDATE_NOTIFICATIONS_START,
+  UPDATE_NOTIFICATIONS_SUCCESS,
+  UPDATE_NOTIFICATIONS_FAILED
 } from '../constant/notifications-consts';
 
 const initialState = {
@@ -20,6 +23,12 @@ export default function notificationReducer(state = initialState, action) {
       };
     case FETCH_NOTIFICATIONS_FAILED:
       return { ...state, preloader: false };
+    case UPDATE_NOTIFICATIONS_START:
+      return state;
+    case UPDATE_NOTIFICATIONS_SUCCESS:
+      return state;
+    case UPDATE_NOTIFICATIONS_FAILED:
+      return state;
   }
 
   return state;

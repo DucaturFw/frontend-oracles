@@ -8,8 +8,6 @@ import {
 const host = require('../config').host;
 export function fetchContracts() {
   return (dispatch, getState) => {
-    // const login = getState().login.login;
-    // const password = getState().login.password;
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_CONTRACTS_START });
     if (!getState().userinfo.userinfo.id) {
@@ -25,7 +23,6 @@ export function fetchContracts() {
       .then(res => {
         console.log(res.data);
         const result = mapperArray(res.data);
-        console.log(result);
         dispatch({
           type: FETCH_CONTRACTS_SUCCESS,
           payload: result
@@ -35,16 +32,13 @@ export function fetchContracts() {
   };
 }
 
-function mapperArray(array) {
-  let result = [];
-  array.forEach((item, index) => {
-    result.push({
+const mapperArray = array => {
+  return array.map(item => {
+    return {
       id: item.id,
-      client: item.party.length > 0 ? `${item.party['0'].name}   ${item.party['0'].family_name}` : '',
-      executer: item.party.length > 1 ? `${item.party['1'].name}   ${item.party['1'].family_name}` : '',
+      client: item.in_party.length > 0 ? `${item.in_party[0].name}   ${item.in_party[0].family_name}` : '',
+      executer: item.in_party.length > 1 ? `${item.in_party[0].name}   ${item.in_party[0].family_name}` : '',
       starttime: item.stages.length > 0 ? item.stages[0].start : ''
-    });
+    };
   });
-
-  return result;
-}
+};

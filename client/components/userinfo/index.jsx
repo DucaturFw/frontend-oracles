@@ -3,23 +3,41 @@ import styled from 'styled-components';
 import FA from 'react-fontawesome';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchUserInfo } from '../../actions/userinfo';
+import { updateUserInfo } from '../../actions/userinfo';
 import doc from './doc.png';
 import scan from './scan.png';
 class Account extends React.Component {
-  state = {
-    name: '',
-    family_name: '',
-    email: '',
-    eth_account: '',
-    organization_name: '',
-    tax_num: '',
-    payment_num: ''
-  };
-  componentWillMount() {
-    this.props.fetchUserInfo();
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: props.name,
+      family_name: props.family_name,
+      email: props.email,
+      eth_account: props.eth_account,
+      organization_name: props.organization_name,
+      tax_num: props.tax_num,
+      payment_num: props.payment_num
+    };
   }
 
+  componentWillReceiveProps(props) {
+    this.mapToState(props);
+  }
+
+  saveInfo = () => {
+    this.props.updateUserInfo(this.state);
+  };
+  mapToState = props => {
+    this.setState({
+      name: props.name,
+      family_name: props.family_name,
+      email: props.email,
+      eth_account: props.eth_account,
+      organization_name: props.organization_name,
+      tax_num: props.tax_num,
+      payment_num: props.payment_num
+    });
+  };
   render() {
     if (this.props.preloader) {
       return (
@@ -45,48 +63,87 @@ class Account extends React.Component {
                 <TitleField>
                   <b>Имя</b>
                 </TitleField>
-                <StyledInput placeholder="Введите ваше имя" />
+                <StyledInput
+                  value={this.state.name}
+                  onChange={e => {
+                    this.setState({ name: e.target.value });
+                  }}
+                  placeholder="Введите ваше имя"
+                />
               </Item>
 
               <Item>
                 <TitleField>
                   <b>Фамилия </b>
                 </TitleField>
-                <StyledInput placeholder="Введите вашу фамилию" />
+                <StyledInput
+                  value={this.state.family_name}
+                  onChange={e => {
+                    this.setState({ family_name: e.target.value });
+                  }}
+                  placeholder="Введите вашу фамилию"
+                />
               </Item>
 
               <Item>
                 <TitleField>
                   <b>Email </b>
                 </TitleField>
-                <StyledInput placeholder="Введите ваш email" />
+                <StyledInput
+                  value={this.state.email}
+                  onChange={e => {
+                    this.setState({ email: e.target.value });
+                  }}
+                  placeholder="Введите ваш email"
+                />
               </Item>
 
               <Item>
                 <TitleField>
                   <b>Eth account</b>
                 </TitleField>
-                <StyledInput placeholder="Введите ваш eth аккаунт" />
+                <StyledInput
+                  value={this.state.eth_account}
+                  onChange={e => {
+                    this.setState({ eth_account: e.target.value });
+                  }}
+                  placeholder="Введите ваш eth аккаунт"
+                />
               </Item>
 
               <Item>
                 <TitleField>
                   <b>Имя организации</b>
                 </TitleField>
-                <StyledInput placeholder="Введите имя организации" />
+                <StyledInput
+                  value={this.state.organization_name}
+                  onChange={e => {
+                    this.setState({ organization_name: e.target.value });
+                  }}
+                  placeholder="Введите имя организации"
+                />
               </Item>
               <Item>
                 <TitleField>
                   <b>ИНН</b>
                 </TitleField>
-                <StyledInput placeholder="Введите ваш ИНН" />
+                <StyledInput
+                  value={this.state.tax_num}
+                  onChange={e => {
+                    this.setState({ tax_num: e.target.value });
+                  }}
+                  placeholder="Введите ваш ИНН"
+                />
               </Item>
-              <Item>
-                <TitleField>
-                  <b>Рассчётный счет</b>
-                </TitleField>
-                <StyledInput placeholder="Введите ваш расчётный счёт" />
-              </Item>
+              <ButtonBlock>
+                <ButtonSave
+                  onClick={() => {
+                    this.saveInfo();
+                  }}
+                >
+                  Сохранить
+                </ButtonSave>
+              </ButtonBlock>
             </Block>
             <Block>
               <Segment>
@@ -109,9 +166,15 @@ class Account extends React.Component {
               </FilesBlock>
               <Item>
                 <TitleField>
-                  <b>Номер счета</b>
+                  <b>Рассчётный счет</b>
                 </TitleField>
-                <StyledInput placeholder="Ваш номер счета" />
+                <StyledInput
+                  value={this.state.payment_num}
+                  onChange={e => {
+                    this.setState({ payment_num: e.target.value });
+                  }}
+                  placeholder="Введите ваш расчётный счёт"
+                />
               </Item>
             </Block>
           </Wrap2>
@@ -121,10 +184,16 @@ class Account extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUserInfo }, dispatch);
+const mapDispatchtoProps = dispatch => bindActionCreators({ updateUserInfo }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.userinfo.preloader,
-  contracts: state.userinfo.userinfo
+  name: state.userinfo.userinfo.name,
+  family_name: state.userinfo.userinfo.family_name,
+  email: state.userinfo.userinfo.email,
+  eth_account: state.userinfo.userinfo.info.eth_account,
+  organization_name: state.userinfo.userinfo.info.organization_name,
+  tax_num: state.userinfo.userinfo.info.tax_num,
+  payment_num: state.userinfo.userinfo.info.payment_num
 });
 
 export default connect(
@@ -213,4 +282,23 @@ background: #FFFFFF;
 border: 4px dashed #CFCFCF; 
 width:65px
 height:65px;
+`;
+const ButtonBlock = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin: 40px 0px 0px 300px;
+`;
+const ButtonSave = styled.div`
+display:flex;
+justify-content: center;
+align-items: center;
+width:122px
+height:45px;
+font-weight: 500;
+line-height: 20px;
+color:#ffffff;
+background: #3EA5F5;
+border-radius: 22.5px;
+text-align:center;
+
 `;

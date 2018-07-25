@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { LOAD_CONTRACT_FAILED, LOAD_CONTRACT_START, LOAD_CONTRACT_SUCCESS } from '../constant/contract-consts';
+import { FETCH_CONTRACT_START, FETCH_CONTRACT_SUCCESS, FETCH_CONTRACT_FAILED } from '../constant/contract-consts';
 
 const host = require('../config').host;
 
 export function loadData(id) {
   return dispatch => {
     const hash = localStorage.getItem('hash');
-    dispatch({ type: LOAD_CONTRACT_START });
+    dispatch({ type: FETCH_CONTRACT_START });
     axios
       .get(`${host}/contracts/${id}`, {
         headers: {
@@ -16,10 +16,10 @@ export function loadData(id) {
       .then(res => {
         console.log(res.data);
         dispatch({
-          type: LOAD_CONTRACT_SUCCESS,
+          type: FETCH_CONTRACT_SUCCESS,
           payload: res.data
         });
       })
-      .catch(err => dispatch({ type: LOAD_CONTRACT_FAILED }));
+      .catch(err => dispatch({ type: FETCH_CONTRACT_FAILED }));
   };
 }

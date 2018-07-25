@@ -8,10 +8,14 @@ import { connect } from 'react-redux';
 import { loadData } from '../../actions/contract';
 
 class Contract extends React.Component {
+  constructor(props) {
+    super(props);
+    props.fetchContract(props.match.params.id);
+  }
   state = { showPopup: false };
 
   componentWillMount() {
-    this.props.loadData(this.props.match.params.id);
+    this.props.fetchContract(this.props.match.params.id);
   }
 
   onDisputeClick = () => {
@@ -28,6 +32,16 @@ class Contract extends React.Component {
         <Wrap>
           <LoadingWrap>
             <FA name="spinner" size="4x" spin />
+          </LoadingWrap>
+        </Wrap>
+      );
+    }
+
+    if (this.props.error) {
+      return (
+        <Wrap>
+          <LoadingWrap>
+            <h1>Не удалось загрузить контракт</h1>
           </LoadingWrap>
         </Wrap>
       );

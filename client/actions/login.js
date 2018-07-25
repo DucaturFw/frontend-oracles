@@ -26,4 +26,4 @@ export function authorization(login, password) {
 
       .catch(err => dispatch({ type: USER_LOGIN_FAILED }));
   };
-}
+};

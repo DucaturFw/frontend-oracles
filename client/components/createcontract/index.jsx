@@ -10,7 +10,7 @@ import row from './row.png';
 
 import { DateInput } from 'semantic-ui-calendar-react';
 import {
-    fetchUsers, postNewContract,
+    fetchUsers, createContract,
     sendFileIpfs
 } from '../../actions/createcontract';
 
@@ -19,7 +19,8 @@ class CreateContract extends React.Component {
     client: '',
     executer: '',
     stages: [{ start: '', dispute_start_allowed: '', owner: '' }],
-    filename: ''
+    filename: '',
+    buffer: ''
   };
   componentWillMount() {
     this.props.fetchUsers();
@@ -45,9 +46,26 @@ class CreateContract extends React.Component {
     this.setState({ stages: array });
   };
 
-  createContract = () => {
-    return null;
-  }
+  captureFile = event => {
+    // event.stopPropagation();
+    // event.preventDefault();
+    this.setState({ filename: event.target.files[0].name });
+    const file = event.target.files[0];
+    let reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = () => this.convertToBuffer(reader);
+  };
+
+  convertToBuffer = async reader => {
+    //file is converted to a buffer for upload to IPFS
+    const buffer = await Buffer.from(reader.result);
+    //set this buffer -using es6 syntax
+    this.props.sendFileIpfs(buffer);
+  };
+
+  createcontract = () => {
+    this.props.createContract();
+  };
 
   createstage = () => {
     return this.state.stages.map((item, index) => {
@@ -179,10 +197,7 @@ class CreateContract extends React.Component {
                       <img src={scan} />
                     </ButtonaddMaterial>
                   }
-                  onChange={e => {
-                    this.setState({ filename: e.target.files[0].name });
-                    this.props.sendFileIpfs(e);
-                  }}
+                  onChange={this.captureFile}
                 />
               </MaterialBlock>
 
@@ -197,7 +212,7 @@ class CreateContract extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUsers, sendFileIpfs, postNewContract }, dispatch);
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUsers, sendFileIpfs, createContract }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.createcontract.preloader,
   users: state.createcontract.users
