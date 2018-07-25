@@ -13,7 +13,8 @@ import {
 import ipfs from '../utils/ipfs';
 import web3 from '../utils/contract/web3';
 import { push } from 'connected-react-router';
-import storehash from '../utils/contract/storage';
+import disputes from '../utils/contract/disputes';
+import moment from 'moment';
 
 const host = require('../config').host;
 
@@ -55,28 +56,38 @@ export const sendFileIpfs = buffer => {
   };
 };
 
-export const createContract = () => {
+export const createContract = data => {
   return (dispatch, getState) => {
+    const hash = getState().createcontract.hash;
+    data.filename = hash;
     const loginHash = localStorage.getItem('hash');
     dispatch({ type: CREATE_CONTRACT_START });
     axios
-      .post(`${host}/contracts/`, {
+      .post(`${host}/contracts/`, data, {
         headers: {
           Authorization: 'Basic ' + loginHash
         }
       })
-      .then(async (res) => {
-        const hash = getState().createcontract.hash;
+      .then(async res => {
         const account = web3.eth.defaultAccount;
         console.log('Sending from Metamask account: ' + account);
         await web3.eth.getAccounts().then(res => console.log(res));
-        await storehash.methods.sendHash(hash).send(
+        let party = res.data.party.map(u => u.eth_account);
+        let stages_starts = [],
+          stages_dispute_starts = [],
+          stages_owners = [];
+        data.stages.forEach(s => {
+          stages_starts.push(moment(s.start, 'YYYY-MM-DD').seconds());
+          stages_dispute_starts.push(moment(s.dispute_start_allowed, 'YYYY-MM-DD').seconds());
+          stages_owners.push(s.owner);
+        });
+        await disputes.methods.openCase(res.data.id, party, stages_starts, stages_dispute_starts, hash).send(
           {
             from: account || '0xD6669D7f59f3733F21bbb6bD49b174a59Dfcc3Ce'
           },
           (error, transactionHash) => {
             if (error) {
-              dispatch({ type: CREATE_CONTRACT_FAILED });
+              dispatch({ type: CREATE_CONTRACT_FAILED, payload: 'FAILED TO LOAD TO BLOCKCHAIN' });
               return;
             }
             dispatch({
@@ -87,8 +98,12 @@ export const createContract = () => {
           }
         );
       })
-      .catch(err => dispatch({ type: CREATE_CONTRACT_FAILED,
-        payload: "FAILED TO UPLOAD TO ETH" }));
+      .catch(err =>
+        dispatch({
+          type: CREATE_CONTRACT_FAILED,
+          payload: 'FAILED TO CREATE ON SERVER'
+        })
+      );
   };
 };
 
@@ -96,8 +111,8 @@ const mapperArray = array => {
   let result = [];
   array.forEach((item, index) => {
     result.push({
-      key: index,
-      value: `${item.name} ${item.family_name}`,
+      key: item.id,
+      value: +item.id,
       text: `${item.name} ${item.family_name}`
     });
   });

@@ -11,6 +11,6 @@ export function configureStore(initialState) {
   return createStore(
     connectRouter(history)(rootReducer),
     initialState,
-    composeEnhancers(applyMiddleware(thunk, logger,, routerMiddleware(history)))
+    composeEnhancers(applyMiddleware(thunk, logger, routerMiddleware(history)))
   );
 }

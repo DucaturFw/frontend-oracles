@@ -13,7 +13,9 @@ import {
 const initialState = {
   preloader: false,
   users: [],
-  hash: ''
+  hash: '',
+  contract: {},
+  error: '',
 };
 export default function createContractReducer(state = initialState, action) {
   switch (action.type) {
@@ -36,7 +38,7 @@ export default function createContractReducer(state = initialState, action) {
         contract: action.payload
       };
     case CREATE_CONTRACT_FAILED:
-      return { ...state, preloader: false };
+      return { ...state, preloader: false, error: action.payload || '' };
     case SEND_FILE_IPFS_START:
       return state;
     case SEND_FILE_IPFS_SUCCESS:

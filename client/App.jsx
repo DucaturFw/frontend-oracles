@@ -36,8 +36,8 @@ class App extends Component {
             <Container>
               <Header />
               <MainContent>
-                <Route exact path="/createcontract" component={CreateContract} />
-                <Route exact path="/mycontracts" component={ContractList} />
+                <Route exact path="/create" component={CreateContract} />
+                <Route exact path="/my_contracts" component={ContractList} />
                 <Route path="/contract/:id" component={Contract} />
                 <Route exact path="/userinfo" component={UserInfo} />
                 <Route exact path="/notifications" component={Notifications} />

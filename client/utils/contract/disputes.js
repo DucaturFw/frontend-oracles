@@ -1,4 +1,4 @@
-import abi from './storage_abi.json';
+import abi from './disputes_abi.json';
 import web3 from './web3';
 
 const contract = {

@@ -1,4 +1,4 @@
-import { LOAD_CONTRACT_FAILED, LOAD_CONTRACT_START, LOAD_CONTRACT_SUCCESS } from '../constant/contract-consts';
+import { FETCH_CONTRACT_START, FETCH_CONTRACT_SUCCESS, FETCH_CONTRACT_FAILED } from '../constant/contract-const';
 
 const initialState = {
   preloader: false,
@@ -7,15 +7,15 @@ const initialState = {
 
 export default function contractReducer(state = initialState, action) {
   switch (action.type) {
-    case LOAD_CONTRACT_START:
+    case FETCH_CONTRACT_START:
       return { ...state, preloader: true };
-    case LOAD_CONTRACT_SUCCESS:
+    case FETCH_CONTRACT_SUCCESS:
       return {
         ...state,
         preloader: false,
         contract: action.payload
       };
-    case LOAD_CONTRACT_FAILED:
+    case FETCH_CONTRACT_FAILED:
       return { ...state, preloader: false };
   }
   return state;

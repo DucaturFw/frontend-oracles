@@ -4,7 +4,7 @@ import FileInput from '@team-griffin/react-file-input';
 import FA from 'react-fontawesome';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Dropdown, Checkbox, Form } from 'semantic-ui-react';
+import { Dropdown, Checkbox, Form, Dimmer, Loader, Message } from 'semantic-ui-react';
 import scan from './scan.png';
 import row from './row.png';
 
@@ -13,6 +13,7 @@ import {
     fetchUsers, createContract,
     sendFileIpfs
 } from '../../actions/createcontract';
+import moment from 'moment';
 
 class CreateContract extends React.Component {
   state = {
@@ -20,26 +21,19 @@ class CreateContract extends React.Component {
     executer: '',
     stages: [{ start: '', dispute_start_allowed: '', owner: '' }],
     filename: '',
+    loading: false,
+    errorMsg: '',
     buffer: ''
   };
+
   componentWillMount() {
     this.props.fetchUsers();
   }
 
   createArrayResponsible = () => {
-    return [
-      {
-        key: 0,
-        value: this.state.client,
-        text: this.state.client
-      },
-      {
-        key: 1,
-        value: this.state.executer,
-        text: this.state.executer
-      }
-    ];
+    return this.props.users.filter(u => u.value === this.state.client || u.value === this.state.executer);
   };
+
   addstage = () => {
     const array = this.state.stages;
     array.push({ start: '', dispute_start_allowed: '', owner: '' });
@@ -63,15 +57,56 @@ class CreateContract extends React.Component {
     this.props.sendFileIpfs(buffer);
   };
 
-  createcontract = () => {
-    this.props.createContract();
+  createContract = () => {
+    this.setState({ errorMsg: '' });
+    if (!this.state.client || !this.state.executer) {
+      this.setState({ errorMsg: 'Исполнитель или заказчик заполнены неверно' });
+      return;
+    }
+
+    if (
+      !this.state.stages.reduce(
+        (old, stage) => old || !stage.start || !stage.dispute_start_allowed || !stage.owner,
+        true
+      )
+    ) {
+      this.setState({ errorMsg: 'Этапы заполнены неверно' });
+      return;
+    }
+
+    const data = {
+      party: [this.state.client, this.state.executer],
+      stages: this.state.stages.map(s => ({
+        ...s,
+        start: moment(s.start, 'DD-MM-YYYY').format('YYYY-MM-DD'),
+        dispute_start_allowed: moment(s.dispute_start_allowed, 'DD-MM-YYYY').format('YYYY-MM-DD')
+      }))
+    };
+    this.setState({ loading: true });
+    this.props.createContract(data);
+  };
+
+  deleteStage = idx => {
+    const stgs = this.state.stages;
+    stgs.splice(idx, 1);
+    this.setState({
+      stages: stgs
+    });
   };
 
   createstage = () => {
     return this.state.stages.map((item, index) => {
       return (
         <Fragment key={index}>
-          <Stage>Этап {index + 1} </Stage>
+          <Stage>
+            Этап {index + 1}
+            {(index && (
+              <span style={{ color: '#ffbbbb' }} onClick={() => this.deleteStage(index)}>
+                &nbsp;&nbsp;X
+              </span>
+            )) ||
+              ''}
+          </Stage>
           <StagesContractBlock>
             <ContractText>
               <TitleField>Начало действия контракта</TitleField>
@@ -79,6 +114,7 @@ class CreateContract extends React.Component {
             </ContractText>
             <TimeContract>
               <StyledDateInput
+                key={1}
                 value={this.state.stages[index].start}
                 onChange={(event, { value }) => {
                   let array = this.state.stages;
@@ -89,10 +125,11 @@ class CreateContract extends React.Component {
                 }}
               />
               <StyledDateInput
-                value={this.state.stages[index].startdispute}
+                key={2}
+                value={this.state.stages[index].dispute_start_allowed}
                 onChange={(event, { value }) => {
                   let array = this.state.stages;
-                  array[index].startdispute = value;
+                  array[index].dispute_start_allowed = value;
                   this.setState({
                     stages: array
                   });
@@ -122,6 +159,7 @@ class CreateContract extends React.Component {
       );
     });
   };
+
   render() {
     const { users } = this.props;
     if (this.props.preloader) {
@@ -135,6 +173,14 @@ class CreateContract extends React.Component {
     }
     return (
       <Fragment>
+        {(this.state.errorMsg || this.props.error) && (
+          <Message negative>
+            <Message.Header>{this.state.errorMsg || this.props.error}</Message.Header>
+          </Message>
+        )}
+        <Dimmer active={this.state.loading}>
+          <Loader indeterminate>Creating contract</Loader>
+        </Dimmer>
         <Title>
           <h2>CREATE NEW CONTRACT</h2>
         </Title>
@@ -215,7 +261,8 @@ class CreateContract extends React.Component {
 const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUsers, sendFileIpfs, createContract }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.createcontract.preloader,
-  users: state.createcontract.users
+  users: state.createcontract.users,
+  error: state.createcontract.error
 });
 
 export default connect(

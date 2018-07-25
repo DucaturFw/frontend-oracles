@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_CONTRACT_START, FETCH_CONTRACT_SUCCESS, FETCH_CONTRACT_FAILED } from '../constant/contract-consts';
+import { FETCH_CONTRACT_START, FETCH_CONTRACT_SUCCESS, FETCH_CONTRACT_FAILED } from '../constant/contract-const';
 
 const host = require('../config').host;
 
