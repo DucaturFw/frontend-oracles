@@ -9,7 +9,7 @@ import {
   CREATE_CONTRACT_START,
   CREATE_CONTRACT_SUCCESS,
   CREATE_CONTRACT_FAILED
-} from '../constant/createcontract-const';
+} from '../constant/createcontract-consts';
 import ipfs from '../utils/ipfs';
 import web3 from '../utils/contract/web3';
 import { push } from 'connected-react-router';

@@ -8,7 +8,7 @@ import {
   CREATE_CONTRACT_START,
   CREATE_CONTRACT_SUCCESS,
   CREATE_CONTRACT_FAILED
-} from '../constant/createcontract-const';
+} from '../constant/createcontract-consts';
 
 const initialState = {
   preloader: false,

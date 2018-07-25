@@ -3,7 +3,7 @@ import {
   FETCH_CONTRACTS_START,
   FETCH_CONTRACTS_SUCCESS,
   FETCH_CONTRACTS_FAILED
-} from '../constant/mycontracts-const';
+} from '../constant/mycontracts-consts';
 
 const host = require('../config').host;
 export function fetchContracts() {
