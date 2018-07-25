@@ -5,13 +5,11 @@ import file from './file.png';
 import Dispute from '../modals/dispute';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { loadData } from '../../actions/contract';
+import { fetchContract } from '../../actions/contract';
 
 class Contract extends React.Component {
-  constructor(props) {
-    super(props);
-    console.log(props);
-    props.loadData(props.match.params.id);
+  componentWillMount() {
+    this.props.fetchContract(this.props.match.params.id);
   }
   state = { showPopup: false };
 
@@ -141,7 +139,7 @@ class Contract extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ loadData }, dispatch);
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchContract: fetchContract }, dispatch);
 const mapStateToProps = state => ({
   contract: state.contract.contract
 });

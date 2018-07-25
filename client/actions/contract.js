@@ -3,7 +3,7 @@ import { FETCH_CONTRACT_START, FETCH_CONTRACT_SUCCESS, FETCH_CONTRACT_FAILED } f
 
 const host = require('../config').host;
 
-export function loadData(id) {
+export function fetchContract(id) {
   return dispatch => {
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_CONTRACT_START });

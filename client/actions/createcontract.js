@@ -59,7 +59,7 @@ export const sendFileIpfs = buffer => {
 export const createContract = data => {
   return (dispatch, getState) => {
     const hash = getState().createcontract.hash;
-    data.filename = hash;
+    data.files = hash;
     const loginHash = localStorage.getItem('hash');
     dispatch({ type: CREATE_CONTRACT_START });
     axios
@@ -79,7 +79,7 @@ export const createContract = data => {
         data.stages.forEach(s => {
           stages_starts.push(moment(s.start, 'YYYY-MM-DD').seconds());
           stages_dispute_starts.push(moment(s.dispute_start_allowed, 'YYYY-MM-DD').seconds());
-          stages_owners.push(s.owner);
+          stages_owners.push(res.data.in_party.find(d => d.id === s.owner).eth_account);
         });
         await disputes.methods
           .openCase(res.data.id, party, stages_starts, stages_dispute_starts, stages_owners, hash)
