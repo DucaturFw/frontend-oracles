@@ -21,7 +21,7 @@ export function authorization(login, password) {
         });
         localStorage.setItem('login', 'true');
         localStorage.setItem('hash', `${Buffer.from(`${login}:${password}`).toString('base64')}`);
-        dispatch(push('/createcontract'));
+        dispatch(push('/create'));
       })
 
       .catch(err => dispatch({ type: USER_LOGIN_FAILED }));

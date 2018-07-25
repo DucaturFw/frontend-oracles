@@ -13,8 +13,8 @@ class Footer extends React.Component {
         </Left>
         <Right>
           <Menu>
-            <StyledLink to="/createcontract">Новый Контракт</StyledLink>
-            <StyledLink to="/mycontracts">Мои Контракты</StyledLink>
+            <StyledLink to="/create">Новый Контракт</StyledLink>
+            <StyledLink to="/my_contracts">Мои Контракты</StyledLink>
           </Menu>
           {/*<StyledDropdown size="mini" selection options={data} />*/}
         </Right>
