@@ -72,7 +72,7 @@ export const createContract = data => {
         const account = web3.eth.defaultAccount;
         console.log('Sending from Metamask account: ' + account);
         await web3.eth.getAccounts().then(res => console.log(res));
-        let party = res.data.party.map(u => u.eth_account);
+        let party = res.data.in_party.map(u => u.eth_account);
         let stages_starts = [],
           stages_dispute_starts = [],
           stages_owners = [];
@@ -81,7 +81,7 @@ export const createContract = data => {
           stages_dispute_starts.push(moment(s.dispute_start_allowed, 'YYYY-MM-DD').seconds());
           stages_owners.push(s.owner);
         });
-        await disputes.methods.openCase(res.data.id, party, stages_starts, stages_dispute_starts, hash).send(
+        await disputes.methods.openCase(res.data.id, party, stages_starts, stages_dispute_starts, stages_owners, hash).send(
           {
             from: account || '0xD6669D7f59f3733F21bbb6bD49b174a59Dfcc3Ce'
           },
@@ -98,12 +98,13 @@ export const createContract = data => {
           }
         );
       })
-      .catch(err =>
+      .catch(err => {
+        console.error(err);
         dispatch({
           type: CREATE_CONTRACT_FAILED,
           payload: 'FAILED TO CREATE ON SERVER'
-        })
-      );
+        });
+      });
   };
 };
 
