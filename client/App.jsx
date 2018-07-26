@@ -27,36 +27,31 @@ import Register from './components/userinfo/register';
 const store = configureStore();
 window.store = store;
 
-class App extends Component {
-  render() {
-    const { authenticated } = this.props;
+const App = ({ authenticated }) => (
+  <ThemeProvider theme={theme}>
+    <ConnectedRouter history={history}>
+      {authenticated ? (
+        <Container>
+          <Header />
+          <MainContent>
+            <Route exact path="/create" component={CreateContract} />
+            <Route exact path="/contracts" component={ContractList} />
+            <Route path="/contracts/:id" component={Contract} />
+            <Route exact path="/userinfo/:id" component={UserInfo} />
+            <Route exact path="/notifications" component={Notifications} />
+          </MainContent>
+          <Footer />
+        </Container>
+      ) : (
+        <Fragment>
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/" component={Login} />
+        </Fragment>
+      )}
+    </ConnectedRouter>
+  </ThemeProvider>
+);
 
-    return (
-      <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          {authenticated || localStorage.getItem('hash') ? (
-            <Container>
-              <Header />
-              <MainContent>
-                <Route exact path="/create" component={CreateContract} />
-                <Route exact path="/contracts" component={ContractList} />
-                <Route path="/contracts/:id" component={Contract} />
-                <Route exact path="/userinfo/:id" component={UserInfo} />
-                <Route exact path="/notifications" component={Notifications} />
-              </MainContent>
-              <Footer />
-            </Container>
-          ) : (
-            <Fragment>
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/" component={Login} />
-            </Fragment>
-          )}
-        </ConnectedRouter>
-      </ThemeProvider>
-    );
-  }
-}
 const mapStateToProps = state => ({
   authenticated: state.login.authenticated
 });

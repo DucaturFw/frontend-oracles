@@ -14,7 +14,14 @@ const host = require('../config').host;
 
 export const fetchUserInfo = id => {
   return async (dispatch, getState) => {
-    if (getState().userinfo.userinfo.id) return;
+    if (id === 'self' && getState().userinfo.selfinfo.id) {
+      dispatch({
+        type: FETCH_USERINFO_SUCCESS,
+        payload: getState().userinfo.selfinfo,
+        self: false
+      });
+      return;
+    }
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_USERINFO_START });
     await axios
@@ -26,10 +33,11 @@ export const fetchUserInfo = id => {
       .then(res => {
         dispatch({
           type: FETCH_USERINFO_SUCCESS,
-          payload: id === 'self' ? res.data.self : res.data
+          payload: id === 'self' ? res.data.self : res.data,
+          self: id === 'self'
         });
       })
-      .catch(err => dispatch({ type: FETCH_USERINFO_FAILED }));
+      .catch(err => dispatch({ type: FETCH_USERINFO_FAILED, error: 'User does not exist or you do not have permissions.'}));
   };
 };
 
@@ -88,7 +96,7 @@ export const updateUserInfo = state => {
           console.log(res);
         });
     } catch (err) {
-      dispatch({ type: UPDATE_USERINFO_FAILED });
+      dispatch({ type: UPDATE_USERINFO_FAILED, error: 'Failed: do you have proper permissions?' });
     }
     dispatch({
       type: UPDATE_USERINFO_SUCCESS

@@ -109,7 +109,7 @@ class CreateContract extends React.Component {
           <Stage>
             Этап {index + 1}
             {(index && (
-              <span style={{ color: '#ffbbbb' }} onClick={() => this.deleteStage(index)}>
+              <span style={{ color: '#ffbbbb', cursor: 'pointer' }} onClick={() => this.deleteStage(index)}>
                 &nbsp;&nbsp;X
               </span>
             )) ||

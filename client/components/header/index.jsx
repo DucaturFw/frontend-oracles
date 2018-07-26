@@ -35,7 +35,7 @@ class Header extends React.Component {
           <Notification>
             <NotificationLink to={'/notifications'}>0</NotificationLink>
           </Notification>
-          <img src={iconmenu} onClick={this.props.logout}/>
+          <img src={iconmenu} onClick={this.props.logout} />
         </Right>
       </Wrap>
     );
@@ -44,8 +44,8 @@ class Header extends React.Component {
 
 const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUserInfo, logout }, dispatch);
 const mapStateToProps = state => ({
-  name: state.userinfo.userinfo.name,
-  family_name: state.userinfo.userinfo.family_name
+  name: state.userinfo.selfinfo.name,
+  family_name: state.userinfo.selfinfo.family_name
 });
 
 export default connect(

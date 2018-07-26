@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { fetchUserInfo, updateUserInfo } from '../../actions/userinfo';
 import doc from './doc.png';
 import scan from './scan.png';
+import { Message } from 'semantic-ui-react';
 
 export class Account extends React.Component {
   constructor(props) {
@@ -14,9 +15,7 @@ export class Account extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.match.params.id !== 'self') {
-      this.props.fetchUserInfo(this.props.match.params.id);
-    }
+    this.props.fetchUserInfo(this.props.match.params.id);
   }
 
   componentWillReceiveProps(props) {
@@ -36,7 +35,7 @@ export class Account extends React.Component {
       organization_name: props.organization_name || '',
       tax_num: props.tax_num || '',
       payment_num: props.payment_num || '',
-      password: '',
+      password: ''
     };
   };
 
@@ -62,6 +61,11 @@ export class Account extends React.Component {
     }
     return (
       <Fragment>
+        {this.props.error && (
+          <Message negative>
+            <Message.Header>{this.state.errorMsg || this.props.error}</Message.Header>
+          </Message>
+        )}
         <Title>
           <h2>Аккаунт</h2>
         </Title>
@@ -214,16 +218,31 @@ export class Account extends React.Component {
 }
 
 const mapDispatchtoProps = dispatch => bindActionCreators({ buttonAction: updateUserInfo, fetchUserInfo }, dispatch);
-const mapStateToProps = state => ({
-  preloader: state.userinfo.preloader,
-  name: state.userinfo.userinfo.name,
-  family_name: state.userinfo.userinfo.family_name,
-  email: state.userinfo.userinfo.email,
-  eth_account: state.userinfo.userinfo.info.eth_account,
-  organization_name: state.userinfo.userinfo.info.organization_name,
-  tax_num: state.userinfo.userinfo.info.tax_num,
-  payment_num: state.userinfo.userinfo.info.payment_num
-});
+const mapStateToProps = state => {
+  return !state.router.location.pathname.includes('self')
+    ? {
+        preloader: state.userinfo.preloader,
+        error: state.userinfo.error,
+        name: state.userinfo.userinfo.name,
+        family_name: state.userinfo.userinfo.family_name,
+        email: state.userinfo.userinfo.email,
+        eth_account: state.userinfo.userinfo.info.eth_account,
+        organization_name: state.userinfo.userinfo.info.organization_name,
+        tax_num: state.userinfo.userinfo.info.tax_num,
+        payment_num: state.userinfo.userinfo.info.payment_num
+      }
+    : {
+        preloader: state.userinfo.preloader,
+        error: state.userinfo.error,
+        name: state.userinfo.selfinfo.name,
+        family_name: state.userinfo.selfinfo.family_name,
+        email: state.userinfo.selfinfo.email,
+        eth_account: state.userinfo.selfinfo.info.eth_account,
+        organization_name: state.userinfo.selfinfo.info.organization_name,
+        tax_num: state.userinfo.selfinfo.info.tax_num,
+        payment_num: state.userinfo.selfinfo.info.payment_num
+      };
+};
 
 export default connect(
   mapStateToProps,
