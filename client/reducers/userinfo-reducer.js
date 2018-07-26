@@ -24,7 +24,8 @@ export default function userInfoReducer(state = initialState, action) {
         return {
           ...state,
           preloader: false,
-          selfinfo: action.payload
+          selfinfo: action.payload,
+          events: action.events,
         };
       else
         return {
