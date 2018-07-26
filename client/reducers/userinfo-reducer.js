@@ -11,7 +11,8 @@ import { USER_LOGOUT } from '../constant/login-consts';
 const initialState = {
   preloader: false,
   userinfo: { info: {} },
-  selfinfo: { info: {} }
+  selfinfo: { info: {} },
+  events: []
 };
 
 export default function userInfoReducer(state = initialState, action) {

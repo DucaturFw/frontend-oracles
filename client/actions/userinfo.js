@@ -34,6 +34,7 @@ export const fetchUserInfo = id => {
         dispatch({
           type: FETCH_USERINFO_SUCCESS,
           payload: id === 'self' ? res.data.self : res.data,
+          events: id === 'self' ? res.data.events : getState().userinfo.selfinfo.events,
           self: id === 'self'
         });
       })
