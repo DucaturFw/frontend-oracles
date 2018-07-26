@@ -15,7 +15,7 @@ export class Account extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchUserInfo(this.props.match.params.id);
+    if (!this.props.register) this.props.fetchUserInfo(this.props.match.params.id);
   }
 
   componentWillReceiveProps(props) {

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Route } from 'react-router-dom';
+import {Redirect, Route} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from './store';
 import history from './store/history';
@@ -24,9 +24,6 @@ import Login from './components/login/index';
 import { ConnectedRouter } from 'connected-react-router';
 import Register from './components/userinfo/register';
 
-const store = configureStore();
-window.store = store;
-
 const App = ({ authenticated }) => (
   <ThemeProvider theme={theme}>
     <ConnectedRouter history={history}>
@@ -46,6 +43,7 @@ const App = ({ authenticated }) => (
         <Fragment>
           <Route exact path="/register" component={Register} />
           <Route exact path="/" component={Login} />
+          <Redirect to={'/'} />
         </Fragment>
       )}
     </ConnectedRouter>
@@ -58,6 +56,7 @@ const mapStateToProps = state => ({
 
 const ConnApp = connect(mapStateToProps)(App);
 
+const store = configureStore();
 const WrapApp = () => {
   return (
     <Provider store={store}>
