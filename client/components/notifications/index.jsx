@@ -14,6 +14,9 @@ class Notifications extends React.Component {
   componentWillMount() {
     this.props.fetchNotifications();
   }
+  componentDidMount() {
+    setTimeout(() => this.props.updateNotifications(), 5000);
+  }
   closePopup = () => {
     this.setState({ showPopup: false });
   };

@@ -32,7 +32,7 @@ export const fetchNotifications = () => {
 };
 
 export const updateNotifications = () => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const hash = localStorage.getItem('hash');
     const notifications = getState().notifications.notifications.filter(item => item.seen === false);
     console.log(notifications);
@@ -62,6 +62,6 @@ export const updateNotifications = () => {
         .catch(err => dispatch({ type: UPDATE_NOTIFICATIONS_FAILED }));
     });
     dispatch({ type: UPDATE_NOTIFICATIONS_SUCCESS });
-    dispatch(fetchNotifications());
+    await dispatch(fetchNotifications());
   };
 };
