@@ -58,11 +58,16 @@ export const changeStatusFilter = status => {
 
 const mapperTable = array => {
   return array.map(item => {
+    const owner = item.in_party.filter(el => {
+      return el.id === item.stages[item.finished].owner;
+    });
+    console.log(owner);
     return {
       id: item.id,
       client: item.in_party.length > 0 ? `${item.in_party[0].name} ${item.in_party[0].family_name}` : '',
       executer: item.in_party.length > 1 ? `${item.in_party[0].name} ${item.in_party[0].family_name}` : '',
       starttime: item.stages.length > 0 ? item.stages[0].start : '',
+      owner: `${owner[0].name} ${owner[0].family_name}`,
       dispute: item.stages.length > 0 ? item.stages[0].dispute_start_allowed : '',
       status: assignStatus(item.finished)
     };

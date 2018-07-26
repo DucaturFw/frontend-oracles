@@ -37,7 +37,7 @@ export default function myContractsReducer(state = initialState, action) {
     case CHANGE_EXECUTER_FILTER:
       return { ...state, executer: action.payload };
     case CHANGE_STATUS_FILTER:
-      return { ...state, executer: action.payload };
+      return { ...state, status: action.payload };
   }
 
   return state;
