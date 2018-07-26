@@ -190,7 +190,7 @@ class CreateContract extends React.Component {
           <Loader indeterminate>Creating contract</Loader>
         </Dimmer>
         <Title>
-          <h2>CREATE NEW CONTRACT</h2>
+          <h2>Заключить новый контракт</h2>
         </Title>
         <Wrap>
           <Form>

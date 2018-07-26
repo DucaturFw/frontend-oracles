@@ -22,8 +22,8 @@ class Header extends React.Component {
             </a>
           </Logo>
           <Menu>
-            <StyledLink to={'/create'}>New Contract</StyledLink>
-            <StyledLink to={'/contracts'}>My Contracts</StyledLink>
+            <StyledLink to={'/create'}>Новый Контракт</StyledLink>
+            <StyledLink to={'/contracts'}>Мои контракты</StyledLink>
           </Menu>
         </Left>
         <Right>
