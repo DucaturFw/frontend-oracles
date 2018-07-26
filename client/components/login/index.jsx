@@ -5,6 +5,7 @@ import FA from 'react-fontawesome';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { authorization } from '../../actions/login';
+import { Link } from 'react-router-dom';
 
 class Login extends React.Component {
   state = {
@@ -70,6 +71,7 @@ class Login extends React.Component {
                 <div />
               )}
             </Form>
+            <Link to={'/register'}>Регистрация</Link>
           </Grid.Column>
         </Grid>
       </Wrap>

@@ -4,12 +4,12 @@ import styled from 'styled-components';
 import ducatur from './logo.png';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchUserInfo } from '../../actions/userinfo';
+import { fetchUserInfo, logout } from '../../actions/userinfo';
 import iconmenu from './iconmenu.png';
 
 class Header extends React.Component {
   componentWillMount() {
-    this.props.fetchUserInfo();
+    this.props.fetchUserInfo('self');
   }
 
   render() {
@@ -28,21 +28,21 @@ class Header extends React.Component {
         </Left>
         <Right>
           <Name>
-            <UserInfoLink to={'/userinfo'}>
+            <UserInfoLink to={'/userinfo/self'}>
               {this.props.name} {this.props.family_name}
             </UserInfoLink>
           </Name>
           <Notification>
             <NotificationLink to={'/notifications'}>0</NotificationLink>
           </Notification>
-          <img src={iconmenu} />
+          <img src={iconmenu} onClick={this.props.logout}/>
         </Right>
       </Wrap>
     );
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUserInfo }, dispatch);
+const mapDispatchtoProps = dispatch => bindActionCreators({ fetchUserInfo, logout }, dispatch);
 const mapStateToProps = state => ({
   name: state.userinfo.userinfo.name,
   family_name: state.userinfo.userinfo.family_name

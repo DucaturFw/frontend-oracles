@@ -7,14 +7,18 @@ import {
   UPDATE_USERINFO_SUCCESS,
   UPDATE_USERINFO_FAILED
 } from '../constant/userinfo-consts';
+import { push } from 'connected-react-router';
+import { USER_LOGOUT } from '../constant/login-consts';
+
 const host = require('../config').host;
-export const fetchUserInfo = () => {
+
+export const fetchUserInfo = id => {
   return async (dispatch, getState) => {
     if (getState().userinfo.userinfo.id) return;
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_USERINFO_START });
     await axios
-      .get(`${host}/users/self`, {
+      .get(`${host}/users/${id}`, {
         headers: {
           Authorization: 'Basic ' + hash
         }
@@ -22,7 +26,7 @@ export const fetchUserInfo = () => {
       .then(res => {
         dispatch({
           type: FETCH_USERINFO_SUCCESS,
-          payload: res.data.self
+          payload: id === 'self' ? res.data.self : res.data
         });
       })
       .catch(err => dispatch({ type: FETCH_USERINFO_FAILED }));
@@ -89,6 +93,14 @@ export const updateUserInfo = state => {
     dispatch({
       type: UPDATE_USERINFO_SUCCESS
     });
-    dispatch(fetchUserInfo());
+    dispatch(fetchUserInfo('self'));
+  };
+};
+
+export const logout = () => {
+  return dispatch => {
+    localStorage.removeItem('hash');
+    dispatch({ type: USER_LOGOUT });
+    dispatch(push('/'));
   };
 };

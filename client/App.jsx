@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Router, Route, Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from './store';
 import history from './store/history';
@@ -22,18 +22,11 @@ import UserInfo from './components/userinfo/index';
 import Notifications from './components/notifications/index';
 import Login from './components/login/index';
 import { ConnectedRouter } from 'connected-react-router';
+import Register from './components/userinfo/register';
 
 const store = configureStore();
 window.store = store;
-const Register = () => {
-  return (
-    <Container>
-      <MainContent>
-        <UserInfo />
-      </MainContent>
-    </Container>
-  );
-};
+
 class App extends Component {
   render() {
     const { authenticated } = this.props;
@@ -41,14 +34,14 @@ class App extends Component {
     return (
       <ThemeProvider theme={theme}>
         <ConnectedRouter history={history}>
-          {authenticated || localStorage.getItem('login') ? (
+          {authenticated || localStorage.getItem('hash') ? (
             <Container>
               <Header />
               <MainContent>
                 <Route exact path="/create" component={CreateContract} />
                 <Route exact path="/contracts" component={ContractList} />
                 <Route path="/contracts/:id" component={Contract} />
-                <Route exact path="/userinfo" component={UserInfo} />
+                <Route exact path="/userinfo/:id" component={UserInfo} />
                 <Route exact path="/notifications" component={Notifications} />
               </MainContent>
               <Footer />
