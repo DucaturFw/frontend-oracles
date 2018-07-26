@@ -129,7 +129,7 @@ const mapStateToProps = state => ({
   clients: state.mycontracts.clients,
   executers: state.mycontracts.executers,
   statuses: state.mycontracts.statuses,
-  user_id: state.userinfo.userinfo.id,
+  user_id: state.userinfo.selfinfo.id,
   client: state.mycontracts.client,
   executer: state.mycontracts.executer
 });
