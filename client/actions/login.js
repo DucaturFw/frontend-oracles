@@ -14,12 +14,12 @@ export function authorization(login, password) {
       })
       .then(res => {
         console.log(res);
+        localStorage.setItem('hash', `${Buffer.from(`${login}:${password}`).toString('base64')}`);
         dispatch({
           type: USER_LOGIN_SUCCESS,
           login: login,
           password: password
         });
-        localStorage.setItem('hash', `${Buffer.from(`${login}:${password}`).toString('base64')}`);
         dispatch(push('/create'));
       })
       .catch(err => dispatch({ type: USER_LOGIN_FAILED }));

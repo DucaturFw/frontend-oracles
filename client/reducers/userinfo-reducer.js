@@ -6,11 +6,14 @@ import {
   UPDATE_USERINFO_SUCCESS,
   UPDATE_USERINFO_FAILED
 } from '../constant/userinfo-consts';
+import { USER_LOGOUT } from '../constant/login-consts';
+
 const initialState = {
   preloader: false,
   userinfo: { info: {} },
   selfinfo: { info: {} }
 };
+
 export default function userInfoReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_USERINFO_START:
@@ -36,6 +39,8 @@ export default function userInfoReducer(state = initialState, action) {
       return { ...state, preloader: false };
     case UPDATE_USERINFO_FAILED:
       return { ...state, preloader: false, error: action.error };
+    case USER_LOGOUT:
+      return initialState;
   }
 
   return state;

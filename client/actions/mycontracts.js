@@ -13,12 +13,12 @@ export const fetchContracts = () => {
   return (dispatch, getState) => {
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_CONTRACTS_START });
-    if (!getState().userinfo.userinfo.id) {
+    if (!getState().userinfo.selfinfo.id) {
       dispatch({ type: FETCH_CONTRACTS_FAILED });
       return;
     }
     axios
-      .get(`${host}/contracts/?party__in=${getState().userinfo.userinfo.id}`, {
+      .get(`${host}/contracts/?party__in=${getState().userinfo.selfinfo.id}`, {
         headers: {
           Authorization: 'Basic ' + hash
         }
@@ -101,12 +101,12 @@ const mapperFilterStatus = array => {
 const assignStatus = item => {
   switch (item) {
     case item === 0:
-      return 'идет';
+      return 'активен';
     case item === 1:
       return 'ожидает завершения';
     case item === 2:
       return 'завершен';
     default:
-      return 'идет';
+      return 'активен';
   }
 };

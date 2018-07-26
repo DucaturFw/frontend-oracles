@@ -51,7 +51,7 @@ const App = ({ authenticated }) => (
 );
 
 const mapStateToProps = state => ({
-  authenticated: state.login.authenticated
+  authenticated: state.login.authenticated || localStorage.getItem('hash')
 });
 
 const ConnApp = connect(mapStateToProps)(App);

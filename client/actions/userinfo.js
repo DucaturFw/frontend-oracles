@@ -25,7 +25,7 @@ export const fetchUserInfo = id => {
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_USERINFO_START });
     await axios
-      .get(`${host}/users/${id}`, {
+      .get(`${host}/users/${id}/`, {
         headers: {
           Authorization: 'Basic ' + hash
         }

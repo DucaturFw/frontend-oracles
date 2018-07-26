@@ -16,8 +16,7 @@ import { contractFilter } from '../../selectors/mycontracts';
 
 class ContractList extends React.Component {
   componentWillMount() {
-    let res = this.props.fetchContracts();
-    if (!res) this.props.fetchContracts();
+    this.props.fetchContracts();
   }
 
   componentDidUpdate(prevProps) {
@@ -138,6 +137,7 @@ export default connect(
   mapStateToProps,
   mapDispatchtoProps
 )(ContractList);
+
 const LoadingWrap = styled.div`
   height: 400px;
   text-align: center;
