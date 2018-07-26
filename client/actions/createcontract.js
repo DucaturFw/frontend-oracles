@@ -72,7 +72,8 @@ export const createContract = data => {
         const accounts = await web3.eth.getAccounts();
         console.log('Sending from Metamask account: ' + accounts[0]);
 
-        let party = res.data.in_party.map(u => u.eth_account);
+        console.log(res.data.in_party);
+        let party = res.data.in_party.map(u => u.info.eth_account);
         let stages_starts = [],
           stages_dispute_starts = [],
           stages_owners = [];

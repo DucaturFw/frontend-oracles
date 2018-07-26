@@ -5,24 +5,32 @@ import file from './file.png';
 import Dispute from '../modals/dispute';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchContract } from '../../actions/contract';
+import { fetchContract, finishCase, openDispute } from '../../actions/contract';
+import moment from 'moment';
+import { Message } from 'semantic-ui-react';
+import { DELETE_MESSAGE } from '../../constant/contract-consts';
 
 class Contract extends React.Component {
   componentWillMount() {
     this.props.fetchContract(this.props.match.params.id);
   }
-  state = { showPopup: false };
+  state = { showPopup: false, disputeOn: null };
 
-  onDisputeClick = () => {
-    this.setState({ showPopup: true });
+  onDisputeClick = idx => {
+    this.setState({ showPopup: true, disputeOn: idx });
   };
 
   closePopup = () => {
-    this.setState({ showPopup: false });
+    this.setState({ showPopup: false, disputeOn: null });
+  };
+
+  openDispute = () => {
+    this.props.openDispute(this.props.match.params.id, this.state.disputeOn);
+    this.setState({ showPopup: false, disputeOn: null });
   };
 
   render() {
-    if (!this.props.contract.id) {
+    if (!this.props.contract.id || this.props.loading) {
       return (
         <Wrap>
           <LoadingWrap>
@@ -44,16 +52,24 @@ class Contract extends React.Component {
 
     return (
       <Fragment>
+        {this.props.msg && (
+          <Message positive>
+            <Message.Header>
+              <span
+                style={{ color: '#ffbbbb', cursor: 'pointer' }}
+                onClick={() => this.props.dispatch({ type: DELETE_MESSAGE })}
+              >
+                X
+              </span>
+              {this.props.msg}
+            </Message.Header>
+          </Message>
+        )}
         <Title>
-          <h2>Contract #{this.props.contract.id}</h2>
+          <h2>Контракт #{this.props.contract.id}</h2>
         </Title>
         <Wrap>
-          <Dispute
-            showPopup={this.state.showPopup}
-            close={() => {
-              this.closePopup();
-            }}
-          />
+          <Dispute showPopup={this.state.showPopup} close={this.closePopup} openDispute={this.openDispute} />
 
           <Wrap2>
             <StepBlock>
@@ -74,7 +90,8 @@ class Contract extends React.Component {
                 <TitleField>
                   <b>Заказчик: </b>
                   {this.props.contract.in_party.length > 0
-                    ? this.props.contract.in_party[0].info.organization_name
+                    ? `${this.props.contract.in_party[0].info.organization_name}
+                     (${this.props.contract.in_party[0].name} ${this.props.contract.in_party[0].family_name})`
                     : ''}
                 </TitleField>
               </Item>
@@ -82,7 +99,8 @@ class Contract extends React.Component {
                 <Item key={'developed_by'}>
                   <TitleField>
                     <b>Испонитель: </b>
-                    {this.props.contract.in_party[1].info.organization_name}
+                    {`${this.props.contract.in_party[1].info.organization_name}
+                     (${this.props.contract.in_party[1].name} ${this.props.contract.in_party[1].family_name})`}
                   </TitleField>
                 </Item>
               )}
@@ -95,6 +113,7 @@ class Contract extends React.Component {
               return (
                 <Block key={idx}>
                   <Stage>Этап {idx + 1}</Stage>
+                  {stage.dispute_started && `Открыт диспут: ${stage.dispute_started} (${stage.dispute_starter})`}
                   <Item>
                     <TitleField>
                       <b>Начало действия: </b>
@@ -107,6 +126,11 @@ class Contract extends React.Component {
                       {stage.dispute_start_allowed}
                     </TitleField>
                   </Item>
+                  {moment(stage.dispute_start_allowed, 'YYYY-MM-DD').toDate() < new Date() && (
+                    <ButtonsBlock>
+                      <ButtonOpenDispute onClick={() => this.onDisputeClick(idx)}>Открыть диспут</ButtonOpenDispute>
+                    </ButtonsBlock>
+                  )}
                 </Block>
               );
             })}
@@ -129,8 +153,7 @@ class Contract extends React.Component {
               </File>
             </FilesBlock>
             <ButtonsBlock>
-              <ButtonOpenDispute onClick={() => this.onDisputeClick()}>Открыть диспут</ButtonOpenDispute>
-              <ButtonCloseContract>Завершить контракт</ButtonCloseContract>
+              <ButtonCloseContract onClick={() => this.props.finishCase(this.props.match.params.id)}>Завершить контракт</ButtonCloseContract>
             </ButtonsBlock>
           </Wrap2>
         </Wrap>
@@ -139,9 +162,14 @@ class Contract extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ fetchContract: fetchContract }, dispatch);
+const mapDispatchtoProps = dispatch => ({
+  dispatch,
+  ...bindActionCreators({ fetchContract, openDispute, finishCase }, dispatch)
+});
 const mapStateToProps = state => ({
-  contract: state.contract.contract
+  contract: state.contract.contract,
+  loading: state.contract.preloading,
+  msg: state.contract.msg
 });
 
 export default connect(

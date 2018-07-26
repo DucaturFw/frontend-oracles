@@ -25,7 +25,7 @@ export default class Dispute extends Component {
             </ButtonCancel>
             <ButtonOpenDispute
               onClick={() => {
-                this.props.close();
+                this.props.openDispute();
               }}
             >
               Открыть диспут
