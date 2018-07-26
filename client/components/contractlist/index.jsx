@@ -5,13 +5,16 @@ import { Dropdown } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { fetchContracts } from '../../actions/mycontracts';
-import { push } from 'connected-react-router'
-
-const data = [];
+import { push } from 'connected-react-router';
+import {
+  fetchContracts,
+  changeClientFilter,
+  changeExecuterFilter,
+  changeStatusFilter
+} from '../../actions/mycontracts';
+import { contractFilter } from '../../selectors/mycontracts';
 
 class ContractList extends React.Component {
-
   componentWillMount() {
     let res = this.props.fetchContracts();
     if (!res) this.props.fetchContracts();
@@ -21,6 +24,16 @@ class ContractList extends React.Component {
     if (!prevProps.user_id && this.props.user_id) this.props.fetchContracts();
   }
 
+  changeClientFilter = (event, data) => {
+    this.props.changeClientFilter(data.value);
+  };
+  changeExecuterFilter = (event, data) => {
+    this.props.changeExecuterFilter(data.value);
+  };
+
+  changeStatusFilter = (event, data) => {
+    this.props.changeStatusFilter(data.value);
+  };
   render() {
     const options = {
       onRowClick: row => {
@@ -46,9 +59,29 @@ class ContractList extends React.Component {
         <Wrap>
           <FilterBlock>
             <TitleFilter>Filter by </TitleFilter>
-            <StyledDropdown size="mini" search selection options={data} />
-            <StyledDropdown size="mini" search selection options={this.props.clients} />
-            <StyledDropdown size="mini" search selection options={this.props.executers} />
+            <StyledDropdown
+              size="mini"
+              onChange={this.changeStatusFilter}
+              search
+              selection
+              options={this.props.statuses}
+            />
+            <StyledDropdown
+              size="mini"
+              onChange={this.changeClientFilter}
+              value={this.props.client}
+              search
+              selection
+              options={this.props.clients}
+            />
+            <StyledDropdown
+              size="mini"
+              onChange={this.changeExecuterFilter}
+              value={this.props.executer}
+              search
+              selection
+              options={this.props.executers}
+            />
             <CreateContract
               onClick={() => {
                 this.props.dispatch(push('/create'));
@@ -86,13 +119,19 @@ class ContractList extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => ({ dispatch, ...bindActionCreators({ fetchContracts }, dispatch) });
+const mapDispatchtoProps = dispatch => ({
+  dispatch,
+  ...bindActionCreators({ fetchContracts, changeClientFilter, changeExecuterFilter, changeStatusFilter }, dispatch)
+});
 const mapStateToProps = state => ({
   preloader: state.mycontracts.preloader,
-  contracts: state.mycontracts.contracts,
+  contracts: contractFilter(state),
   clients: state.mycontracts.clients,
   executers: state.mycontracts.executers,
-  user_id: state.userinfo.userinfo.id
+  statuses: state.mycontracts.statuses,
+  user_id: state.userinfo.userinfo.id,
+  client: state.mycontracts.client,
+  executer: state.mycontracts.executer
 });
 
 export default connect(
