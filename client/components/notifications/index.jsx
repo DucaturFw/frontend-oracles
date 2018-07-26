@@ -9,14 +9,25 @@ import { fetchNotifications, updateNotifications } from '../../actions/notificat
 import eventtypes from './eventtypes';
 import icon from './oval.png';
 import icongrey from './icongrey.png';
+
 class Notifications extends React.Component {
-  state = { showPopup: false, eventText: '' };
+  state = {
+    showPopup: false,
+    eventText: ''
+  };
+
   componentWillMount() {
     this.props.fetchNotifications();
   }
+
   componentDidMount() {
-    setTimeout(() => this.props.updateNotifications(), 5000);
+    this.timeout = setTimeout(() => this.props.updateNotifications(), 5000);
   }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
   closePopup = () => {
     this.setState({ showPopup: false });
   };
@@ -41,6 +52,7 @@ class Notifications extends React.Component {
       );
     });
   };
+
   render() {
     if (this.props.preloader) {
       return (
@@ -87,6 +99,7 @@ export default connect(
   mapStateToProps,
   mapDispatchtoProps
 )(Notifications);
+
 const LoadingWrap = styled.div`
   height: 400px;
   text-align: center;

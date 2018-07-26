@@ -7,14 +7,25 @@ import {
   UPDATE_USERINFO_SUCCESS,
   UPDATE_USERINFO_FAILED
 } from '../constant/userinfo-consts';
+import { push } from 'connected-react-router';
+import { USER_LOGOUT } from '../constant/login-consts';
+
 const host = require('../config').host;
-export const fetchUserInfo = () => {
+
+export const fetchUserInfo = id => {
   return async (dispatch, getState) => {
-    if (getState().userinfo.userinfo.id) return;
+    if (id === 'self' && getState().userinfo.selfinfo.id) {
+      dispatch({
+        type: FETCH_USERINFO_SUCCESS,
+        payload: getState().userinfo.selfinfo,
+        self: false
+      });
+      return;
+    }
     const hash = localStorage.getItem('hash');
     dispatch({ type: FETCH_USERINFO_START });
     await axios
-      .get(`${host}/users/self`, {
+      .get(`${host}/users/${id}`, {
         headers: {
           Authorization: 'Basic ' + hash
         }
@@ -22,10 +33,11 @@ export const fetchUserInfo = () => {
       .then(res => {
         dispatch({
           type: FETCH_USERINFO_SUCCESS,
-          payload: res.data.self
+          payload: id === 'self' ? res.data.self : res.data,
+          self: id === 'self'
         });
       })
-      .catch(err => dispatch({ type: FETCH_USERINFO_FAILED }));
+      .catch(err => dispatch({ type: FETCH_USERINFO_FAILED, error: 'User does not exist or you do not have permissions.'}));
   };
 };
 
@@ -84,11 +96,19 @@ export const updateUserInfo = state => {
           console.log(res);
         });
     } catch (err) {
-      dispatch({ type: UPDATE_USERINFO_FAILED });
+      dispatch({ type: UPDATE_USERINFO_FAILED, error: 'Failed: do you have proper permissions?' });
     }
     dispatch({
       type: UPDATE_USERINFO_SUCCESS
     });
-    dispatch(fetchUserInfo());
+    dispatch(fetchUserInfo('self'));
+  };
+};
+
+export const logout = () => {
+  return dispatch => {
+    localStorage.removeItem('hash');
+    dispatch({ type: USER_LOGOUT });
+    dispatch(push('/'));
   };
 };

@@ -5,6 +5,7 @@ import notifications from '../reducers/notifications-reducer';
 import userinfo from '../reducers/userinfo-reducer';
 import login from '../reducers/login-reducer';
 import contract from '../reducers/contract-reducer';
+import register from '../reducers/register-reducer';
 
 export const rootReducer = combineReducers({
   mycontracts,
@@ -12,5 +13,6 @@ export const rootReducer = combineReducers({
   notifications,
   userinfo,
   login,
-  contract
+  contract,
+  register,
 });

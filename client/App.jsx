@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Router, Route, Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from './store';
 import history from './store/history';
@@ -22,48 +22,36 @@ import UserInfo from './components/userinfo/index';
 import Notifications from './components/notifications/index';
 import Login from './components/login/index';
 import { ConnectedRouter } from 'connected-react-router';
+import Register from './components/userinfo/register';
 
 const store = configureStore();
 window.store = store;
-const Register = () => {
-  return (
-    <Container>
-      <MainContent>
-        <UserInfo />
-      </MainContent>
-    </Container>
-  );
-};
-class App extends Component {
-  render() {
-    const { authenticated } = this.props;
 
-    return (
-      <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          {authenticated || localStorage.getItem('login') ? (
-            <Container>
-              <Header />
-              <MainContent>
-                <Route exact path="/create" component={CreateContract} />
-                <Route exact path="/contracts" component={ContractList} />
-                <Route path="/contracts/:id" component={Contract} />
-                <Route exact path="/userinfo" component={UserInfo} />
-                <Route exact path="/notifications" component={Notifications} />
-              </MainContent>
-              <Footer />
-            </Container>
-          ) : (
-            <Fragment>
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/" component={Login} />
-            </Fragment>
-          )}
-        </ConnectedRouter>
-      </ThemeProvider>
-    );
-  }
-}
+const App = ({ authenticated }) => (
+  <ThemeProvider theme={theme}>
+    <ConnectedRouter history={history}>
+      {authenticated ? (
+        <Container>
+          <Header />
+          <MainContent>
+            <Route exact path="/create" component={CreateContract} />
+            <Route exact path="/contracts" component={ContractList} />
+            <Route path="/contracts/:id" component={Contract} />
+            <Route exact path="/userinfo/:id" component={UserInfo} />
+            <Route exact path="/notifications" component={Notifications} />
+          </MainContent>
+          <Footer />
+        </Container>
+      ) : (
+        <Fragment>
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/" component={Login} />
+        </Fragment>
+      )}
+    </ConnectedRouter>
+  </ThemeProvider>
+);
+
 const mapStateToProps = state => ({
   authenticated: state.login.authenticated
 });
