@@ -61,6 +61,7 @@ class ContractList extends React.Component {
             <StyledDropdown
               size="mini"
               onChange={this.changeStatusFilter}
+              value={this.props.status}
               search
               selection
               options={this.props.statuses}
@@ -102,14 +103,14 @@ class ContractList extends React.Component {
             <TableHeaderColumn dataSort dataField="starttime">
               Начало
             </TableHeaderColumn>
-            <TableHeaderColumn dataSort dataField="endtime">
-              Завершение
-            </TableHeaderColumn>
             <TableHeaderColumn dataSort dataField="dispute">
               Диспут
             </TableHeaderColumn>
-            <TableHeaderColumn dataSort dataField="status">
+            <TableHeaderColumn dataSort dataField="owner">
               Отвественный
+            </TableHeaderColumn>
+            <TableHeaderColumn dataSort dataField="status">
+              Статус
             </TableHeaderColumn>
           </BootstrapTable>
         </Wrap>
@@ -130,7 +131,8 @@ const mapStateToProps = state => ({
   statuses: state.mycontracts.statuses,
   user_id: state.userinfo.selfinfo.id,
   client: state.mycontracts.client,
-  executer: state.mycontracts.executer
+  executer: state.mycontracts.executer,
+  status: state.mycontracts.status
 });
 
 export default connect(
