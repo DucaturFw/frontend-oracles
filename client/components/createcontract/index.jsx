@@ -80,7 +80,7 @@ class CreateContract extends React.Component {
         start: moment(s.start, 'DD-MM-YYYY').format('YYYY-MM-DD'),
         dispute_start_allowed: moment(s.dispute_start_allowed, 'DD-MM-YYYY').format('YYYY-MM-DD')
       })),
-      files: this.props.hash,
+      files: this.props.hash
     };
 
     this.props.createContract(data);

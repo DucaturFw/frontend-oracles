@@ -49,6 +49,18 @@ export class Account extends React.Component {
     });
   };
 
+  convertIpfsToFiles = () => {
+    console.log(this.props.files);
+    var blob,
+      url,
+      mymeType = 'application/octet-stream';
+    blob = new Blob([this.props.files], {
+      type: mymeType
+    });
+    console.log(blob);
+    url = window.URL.createObjectURL(blob);
+    console.log(url);
+  };
   render() {
     if (this.props.preloader) {
       return (
@@ -68,6 +80,7 @@ export class Account extends React.Component {
         )}
         <Title>
           <h2>Аккаунт</h2>
+          {/* <button onClick={this.convertIpfsToFiles} /> */}
         </Title>
         <Wrap>
           <Wrap2>
@@ -240,7 +253,8 @@ const mapStateToProps = state => {
         eth_account: state.userinfo.selfinfo.info.eth_account,
         organization_name: state.userinfo.selfinfo.info.organization_name,
         tax_num: state.userinfo.selfinfo.info.tax_num,
-        payment_num: state.userinfo.selfinfo.info.payment_num
+        payment_num: state.userinfo.selfinfo.info.payment_num,
+        files: state.userinfo.selfinfo.files
       };
 };
 
