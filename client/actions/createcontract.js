@@ -41,7 +41,7 @@ export const fetchUsers = () => {
   };
 };
 
-export const sendFileIpfs = buffer => {
+export const sendFileIpfs = (buffer, filename) => {
   return async dispatch => {
     dispatch({ type: SEND_FILE_IPFS_START });
     console.log(buffer);
@@ -50,7 +50,7 @@ export const sendFileIpfs = buffer => {
         dispatch({ type: SEND_FILE_IPFS_FAILED });
         return;
       }
-      dispatch({ type:  SEND_FILE_IPFS_SUCCESS, hash: ipfsHash[0].hash });
+      dispatch({ type: SEND_FILE_IPFS_SUCCESS, hash: ipfsHash[0].hash, filename: filename });
       console.log(ipfsHash);
     });
   };
@@ -59,7 +59,11 @@ export const sendFileIpfs = buffer => {
 export const createContract = data => {
   return (dispatch, getState) => {
     const hash = getState().createcontract.hash;
-    data['files'] = hash;
+    const filename = getState().createcontract.filename;
+    const ipfshash = JSON.stringify([{ name: filename, hash: hash }]);
+    data['files'] = ipfshash;
+
+    console.log(ipfshash);
     const loginHash = localStorage.getItem('hash');
     dispatch({ type: CREATE_CONTRACT_START });
     axios
@@ -83,7 +87,7 @@ export const createContract = data => {
           stages_owners.push(res.data.in_party.find(d => d.id === s.owner).eth_account);
         });
         await disputes.methods
-          .openCase(res.data.id, party, stages_starts, stages_dispute_starts, stages_owners, hash)
+          .openCase(res.data.id, party, stages_starts, stages_dispute_starts, stages_owners, ipfshash)
           .send(
             {
               from: accounts[0]

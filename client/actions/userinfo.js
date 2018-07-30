@@ -5,14 +5,10 @@ import {
   FETCH_USERINFO_FAILED,
   UPDATE_USERINFO_START,
   UPDATE_USERINFO_SUCCESS,
-  UPDATE_USERINFO_FAILED,
-  FETCH_IPFS_FILE_START,
-  FETCH_IPFS_FILE_SUCCESS,
-  FETCH_IPFS_FILE_FAILED
+  UPDATE_USERINFO_FAILED
 } from '../constant/userinfo-consts';
 import { push } from 'connected-react-router';
 import { USER_LOGOUT } from '../constant/login-consts';
-import ipfs from '../utils/ipfs';
 
 const host = require('../config').host;
 
@@ -41,7 +37,6 @@ export const fetchUserInfo = id => {
           events: id === 'self' ? res.data.events : getState().userinfo.selfinfo.events,
           self: id === 'self'
         });
-        if (getState().router.location.pathname == '/userinfo/self') dispatch(fetchIpfsFile());
       })
       .catch(err =>
         dispatch({ type: FETCH_USERINFO_FAILED, error: 'User does not exist or you do not have permissions.' })
@@ -118,20 +113,5 @@ export const logout = () => {
     localStorage.removeItem('hash');
     dispatch({ type: USER_LOGOUT });
     dispatch(push('/'));
-  };
-};
-
-export const fetchIpfsFile = () => {
-  return async dispatch => {
-    dispatch({ type: FETCH_IPFS_FILE_START });
-    const validCID = 'Qmb4fqc5Ufr1keYzM2G5hGPaGqaEUUB4mRzJNe1C8bpDmm';
-    await ipfs.files.get(validCID, function(err, files) {
-      if (err) {
-        dispatch({ type: FETCH_IPFS_FILE_FAILED });
-      }
-      console.log(files);
-
-      dispatch({ type: FETCH_IPFS_FILE_SUCCESS, payload: files[0].content });
-    });
   };
 };

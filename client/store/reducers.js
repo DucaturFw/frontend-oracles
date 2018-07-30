@@ -6,6 +6,7 @@ import userinfo from '../reducers/userinfo-reducer';
 import login from '../reducers/login-reducer';
 import contract from '../reducers/contract-reducer';
 import register from '../reducers/register-reducer';
+import ipfs from '../reducers/ipfs-reducer';
 
 export const rootReducer = combineReducers({
   mycontracts,
@@ -15,4 +16,5 @@ export const rootReducer = combineReducers({
   login,
   contract,
   register,
+  ipfs
 });

@@ -4,10 +4,7 @@ import {
   FETCH_USERINFO_FAILED,
   UPDATE_USERINFO_START,
   UPDATE_USERINFO_SUCCESS,
-  UPDATE_USERINFO_FAILED,
-  FETCH_IPFS_FILE_START,
-  FETCH_IPFS_FILE_SUCCESS,
-  FETCH_IPFS_FILE_FAILED
+  UPDATE_USERINFO_FAILED
 } from '../constant/userinfo-consts';
 import { USER_LOGOUT } from '../constant/login-consts';
 
@@ -15,8 +12,7 @@ const initialState = {
   preloader: false,
   userinfo: { info: {} },
   selfinfo: { info: {} },
-  events: [],
-  files: []
+  events: []
 };
 
 export default function userInfoReducer(state = initialState, action) {
@@ -47,12 +43,6 @@ export default function userInfoReducer(state = initialState, action) {
       return { ...state, preloader: false, error: action.error };
     case USER_LOGOUT:
       return initialState;
-    case FETCH_IPFS_FILE_START:
-      return state;
-    case FETCH_IPFS_FILE_SUCCESS:
-      return { ...state, files: action.payload };
-    case FETCH_IPFS_FILE_FAILED:
-      return state;
   }
 
   return state;

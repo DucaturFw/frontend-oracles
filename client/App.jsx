@@ -29,7 +29,7 @@ const App = ({ authenticated }) => (
   <ThemeProvider theme={theme}>
     <ConnectedRouter history={history}>
       {authenticated ? (
-        <Web3Provider>
+        <Web3Wrap>
           <Container>
             <Header />
             <MainContent>
@@ -39,18 +39,18 @@ const App = ({ authenticated }) => (
                 <Route path="/contracts/:id" component={Contract} />
                 <Route exact path="/userinfo/:id" component={UserInfo} />
                 <Route exact path="/notifications" component={Notifications} />
-                <Redirect to={'/create'} />
+                <Redirect to={'/contracts'} />
               </Switch>
             </MainContent>
             <Footer />
           </Container>
-        </Web3Provider>
+        </Web3Wrap>
       ) : (
         <Fragment>
           <Switch>
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/" component={Login} />
-          <Redirect to={'/'} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/" component={Login} />
+            <Redirect to={'/'} />
           </Switch>
         </Fragment>
       )}
@@ -64,6 +64,10 @@ const mapStateToProps = state => ({
 
 const ConnApp = connect(mapStateToProps)(App);
 
+const Web3Wrap = props => {
+  if (window.web3) return <Fragment>{props.children}</Fragment>;
+  return <Web3Provider>{props.children}</Web3Provider>;
+};
 const store = configureStore();
 const WrapApp = () => {
   return (

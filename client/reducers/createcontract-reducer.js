@@ -14,6 +14,7 @@ const initialState = {
   preloader: false,
   users: [],
   hash: '',
+  filename: '',
   contract: {},
   error: '',
   loadingcontract: false
@@ -44,7 +45,7 @@ export default function createContractReducer(state = initialState, action) {
     case SEND_FILE_IPFS_START:
       return { ...state, loadingcontract: true };
     case SEND_FILE_IPFS_SUCCESS:
-      return { ...state, loadingcontract: false, hash: action.hash };
+      return { ...state, loadingcontract: false, hash: action.hash, filename: action.filename };
     case SEND_FILE_IPFS_FAILED:
       return { ...state, loadingcontract: false, error: 'Failed to load to IPFS' };
   }

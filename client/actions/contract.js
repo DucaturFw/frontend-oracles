@@ -1,12 +1,18 @@
 import axios from 'axios';
 import web3 from '../utils/contract/web3';
 import {
-  FETCH_CONTRACT_START, FETCH_CONTRACT_SUCCESS, FETCH_CONTRACT_FAILED,
-  DISPUTE_STAGE_START, DISPUTE_STAGE_SUCCESS, DISPUTE_STAGE_FAILED,
-  CASE_FINISH_START, CASE_FINISH_FAILED, CASE_FINISH_SUCCESS
+  FETCH_CONTRACT_START,
+  FETCH_CONTRACT_SUCCESS,
+  FETCH_CONTRACT_FAILED,
+  DISPUTE_STAGE_START,
+  DISPUTE_STAGE_SUCCESS,
+  DISPUTE_STAGE_FAILED,
+  CASE_FINISH_START,
+  CASE_FINISH_FAILED,
+  CASE_FINISH_SUCCESS
 } from '../constant/contract-consts';
 import disputes from '../utils/contract/disputes';
-
+import ipfs from '../utils/ipfs';
 const host = require('../config').host;
 
 export function fetchContract(id) {

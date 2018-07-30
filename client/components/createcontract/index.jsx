@@ -24,7 +24,8 @@ class CreateContract extends React.Component {
       buffer: '',
       myid: null,
       idclient: null,
-      idexecuter: null
+      idexecuter: null,
+      filename: ''
     };
   }
 
@@ -45,6 +46,7 @@ class CreateContract extends React.Component {
   captureFile = event => {
     this.setState({ filename: event.target.files[0].name });
     const file = event.target.files[0];
+    this.setState({ filename: file.name });
     let reader = new window.FileReader();
     reader.readAsArrayBuffer(file);
     reader.onloadend = () => this.convertToBuffer(reader);
@@ -53,7 +55,7 @@ class CreateContract extends React.Component {
   convertToBuffer = async reader => {
     //file is converted to a buffer for upload to IPFS
     const buffer = await Buffer.from(reader.result);
-    this.props.sendFileIpfs(buffer);
+    this.props.sendFileIpfs(buffer, this.state.filename);
   };
 
   createContract = () => {

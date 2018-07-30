@@ -29,6 +29,30 @@ class Contract extends React.Component {
     this.setState({ showPopup: false, disputeOn: null });
   };
 
+  getFiles = () => {
+    const files = JSON.parse(this.props.contract.files);
+    console.log(files);
+    return files.map(item => {
+      return (
+        <Fragment>
+          <File>
+            <a>
+              <img src={file} />
+            </a>
+            <p> {item.name}</p>
+          </File>
+        </Fragment>
+      );
+    });
+  };
+  // convertIpfsToFileLink =(file)=>{
+  //   let    blob = new Blob([file], {
+  //         type:'application/octet-stream'
+  //       });
+  //       console.log(blob);
+  //       url = window.URL.createObjectURL(blob);
+
+  // }
   render() {
     if (!this.props.contract.id || this.props.loading) {
       return (
@@ -138,22 +162,11 @@ class Contract extends React.Component {
               <TitleSegment>МАТЕРИАЛЫ КОНТРАКТА</TitleSegment>
               <Answer>?</Answer>
             </StagesBlock>
-            <FilesBlock>
-              <File>
-                <a>
-                  <img src={file} />
-                </a>
-                <p> Текстконтракта.doc</p>
-              </File>
-              <File>
-                <a>
-                  <img src={file} />
-                </a>
-                <p> NDA.doc</p>
-              </File>
-            </FilesBlock>
+            <FilesBlock>{this.getFiles()}</FilesBlock>
             <ButtonsBlock>
-              <ButtonCloseContract onClick={() => this.props.finishCase(this.props.match.params.id)}>Завершить контракт</ButtonCloseContract>
+              <ButtonCloseContract onClick={() => this.props.finishCase(this.props.match.params.id)}>
+                Завершить контракт
+              </ButtonCloseContract>
             </ButtonsBlock>
           </Wrap2>
         </Wrap>
