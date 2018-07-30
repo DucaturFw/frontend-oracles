@@ -1,5 +1,6 @@
-import React, { Component, Fragment } from 'react';
-import {Redirect, Route} from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { Web3Provider } from 'react-web3';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from './store';
 import history from './store/history';
@@ -28,17 +29,22 @@ const App = ({ authenticated }) => (
   <ThemeProvider theme={theme}>
     <ConnectedRouter history={history}>
       {authenticated ? (
-        <Container>
-          <Header />
-          <MainContent>
-            <Route exact path="/create" component={CreateContract} />
-            <Route exact path="/contracts" component={ContractList} />
-            <Route path="/contracts/:id" component={Contract} />
-            <Route exact path="/userinfo/:id" component={UserInfo} />
-            <Route exact path="/notifications" component={Notifications} />
-          </MainContent>
-          <Footer />
-        </Container>
+        <Web3Provider>
+          <Container>
+            <Header />
+            <MainContent>
+              <Switch>
+                <Route exact path="/create" component={CreateContract} />
+                <Route exact path="/contracts" component={ContractList} />
+                <Route path="/contracts/:id" component={Contract} />
+                <Route exact path="/userinfo/:id" component={UserInfo} />
+                <Route exact path="/notifications" component={Notifications} />
+                <Redirect to={'/create'} />
+              </Switch>
+            </MainContent>
+            <Footer />
+          </Container>
+        </Web3Provider>
       ) : (
         <Fragment>
           <Route exact path="/register" component={Register} />

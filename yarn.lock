@@ -6781,6 +6781,12 @@ react-transition-group@^2.3.1:
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
+react-web3@^0.4.5:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/react-web3/-/react-web3-0.4.5.tgz#c89b9fa51d02be26dcf02e59ee39fbf0d54b6805"
+  dependencies:
+    lodash "^4.17.4"
+
 react@^16.2.0:
   version "16.4.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.4.0.tgz#402c2db83335336fba1962c08b98c6272617d585"
