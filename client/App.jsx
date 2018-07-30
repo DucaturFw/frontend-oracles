@@ -47,9 +47,11 @@ const App = ({ authenticated }) => (
         </Web3Provider>
       ) : (
         <Fragment>
+          <Switch>
           <Route exact path="/register" component={Register} />
           <Route exact path="/" component={Login} />
           <Redirect to={'/'} />
+          </Switch>
         </Fragment>
       )}
     </ConnectedRouter>
