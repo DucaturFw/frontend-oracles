@@ -6,6 +6,7 @@ import Dispute from '../modals/dispute';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchContract, finishCase, openDispute } from '../../actions/contract';
+import { fetchIpfsFile } from '../../actions/ipfs';
 import moment from 'moment';
 import { Message } from 'semantic-ui-react';
 import { DELETE_MESSAGE } from '../../constant/contract-consts';
@@ -32,27 +33,24 @@ class Contract extends React.Component {
   getFiles = () => {
     const files = JSON.parse(this.props.contract.files);
     console.log(files);
-    return files.map(item => {
+    return files.map((item, index) => {
       return (
-        <Fragment>
-          <File>
-            <a>
-              <img src={file} />
-            </a>
+        <Fragment key={index}>
+          <File
+            onClick={() => {
+              this.convertIpfsToFileLink(item.hash, item.name);
+            }}
+          >
+            <img src={file} />
             <p> {item.name}</p>
           </File>
         </Fragment>
       );
     });
   };
-  // convertIpfsToFileLink =(file)=>{
-  //   let    blob = new Blob([file], {
-  //         type:'application/octet-stream'
-  //       });
-  //       console.log(blob);
-  //       url = window.URL.createObjectURL(blob);
-
-  // }
+  convertIpfsToFileLink = (hash, name) => {
+    this.props.fetchIpfsFile(hash, name);
+  };
   render() {
     if (!this.props.contract.id || this.props.loading) {
       return (
@@ -162,7 +160,7 @@ class Contract extends React.Component {
               <TitleSegment>МАТЕРИАЛЫ КОНТРАКТА</TitleSegment>
               <Answer>?</Answer>
             </StagesBlock>
-            <FilesBlock>{this.getFiles()}</FilesBlock>
+            <FilesBlock>{this.props.contract.files != '' ? this.getFiles() : ''}</FilesBlock>
             <ButtonsBlock>
               <ButtonCloseContract onClick={() => this.props.finishCase(this.props.match.params.id)}>
                 Завершить контракт
@@ -177,12 +175,13 @@ class Contract extends React.Component {
 
 const mapDispatchtoProps = dispatch => ({
   dispatch,
-  ...bindActionCreators({ fetchContract, openDispute, finishCase }, dispatch)
+  ...bindActionCreators({ fetchContract, openDispute, finishCase, fetchIpfsFile }, dispatch)
 });
 const mapStateToProps = state => ({
   contract: state.contract.contract,
   loading: state.contract.preloading,
-  msg: state.contract.msg
+  msg: state.contract.msg,
+  file: state.ipfs.files
 });
 
 export default connect(
@@ -302,6 +301,7 @@ const FilesBlock = styled.div`
 const File = styled.div`
   padding: 10px;
   display: flex;
+  flex-folw: row nowrap;
   align-items: center;
   &:first-child {
     margin-right: 5px;

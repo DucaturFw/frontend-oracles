@@ -10,7 +10,7 @@ export default function userInfoReducer(state = initialState, action) {
     case FETCH_IPFS_FILE_START:
       return state;
     case FETCH_IPFS_FILE_SUCCESS:
-      return { ...state, files: action.payload };
+      return state;
     case FETCH_IPFS_FILE_FAILED:
       return state;
   }
