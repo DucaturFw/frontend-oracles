@@ -65,6 +65,7 @@ const mapStateToProps = state => ({
 const ConnApp = connect(mapStateToProps)(App);
 
 const Web3Wrap = props => {
+  console.log(window.web3);
   if (window.web3) return <Fragment>{props.children}</Fragment>;
   return <Web3Provider>{props.children}</Web3Provider>;
 };

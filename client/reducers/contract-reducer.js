@@ -7,7 +7,8 @@ import {
   DISPUTE_STAGE_FAILED,
   CASE_FINISH_START,
   CASE_FINISH_SUCCESS,
-  CASE_FINISH_FAILED, DELETE_MESSAGE
+  CASE_FINISH_FAILED,
+  DELETE_MESSAGE
 } from '../constant/contract-consts';
 
 const initialState = {
@@ -47,7 +48,7 @@ export default function contractReducer(state = initialState, action) {
         msg: 'Your transaction hash: ' + action.msg
       };
     case CASE_FINISH_FAILED:
-      return { ...state, preloader: false };
+      return { ...state, preloader: false, msg: action.payload };
     case DELETE_MESSAGE:
       return { ...state, msg: '' };
   }

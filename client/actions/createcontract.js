@@ -29,9 +29,7 @@ export const fetchUsers = () => {
         }
       })
       .then(res => {
-        console.log(res.data);
         const result = mapperArray(res.data);
-        console.log(result);
         dispatch({
           type: FETCH_USERS_SUCCESS,
           payload: result
@@ -44,14 +42,12 @@ export const fetchUsers = () => {
 export const sendFileIpfs = (buffer, filename) => {
   return async dispatch => {
     dispatch({ type: SEND_FILE_IPFS_START });
-    console.log(buffer);
     ipfs.add(buffer, (err, ipfsHash) => {
       if (err) {
         dispatch({ type: SEND_FILE_IPFS_FAILED });
         return;
       }
       dispatch({ type: SEND_FILE_IPFS_SUCCESS, hash: ipfsHash[0].hash, filename: filename });
-      console.log(ipfsHash);
     });
   };
 };
@@ -75,8 +71,6 @@ export const createContract = data => {
       .then(async res => {
         const accounts = await web3.eth.getAccounts();
         console.log('Sending from Metamask account: ' + accounts[0]);
-
-        console.log(res.data.in_party);
         let party = res.data.in_party.map(u => u.info.eth_account);
         let stages_starts = [],
           stages_dispute_starts = [],
@@ -106,7 +100,6 @@ export const createContract = data => {
           );
       })
       .catch(err => {
-        console.error(err);
         dispatch({
           type: CREATE_CONTRACT_FAILED,
           payload: 'FAILED TO CREATE ON SERVER'

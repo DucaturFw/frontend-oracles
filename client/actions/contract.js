@@ -39,47 +39,54 @@ export function fetchContract(id) {
 export function openDispute(case_id, stage_id) {
   return async dispatch => {
     dispatch({ type: DISPUTE_STAGE_START });
-    const accounts = await web3.eth.getAccounts();
-    console.log('Sending from Metamask account: ' + accounts[0]);
+    try {
+      const accounts = await web3.eth.getAccounts();
+      console.log('Sending from Metamask account: ' + accounts[0]);
 
-    await disputes.methods.openDispute(case_id, stage_id).send(
-      {
-        from: accounts[0]
-      },
-      (error, transactionHash) => {
-        if (error) {
-          dispatch({ type: DISPUTE_STAGE_FAILED, payload: 'FAILED TO SEND TRANSACTION TO BLOCKCHAIN' });
-          return;
+      await disputes.methods.openDispute(case_id, stage_id).send(
+        {
+          from: accounts[0]
+        },
+        (error, transactionHash) => {
+          if (error) {
+            dispatch({ type: DISPUTE_STAGE_FAILED, payload: 'FAILED TO SEND TRANSACTION TO BLOCKCHAIN' });
+            return;
+          }
+          dispatch({
+            type: DISPUTE_STAGE_SUCCESS,
+            msg: transactionHash
+          });
         }
-        dispatch({
-          type: DISPUTE_STAGE_SUCCESS,
-          msg: transactionHash
-        });
-      }
-    );
+      );
+    } catch (error) {
+      dispatch({ type: DISPUTE_STAGE_FAILED, payload: 'FAILED TO SEND TRANSACTION TO BLOCKCHAIN' });
+    }
   };
 }
 
 export function finishCase(case_id) {
   return async dispatch => {
     dispatch({ type: CASE_FINISH_START });
-    const accounts = await web3.eth.getAccounts();
-    console.log('Sending from Metamask account: ' + accounts[0]);
-
-    await disputes.methods.finishCase(case_id).send(
-      {
-        from: accounts[0]
-      },
-      (error, transactionHash) => {
-        if (error) {
-          dispatch({ type: CASE_FINISH_FAILED, payload: 'FAILED TO SEND TRANSACTION TO BLOCKCHAIN' });
-          return;
+    try {
+      const accounts = await web3.eth.getAccounts();
+      console.log('Sending from Metamask account: ' + accounts[0]);
+      await disputes.methods.finishCase(case_id).send(
+        {
+          from: accounts[0]
+        },
+        (error, transactionHash) => {
+          if (error) {
+            dispatch({ type: CASE_FINISH_FAILED, payload: 'FAILED TO SEND TRANSACTION TO BLOCKCHAIN' });
+            return;
+          }
+          dispatch({
+            type: CASE_FINISH_SUCCESS,
+            msg: transactionHash
+          });
         }
-        dispatch({
-          type: CASE_FINISH_SUCCESS,
-          msg: transactionHash
-        });
-      }
-    );
+      );
+    } catch (error) {
+      dispatch({ type: CASE_FINISH_FAILED, payload: 'FAILED TO SEND TRANSACTION TO BLOCKCHAIN' });
+    }
   };
 }
