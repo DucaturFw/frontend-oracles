@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { fetchContract, finishCase, openDispute } from '../../actions/contract';
 import { fetchIpfsFile } from '../../actions/ipfs';
 import moment from 'moment';
-import { Message } from 'semantic-ui-react';
+import { Message, Dimmer, Loader } from 'semantic-ui-react';
 import { DELETE_MESSAGE } from '../../constant/contract-consts';
 
 class Contract extends React.Component {
@@ -87,6 +87,9 @@ class Contract extends React.Component {
             </Message.Header>
           </Message>
         )}
+        <Dimmer active={this.props.preloaderipfs}>
+          <Loader indeterminate>Скачивание файла из ipfs</Loader>
+        </Dimmer>
         <Title>
           <h2>Контракт #{this.props.contract.id}</h2>
         </Title>
@@ -181,7 +184,8 @@ const mapStateToProps = state => ({
   contract: state.contract.contract,
   loading: state.contract.preloading,
   msg: state.contract.msg,
-  file: state.ipfs.files
+  file: state.ipfs.files,
+  preloaderipfs: state.ipfs.preloader
 });
 
 export default connect(

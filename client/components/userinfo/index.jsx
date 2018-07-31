@@ -1,17 +1,23 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import FA from 'react-fontawesome';
+import FileInput from '@team-griffin/react-file-input';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchUserInfo, updateUserInfo } from '../../actions/userinfo';
+import { fetchIpfsFile, sendFileIpfs } from '../../actions/ipfs';
 import doc from './doc.png';
 import scan from './scan.png';
-import { Message } from 'semantic-ui-react';
+import { Message, Dimmer, Loader } from 'semantic-ui-react';
 
 export class Account extends React.Component {
   constructor(props) {
     super(props);
-    this.state = this.mapToState(props);
+    this.state = {
+      ...this.mapToState(props),
+      files: '',
+      filename: ''
+    };
   }
 
   componentWillMount() {
@@ -35,7 +41,7 @@ export class Account extends React.Component {
       organization_name: props.organization_name || '',
       tax_num: props.tax_num || '',
       payment_num: props.payment_num || '',
-      password: ''
+      password: '',
     };
   };
 
@@ -46,6 +52,44 @@ export class Account extends React.Component {
 
     this.setState({
       [name]: value
+    });
+  };
+
+  captureFile = event => {
+    this.setState({ filename: event.target.files[0].name });
+    const file = event.target.files[0];
+    let reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = () => this.convertToBuffer(reader);
+  };
+
+  convertToBuffer = async reader => {
+    //file is converted to a buffer for upload to IPFS
+    const buffer = await Buffer.from(reader.result);
+    await this.props.sendFileIpfs(buffer, this.state.filename);
+    const ipfshash = JSON.stringify([{ name: this.props.filename, hash: this.props.ipfshash }]);
+    this.setState({ files: ipfshash });
+  };
+  convertIpfsToFileLink = (hash, name) => {
+    this.props.fetchIpfsFile(hash, name);
+  };
+
+  getFiles = () => {
+    const files = JSON.parse(this.props.files);
+    console.log(files);
+    return files.map((item, index) => {
+      return (
+        <Fragment key={index}>
+          <File
+            onClick={() => {
+              this.convertIpfsToFileLink(item.hash, item.name);
+            }}
+          >
+            <img src={doc} />
+            <p> {item.name}</p>
+          </File>
+        </Fragment>
+      );
     });
   };
 
@@ -63,9 +107,12 @@ export class Account extends React.Component {
       <Fragment>
         {this.props.error && (
           <Message negative>
-            <Message.Header>{this.state.errorMsg || this.props.error}</Message.Header>
+            <Message.Header>{this.state.errorMsg || this.props.error || this.props.ipfserror}</Message.Header>
           </Message>
         )}
+        <Dimmer active={this.props.ipfspreloader}>
+          <Loader indeterminate />
+        </Dimmer>
         <Title>
           <h2>Аккаунт</h2>
         </Title>
@@ -180,19 +227,19 @@ export class Account extends React.Component {
                 <TitleSegment>Документы</TitleSegment>
               </Segment>
               <FilesBlock>
-                <File>
-                  <a>
-                    <img src={doc} />
-                  </a>
-                  <p>ОГРН.jpg</p>
-                </File>
+                {this.props.files ? this.getFiles() : ''}
                 {(this.props.register || this.props.match.params.id === 'self') && (
                   <File>
-                    <ButtonaddMaterial>
-                      <a>
-                        <img src={scan} />
-                      </a>
-                    </ButtonaddMaterial>
+                    <FileInput
+                      id={'test'}
+                      value={[{ name: this.state.filename }]}
+                      button={
+                        <ButtonaddMaterial>
+                          <img src={scan} />
+                        </ButtonaddMaterial>
+                      }
+                      onChange={this.captureFile}
+                    />
                   </File>
                 )}
               </FilesBlock>
@@ -217,7 +264,8 @@ export class Account extends React.Component {
   }
 }
 
-const mapDispatchtoProps = dispatch => bindActionCreators({ buttonAction: updateUserInfo, fetchUserInfo }, dispatch);
+const mapDispatchtoProps = dispatch =>
+  bindActionCreators({ buttonAction: updateUserInfo, fetchUserInfo, fetchIpfsFile, sendFileIpfs }, dispatch);
 const mapStateToProps = state => {
   return !state.router.location.pathname.includes('self')
     ? {
@@ -229,7 +277,11 @@ const mapStateToProps = state => {
         eth_account: state.userinfo.userinfo.info.eth_account,
         organization_name: state.userinfo.userinfo.info.organization_name,
         tax_num: state.userinfo.userinfo.info.tax_num,
-        payment_num: state.userinfo.userinfo.info.payment_num
+        payment_num: state.userinfo.userinfo.info.payment_num,
+        ipfserror: state.ipfs.error,
+        ipfspreloader: state.ipfs.preloader,
+        ipfshash: state.ipfs.hash,
+        ipfsfilename: state.ipfs.filename
       }
     : {
         preloader: state.userinfo.preloader,
@@ -241,7 +293,11 @@ const mapStateToProps = state => {
         organization_name: state.userinfo.selfinfo.info.organization_name,
         tax_num: state.userinfo.selfinfo.info.tax_num,
         payment_num: state.userinfo.selfinfo.info.payment_num,
-        files: state.userinfo.selfinfo.files
+        files: state.userinfo.selfinfo.files,
+        ipfserror: state.ipfs.error,
+        ipfspreloader: state.ipfs.preloader,
+        ipfshash: state.ipfs.hash,
+        ipfsfilename: state.ipfs.filename
       };
 };
 

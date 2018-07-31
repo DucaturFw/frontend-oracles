@@ -9,7 +9,8 @@ import scan from './scan.png';
 import row from './row.png';
 
 import { DateInput } from 'semantic-ui-calendar-react';
-import { fetchUsers, createContract, sendFileIpfs } from '../../actions/createcontract';
+import { fetchUsers, createContract } from '../../actions/createcontract';
+import { sendFileIpfs } from '../../actions/ipfs';
 import moment from 'moment';
 
 class CreateContract extends React.Component {
@@ -46,7 +47,6 @@ class CreateContract extends React.Component {
   captureFile = event => {
     this.setState({ filename: event.target.files[0].name });
     const file = event.target.files[0];
-    this.setState({ filename: file.name });
     let reader = new window.FileReader();
     reader.readAsArrayBuffer(file);
     reader.onloadend = () => this.convertToBuffer(reader);
@@ -183,13 +183,15 @@ class CreateContract extends React.Component {
     }
     return (
       <Fragment>
-        {(this.state.errorMsg || this.props.error) && (
+        {(this.state.errorMsg || this.props.error || this.props.erroripfs) && (
           <Message negative>
-            <Message.Header>{this.state.errorMsg || this.props.error}</Message.Header>
+            <Message.Header>{this.state.errorMsg || this.props.error || this.props.erroripfs}</Message.Header>
           </Message>
         )}
-        <Dimmer active={this.props.loadingcontract}>
-          <Loader indeterminate>Creating contract</Loader>
+        <Dimmer active={this.props.loadingcontract || this.props.preloaderipfs}>
+          <Loader indeterminate>
+            {this.props.preloaderipfs === true ? 'Загрузка файла в IPFS' : 'Создание контракта'}
+          </Loader>
         </Dimmer>
         <Title>
           <h2>Заключить новый контракт</h2>
@@ -281,7 +283,9 @@ const mapStateToProps = state => ({
   error: state.createcontract.error,
   loadingcontract: state.createcontract.loadingcontract,
   myid: state.userinfo.userinfo.id,
-  hash: state.createcontract.hash
+  hash: state.ipfs.hash,
+  erroripfs: state.ipfs.error,
+  preloaderipfs: state.ipfs.preloader
 });
 
 export default connect(

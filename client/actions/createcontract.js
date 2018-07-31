@@ -3,14 +3,10 @@ import {
   FETCH_USERS_START,
   FETCH_USERS_SUCCESS,
   FETCH_USERS_FAILED,
-  SEND_FILE_IPFS_START,
-  SEND_FILE_IPFS_SUCCESS,
-  SEND_FILE_IPFS_FAILED,
   CREATE_CONTRACT_START,
   CREATE_CONTRACT_SUCCESS,
   CREATE_CONTRACT_FAILED
 } from '../constant/createcontract-consts';
-import ipfs from '../utils/ipfs';
 import web3 from '../utils/contract/web3';
 import { push } from 'connected-react-router';
 import disputes from '../utils/contract/disputes';
@@ -39,23 +35,10 @@ export const fetchUsers = () => {
   };
 };
 
-export const sendFileIpfs = (buffer, filename) => {
-  return async dispatch => {
-    dispatch({ type: SEND_FILE_IPFS_START });
-    ipfs.add(buffer, (err, ipfsHash) => {
-      if (err) {
-        dispatch({ type: SEND_FILE_IPFS_FAILED });
-        return;
-      }
-      dispatch({ type: SEND_FILE_IPFS_SUCCESS, hash: ipfsHash[0].hash, filename: filename });
-    });
-  };
-};
-
 export const createContract = data => {
   return (dispatch, getState) => {
-    const hash = getState().createcontract.hash;
-    const filename = getState().createcontract.filename;
+    const hash = getState().ipfs.hash;
+    const filename = getState().ipfs.filename;
     const ipfshash = JSON.stringify([{ name: filename, hash: hash }]);
     data['files'] = ipfshash;
 

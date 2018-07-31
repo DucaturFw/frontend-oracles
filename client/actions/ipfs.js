@@ -1,4 +1,11 @@
-import { FETCH_IPFS_FILE_START, FETCH_IPFS_FILE_SUCCESS, FETCH_IPFS_FILE_FAILED } from '../constant/ipfs-consts';
+import {
+  FETCH_IPFS_FILE_START,
+  FETCH_IPFS_FILE_SUCCESS,
+  FETCH_IPFS_FILE_FAILED,
+  SEND_FILE_IPFS_START,
+  SEND_FILE_IPFS_FAILED,
+  SEND_FILE_IPFS_SUCCESS
+} from '../constant/ipfs-consts';
 import ipfs from '../utils/ipfs';
 export const fetchIpfsFile = (hash, name) => {
   return async dispatch => {
@@ -22,6 +29,19 @@ export const fetchIpfsFile = (hash, name) => {
       window.URL.revokeObjectURL(url);
 
       dispatch({ type: FETCH_IPFS_FILE_SUCCESS });
+    });
+  };
+};
+
+export const sendFileIpfs = (buffer, filename) => {
+  return async dispatch => {
+    dispatch({ type: SEND_FILE_IPFS_START });
+    ipfs.add(buffer, (err, ipfsHash) => {
+      if (err) {
+        dispatch({ type: SEND_FILE_IPFS_FAILED });
+        return;
+      }
+      dispatch({ type: SEND_FILE_IPFS_SUCCESS, hash: ipfsHash[0].hash, filename: filename });
     });
   };
 };
