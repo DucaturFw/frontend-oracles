@@ -4,12 +4,14 @@ import {
   FETCH_NOTIFICATIONS_FAILED,
   UPDATE_NOTIFICATIONS_START,
   UPDATE_NOTIFICATIONS_SUCCESS,
-  UPDATE_NOTIFICATIONS_FAILED
+  UPDATE_NOTIFICATIONS_FAILED,
+  FETCH_NOTIF_USERS_SUCCESS
 } from '../constant/notifications-consts';
 
 const initialState = {
   preloader: false,
-  notifications: []
+  notifications: [],
+  users: []
 };
 export default function notificationReducer(state = initialState, action) {
   switch (action.type) {
@@ -29,6 +31,8 @@ export default function notificationReducer(state = initialState, action) {
       return state;
     case UPDATE_NOTIFICATIONS_FAILED:
       return state;
+    case FETCH_NOTIF_USERS_SUCCESS:
+      return { ...state, users: action.payload };
   }
 
   return state;

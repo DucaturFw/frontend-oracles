@@ -5,7 +5,8 @@ import {
   FETCH_NOTIFICATIONS_FAILED,
   UPDATE_NOTIFICATIONS_START,
   UPDATE_NOTIFICATIONS_SUCCESS,
-  UPDATE_NOTIFICATIONS_FAILED
+  UPDATE_NOTIFICATIONS_FAILED,
+  FETCH_NOTIF_USERS_SUCCESS
 } from '../constant/notifications-consts';
 
 const host = require('../config').host;
@@ -21,13 +22,24 @@ export const fetchNotifications = () => {
         }
       })
       .then(res => {
-        console.log(res);
         dispatch({
           type: FETCH_NOTIFICATIONS_SUCCESS,
           payload: res.data
         });
+        return axios.get(`${host}/users/`, {
+          headers: {
+            Authorization: 'Basic ' + hash
+          }
+        });
       })
-      .catch(err => dispatch({ type: FETCH_NOTIFICATIONS_FAILED }));
+      .catch(err => dispatch({ type: FETCH_NOTIFICATIONS_FAILED }))
+      .then(res => {
+        dispatch({
+          type: FETCH_NOTIF_USERS_SUCCESS,
+          payload: res.data
+        });
+      })
+      .catch(console.error);
   };
 };
 

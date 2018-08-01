@@ -70,6 +70,7 @@ export class Account extends React.Component {
     const ipfshash = JSON.stringify([{ name: this.props.filename, hash: this.props.ipfshash }]);
     this.setState({ files: ipfshash });
   };
+
   convertIpfsToFileLink = (hash, name) => {
     this.props.fetchIpfsFile(hash, name);
   };
@@ -216,11 +217,6 @@ export class Account extends React.Component {
                   placeholder="Введите ваш ИНН"
                 />
               </Item>
-              {(this.props.register || this.props.match.params.id === 'self') && (
-                <ButtonBlock>
-                  <ButtonSave onClick={this.saveInfo}>{this.props.buttonText || 'Сохранить'}</ButtonSave>
-                </ButtonBlock>
-              )}
             </Block>
             <Block>
               <Segment>
@@ -258,6 +254,11 @@ export class Account extends React.Component {
               </Item>
             </Block>
           </Wrap2>
+          {(this.props.register || this.props.match.params.id === 'self') && (
+            <ButtonBlock>
+              <ButtonSave onClick={this.saveInfo}>{this.props.buttonText || 'Сохранить'}</ButtonSave>
+            </ButtonBlock>
+          )}
         </Wrap>
       </Fragment>
     );
@@ -392,11 +393,11 @@ height:65px;
 `;
 const ButtonBlock = styled.div`
   display: flex;
-  justify-content: flex-end;
-  margin: 40px 0px 0px 300px;
+  justify-content: center;
+  margin: 10px 0px 10px 0;
 `;
 const ButtonSave = styled.div`
-display:flex;
+display: flex;
 justify-content: center;
 align-items: center;
 width:122px

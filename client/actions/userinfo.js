@@ -46,9 +46,8 @@ export const fetchUserInfo = id => {
 
 export const updateUserInfo = state => {
   return (dispatch, getState) => {
-    console.log(state);
-    const userid = getState().userinfo.userinfo.id;
-    const infoid = getState().userinfo.userinfo.info.id;
+    const userid = getState().userinfo.selfinfo.id;
+    const infoid = getState().userinfo.selfinfo.info.id;
     const hash = localStorage.getItem('hash');
     dispatch({ type: UPDATE_USERINFO_START });
     try {
@@ -84,7 +83,7 @@ export const updateUserInfo = state => {
             organization_name: state.organization_name,
             tax_num: state.tax_num,
             payment_num: state.payment_num,
-            files: '',
+            files: JSON.stringify(getState().ipfs),
             user: userid
           }),
           {

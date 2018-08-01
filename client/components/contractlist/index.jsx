@@ -8,7 +8,6 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { push } from 'connected-react-router';
 import {
   fetchContracts,
-  changeClientFilter,
   changeExecuterFilter,
   changeStatusFilter
 } from '../../actions/mycontracts';
@@ -53,11 +52,11 @@ class ContractList extends React.Component {
     return (
       <Fragment>
         <Title>
-          <h2>Contracts List</h2>
+          <h2>Ваши контракты</h2>
         </Title>
         <Wrap>
           <FilterBlock>
-            <TitleFilter>Filter by </TitleFilter>
+            <TitleFilter>Фильтр </TitleFilter>
             <StyledDropdown
               size="mini"
               onChange={this.changeStatusFilter}
@@ -65,14 +64,7 @@ class ContractList extends React.Component {
               search
               selection
               options={this.props.statuses}
-            />
-            <StyledDropdown
-              size="mini"
-              onChange={this.changeClientFilter}
-              value={this.props.client}
-              search
-              selection
-              options={this.props.clients}
+              placeholder={'Статус'}
             />
             <StyledDropdown
               size="mini"
@@ -81,6 +73,7 @@ class ContractList extends React.Component {
               search
               selection
               options={this.props.executers}
+              placeholder={'Исполнитель'}
             />
             <CreateContract
               onClick={() => {
@@ -90,12 +83,9 @@ class ContractList extends React.Component {
               + Создать новый контракт
             </CreateContract>
           </FilterBlock>
-          <BootstrapTable options={options} height="200px" width="300px" data={this.props.contracts}>
-            <TableHeaderColumn dataSort dataField="id">
-              #
-            </TableHeaderColumn>
-            <TableHeaderColumn dataSort dataField="client" isKey={true}>
-              Заказчик
+          <BootstrapTable options={options} height="300px" width="300px" data={this.props.contracts}>
+            <TableHeaderColumn dataSort dataField="id" isKey={true}>
+              ID
             </TableHeaderColumn>
             <TableHeaderColumn dataField="executer" dataSort>
               Исполнитель
@@ -104,7 +94,7 @@ class ContractList extends React.Component {
               Начало
             </TableHeaderColumn>
             <TableHeaderColumn dataSort dataField="dispute">
-              Диспут
+              Возможен диспут
             </TableHeaderColumn>
             <TableHeaderColumn dataSort dataField="owner">
               Отвественный
@@ -121,12 +111,11 @@ class ContractList extends React.Component {
 
 const mapDispatchtoProps = dispatch => ({
   dispatch,
-  ...bindActionCreators({ fetchContracts, changeClientFilter, changeExecuterFilter, changeStatusFilter }, dispatch)
+  ...bindActionCreators({ fetchContracts, changeExecuterFilter, changeStatusFilter }, dispatch)
 });
 const mapStateToProps = state => ({
   preloader: state.mycontracts.preloader,
   contracts: contractFilter(state),
-  clients: state.mycontracts.clients,
   executers: state.mycontracts.executers,
   statuses: state.mycontracts.statuses,
   user_id: state.userinfo.selfinfo.id,
@@ -148,6 +137,7 @@ const LoadingWrap = styled.div`
 
 const Wrap = styled.div`
   max-width: 70rem;
+  min-width: 40%;
   min-height: 20rem;
   background: #ffffff;
   display: flex;

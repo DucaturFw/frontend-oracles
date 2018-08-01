@@ -9,6 +9,7 @@ import { fetchNotifications, updateNotifications } from '../../actions/notificat
 import eventtypes from './eventtypes';
 import icon from './oval.png';
 import icongrey from './icongrey.png';
+import { Link } from 'react-router-dom';
 
 class Notifications extends React.Component {
   state = {
@@ -32,6 +33,39 @@ class Notifications extends React.Component {
     this.setState({ showPopup: false });
   };
 
+  getEventText = item => {
+    let user_by = this.props.users.find(it => it.id == item.user_by);
+    user_by = <Link to={`/users/${user_by}`}>{user_by.info.organization_name || 'Пользователь'}</Link>;
+    switch (item.event_type) {
+      case 'fin':
+        return (
+          <span>
+            <Link to={`/contracts/${item.contract}`}>Контракт</Link> завершен
+          </span>
+        );
+      case 'disp_open':
+        return (
+          <span>
+            В <Link to={`/contracts/${item.contract}`}>контракте</Link> открыт диспут пользователем {user_by}
+          </span>
+        );
+      case 'open':
+        return (
+          <span>
+            <Link to={`/contracts/${item.contract}`}>Контракт</Link> открыт
+          </span>
+        );
+      case 'disp_close':
+        return (
+          <span>
+            В <Link to={`/contracts/${item.contract}`}>контракте</Link> завершен диспут пользователем {user_by}
+          </span>
+        );
+      default:
+        return <Link to={`/users/${user_by}`}>{user_by}</Link>;
+    }
+  };
+
   labels = () => {
     return this.props.notifications.map((item, index) => {
       let date = moment(new Date(item.creation_date)).format('YYYY/MM/DD');
@@ -41,7 +75,7 @@ class Notifications extends React.Component {
             <RowNotificationIcon>{item.seen ? <img src={icongrey} /> : <img src={icon} />}</RowNotificationIcon>
             <RowNotificationText
               onClick={() => {
-                this.setState({ eventText: eventtypes[item.event_type], showPopup: true });
+                this.setState({ eventText: this.getEventText(item), showPopup: true });
               }}
             >
               {eventtypes[item.event_type]}
@@ -92,7 +126,8 @@ class Notifications extends React.Component {
 const mapDispatchtoProps = dispatch => bindActionCreators({ fetchNotifications, updateNotifications }, dispatch);
 const mapStateToProps = state => ({
   preloader: state.notifications.preloader,
-  notifications: state.notifications.notifications
+  notifications: state.notifications.notifications,
+  users: state.notifications.users
 });
 
 export default connect(
@@ -101,14 +136,14 @@ export default connect(
 )(Notifications);
 
 const LoadingWrap = styled.div`
-  height: 400px;
+  // height: 400px;
   text-align: center;
   padding-top: 200px;
 `;
 
 const Wrap = styled.div`
   width: 60rem;
-  height: 20rem;
+  // height: 20rem;
   background: #ffffff;
   display: flex;
   flex-direction: column;
