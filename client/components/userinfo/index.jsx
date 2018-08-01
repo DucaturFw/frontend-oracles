@@ -41,7 +41,7 @@ export class Account extends React.Component {
       organization_name: props.organization_name || '',
       tax_num: props.tax_num || '',
       payment_num: props.payment_num || '',
-      password: '',
+      password: ''
     };
   };
 
@@ -104,6 +104,152 @@ export class Account extends React.Component {
         </Wrap>
       );
     }
+
+    const internals = (
+      <Wrap2>
+        <Block>
+          <Segment>
+            <TitleSegment>Личная информация</TitleSegment>
+          </Segment>
+          <Item>
+            <TitleField>
+              <b>Email </b>
+            </TitleField>
+            <StyledInput
+              disabled={!(this.props.register || this.props.match.params.id === 'self')}
+              value={this.state.email}
+              type={'text'}
+              name={'email'}
+              onChange={this.handleInputChange}
+              placeholder="Введите ваш email"
+            />
+          </Item>
+          {this.props.register && (
+            <Item>
+              <TitleField>
+                <b>Пароль </b>
+              </TitleField>
+              <StyledInput
+                value={this.state.password}
+                type={'password'}
+                name={'password'}
+                onChange={this.handleInputChange}
+                placeholder="Введите ваш пароль"
+              />
+            </Item>
+          )}
+          <Item>
+            <TitleField>
+              <b>Имя</b>
+            </TitleField>
+            <StyledInput
+              value={this.state.name}
+              type={'text'}
+              name={'name'}
+              onChange={this.handleInputChange}
+              placeholder="Введите ваше имя"
+            />
+          </Item>
+
+          <Item>
+            <TitleField>
+              <b>Фамилия </b>
+            </TitleField>
+            <StyledInput
+              disabled={!(this.props.register || this.props.match.params.id === 'self')}
+              value={this.state.family_name}
+              type={'text'}
+              name={'family_name'}
+              onChange={this.handleInputChange}
+              placeholder="Введите вашу фамилию"
+            />
+          </Item>
+
+          <Item>
+            <TitleField>
+              <b>Адрес в сети Ethereum</b>
+            </TitleField>
+            <StyledInput
+              disabled={!(this.props.register || this.props.match.params.id === 'self')}
+              value={this.state.eth_account}
+              type={'text'}
+              name={'eth_account'}
+              onChange={this.handleInputChange}
+              placeholder="Введите ваш eth аккаунт"
+            />
+          </Item>
+
+          <Item>
+            <TitleField>
+              <b>Имя организации</b>
+            </TitleField>
+            <StyledInput
+              disabled={!(this.props.register || this.props.match.params.id === 'self')}
+              value={this.state.organization_name}
+              type={'text'}
+              name={'organization_name'}
+              onChange={this.handleInputChange}
+              placeholder="Введите имя организации"
+            />
+          </Item>
+          <Item>
+            <TitleField>
+              <b>ИНН</b>
+            </TitleField>
+            <StyledInput
+              disabled={!(this.props.register || this.props.match.params.id === 'self')}
+              value={this.state.tax_num}
+              type={'text'}
+              name={'tax_num'}
+              onChange={this.handleInputChange}
+              placeholder="Введите ваш ИНН"
+            />
+          </Item>
+        </Block>
+        <Block>
+          <Segment>
+            <TitleSegment>Документы</TitleSegment>
+          </Segment>
+          <FilesBlock>
+            {this.props.files ? this.getFiles() : ''}
+            {(this.props.register || this.props.match.params.id === 'self') && (
+              <File>
+                <FileInput
+                  id={'test'}
+                  value={[{ name: this.state.filename }]}
+                  button={
+                    <ButtonaddMaterial>
+                      <img src={scan} />
+                    </ButtonaddMaterial>
+                  }
+                  onChange={this.captureFile}
+                />
+              </File>
+            )}
+          </FilesBlock>
+          <Item>
+            <TitleField>
+              <b>Рассчётный счет</b>
+            </TitleField>
+            <StyledInput
+              disabled={!(this.props.register || this.props.match.params.id === 'self')}
+              value={this.state.payment_num}
+              type={'text'}
+              name={'payment_num'}
+              onChange={this.handleInputChange}
+              placeholder="Введите ваш расчётный счёт"
+            />
+          </Item>
+        </Block>
+      </Wrap2>
+    );
+
+    let form = internals;
+
+    if (!this.props.register) {
+      form = <Wrap>{internals}</Wrap>;
+    }
+
     return (
       <Fragment>
         {this.props.error && (
@@ -115,151 +261,14 @@ export class Account extends React.Component {
           <Loader indeterminate />
         </Dimmer>
         <Title>
-          <h2>Аккаунт</h2>
+          <h2>{this.props.buttonText || 'Аккаунт'}</h2>
         </Title>
-        <Wrap>
-          <Wrap2>
-            <Block>
-              <Segment>
-                <TitleSegment>Личная информация</TitleSegment>
-              </Segment>
-              <Item>
-                <TitleField>
-                  <b>Email </b>
-                </TitleField>
-                <StyledInput
-                  disabled={!(this.props.register || this.props.match.params.id === 'self')}
-                  value={this.state.email}
-                  type={'text'}
-                  name={'email'}
-                  onChange={this.handleInputChange}
-                  placeholder="Введите ваш email"
-                />
-              </Item>
-              {this.props.register && (
-                <Item>
-                  <TitleField>
-                    <b>Пароль </b>
-                  </TitleField>
-                  <StyledInput
-                    value={this.state.password}
-                    type={'password'}
-                    name={'password'}
-                    onChange={this.handleInputChange}
-                    placeholder="Введите ваш пароль"
-                  />
-                </Item>
-              )}
-              <Item>
-                <TitleField>
-                  <b>Имя</b>
-                </TitleField>
-                <StyledInput
-                  value={this.state.name}
-                  type={'text'}
-                  name={'name'}
-                  onChange={this.handleInputChange}
-                  placeholder="Введите ваше имя"
-                />
-              </Item>
-
-              <Item>
-                <TitleField>
-                  <b>Фамилия </b>
-                </TitleField>
-                <StyledInput
-                  disabled={!(this.props.register || this.props.match.params.id === 'self')}
-                  value={this.state.family_name}
-                  type={'text'}
-                  name={'family_name'}
-                  onChange={this.handleInputChange}
-                  placeholder="Введите вашу фамилию"
-                />
-              </Item>
-
-              <Item>
-                <TitleField>
-                  <b>Адрес в сети Ethereum</b>
-                </TitleField>
-                <StyledInput
-                  disabled={!(this.props.register || this.props.match.params.id === 'self')}
-                  value={this.state.eth_account}
-                  type={'text'}
-                  name={'eth_account'}
-                  onChange={this.handleInputChange}
-                  placeholder="Введите ваш eth аккаунт"
-                />
-              </Item>
-
-              <Item>
-                <TitleField>
-                  <b>Имя организации</b>
-                </TitleField>
-                <StyledInput
-                  disabled={!(this.props.register || this.props.match.params.id === 'self')}
-                  value={this.state.organization_name}
-                  type={'text'}
-                  name={'organization_name'}
-                  onChange={this.handleInputChange}
-                  placeholder="Введите имя организации"
-                />
-              </Item>
-              <Item>
-                <TitleField>
-                  <b>ИНН</b>
-                </TitleField>
-                <StyledInput
-                  disabled={!(this.props.register || this.props.match.params.id === 'self')}
-                  value={this.state.tax_num}
-                  type={'text'}
-                  name={'tax_num'}
-                  onChange={this.handleInputChange}
-                  placeholder="Введите ваш ИНН"
-                />
-              </Item>
-            </Block>
-            <Block>
-              <Segment>
-                <TitleSegment>Документы</TitleSegment>
-              </Segment>
-              <FilesBlock>
-                {this.props.files ? this.getFiles() : ''}
-                {(this.props.register || this.props.match.params.id === 'self') && (
-                  <File>
-                    <FileInput
-                      id={'test'}
-                      value={[{ name: this.state.filename }]}
-                      button={
-                        <ButtonaddMaterial>
-                          <img src={scan} />
-                        </ButtonaddMaterial>
-                      }
-                      onChange={this.captureFile}
-                    />
-                  </File>
-                )}
-              </FilesBlock>
-              <Item>
-                <TitleField>
-                  <b>Рассчётный счет</b>
-                </TitleField>
-                <StyledInput
-                  disabled={!(this.props.register || this.props.match.params.id === 'self')}
-                  value={this.state.payment_num}
-                  type={'text'}
-                  name={'payment_num'}
-                  onChange={this.handleInputChange}
-                  placeholder="Введите ваш расчётный счёт"
-                />
-              </Item>
-            </Block>
-          </Wrap2>
-          {(this.props.register || this.props.match.params.id === 'self') && (
-            <ButtonBlock>
-              <ButtonSave onClick={this.saveInfo}>{this.props.buttonText || 'Сохранить'}</ButtonSave>
-            </ButtonBlock>
-          )}
-        </Wrap>
+        {form}
+        {(this.props.register || this.props.match.params.id === 'self') && (
+          <ButtonBlock>
+            <ButtonSave onClick={this.saveInfo}>{this.props.buttonText || 'Сохранить'}</ButtonSave>
+          </ButtonBlock>
+        )}
       </Fragment>
     );
   }

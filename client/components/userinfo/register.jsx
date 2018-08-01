@@ -1,6 +1,6 @@
 import React from 'react';
-import { Container } from 'semantic-ui-react';
-import MainContent from '../maincontent';
+import styled from 'styled-components';
+import { Grid, Segment } from 'semantic-ui-react';
 import { Account } from './index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -20,11 +20,20 @@ const Register = connect(
 
 const WrappedRegister = () => {
   return (
-    <Container>
-      <MainContent>
-        <Register />
-      </MainContent>
-    </Container>
+    <Wrap>
+      <Grid textAlign="center" style={{ height: '100%' }} verticalAlign="middle">
+        <Grid.Column style={{ maxWidth: 1200 }}>
+          <Segment stacked>
+            <Register />
+          </Segment>
+        </Grid.Column>
+      </Grid>
+    </Wrap>
   );
 };
 export default WrappedRegister;
+
+const Wrap = styled.div`
+  width: 100%;
+  height: 100%;
+`;

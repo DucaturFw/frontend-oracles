@@ -94,6 +94,7 @@ const LoadingWrap = styled.div`
   text-align: center;
   padding-top: 200px;
 `;
+
 const Wrap = styled.div`
   width: 100%;
   height: 100%;
