@@ -34,11 +34,11 @@ const App = ({ authenticated }) => (
             <Header />
             <MainContent>
               <Switch>
-                <Route path="/create" component={CreateContract} />
-                <Route path="/contracts" component={ContractList} />
-                <Route path="/contracts/:id" component={Contract} />
-                <Route path="/userinfo/:id" component={UserInfo} />
-                <Route path="/notifications" component={Notifications} />
+                <Route exact path="/create" component={CreateContract} />
+                <Route exact path="/contracts/:id" component={Contract} />
+                <Route exact path="/contracts" component={ContractList} />
+                <Route exact path="/userinfo/:id" component={UserInfo} />
+                <Route exact path="/notifications" component={Notifications} />
                 <Redirect to={'/contracts'} />
               </Switch>
             </MainContent>
