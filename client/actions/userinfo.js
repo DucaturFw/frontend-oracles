@@ -11,6 +11,8 @@ import { push } from 'connected-react-router';
 import { USER_LOGOUT } from '../constant/login-consts';
 
 const host = require('../config').host;
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export const fetchUserInfo = id => {
   return async (dispatch, getState) => {

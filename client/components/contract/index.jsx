@@ -15,6 +15,7 @@ class Contract extends React.Component {
   componentWillMount() {
     this.props.fetchContract(this.props.match.params.id);
   }
+
   state = { showPopup: false, disputeOn: null };
 
   onDisputeClick = idx => {
@@ -48,9 +49,11 @@ class Contract extends React.Component {
       );
     });
   };
+
   convertIpfsToFileLink = (hash, name) => {
     this.props.fetchIpfsFile(hash, name);
   };
+
   render() {
     if (!this.props.contract.id || this.props.loading) {
       return (

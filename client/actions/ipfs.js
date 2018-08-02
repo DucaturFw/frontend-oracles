@@ -7,6 +7,7 @@ import {
   SEND_FILE_IPFS_SUCCESS
 } from '../constant/ipfs-consts';
 import ipfs from '../utils/ipfs';
+
 export const fetchIpfsFile = (hash, name) => {
   return async dispatch => {
     dispatch({ type: FETCH_IPFS_FILE_START });

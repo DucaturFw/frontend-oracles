@@ -1,31 +1,29 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-export default class Notification extends Component {
-  render() {
-    if (!this.props.showPopup) return null;
-    return (
-      <Wrapper>
-        <Container>
-          <Title>Оповещение</Title>
-          <DataTitle>11/08/2018</DataTitle>
-          <TextBlock>
-            <p>{this.props.eventText}</p>
-          </TextBlock>
-          <ButtonBlock>
-            <ButtonCancel
-              onClick={() => {
-                this.props.close();
-              }}
-            >
-              Ок
-            </ButtonCancel>
-          </ButtonBlock>
-        </Container>
-      </Wrapper>
-    );
-  }
-}
+export default props => {
+  if (!props.showPopup) return null;
+  return (
+    <Wrapper>
+      <Container>
+        <Title>Оповещение</Title>
+        <DataTitle>{props.eventDate}</DataTitle>
+        <TextBlock>
+          <p>{props.eventText}</p>
+        </TextBlock>
+        <ButtonBlock>
+          <ButtonCancel
+            onClick={() => {
+              props.close();
+            }}
+          >
+            Ок
+          </ButtonCancel>
+        </ButtonBlock>
+      </Container>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   display: flex;

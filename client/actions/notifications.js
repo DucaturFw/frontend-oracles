@@ -10,6 +10,8 @@ import {
 } from '../constant/notifications-consts';
 
 const host = require('../config').host;
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export const fetchNotifications = () => {
   return (dispatch, getState) => {
@@ -32,14 +34,16 @@ export const fetchNotifications = () => {
           }
         });
       })
-      .catch(err => dispatch({ type: FETCH_NOTIFICATIONS_FAILED }))
       .then(res => {
         dispatch({
           type: FETCH_NOTIF_USERS_SUCCESS,
           payload: res.data
         });
       })
-      .catch(console.error);
+      .catch(err => {
+        console.error(err);
+        dispatch({ type: FETCH_NOTIFICATIONS_FAILED });
+      });
   };
 };
 
@@ -49,9 +53,9 @@ export const updateNotifications = () => {
     const notifications = getState().notifications.notifications.filter(item => item.seen === false);
     console.log(notifications);
     dispatch({ type: UPDATE_NOTIFICATIONS_START });
-    notifications.forEach(item => {
-      axios
-        .patch(
+    Promise.all(
+      notifications.map(item =>
+        axios.patch(
           `${host}/events/${item.id}/`,
           JSON.stringify({
             seen: true,
@@ -68,12 +72,14 @@ export const updateNotifications = () => {
             }
           }
         )
-        .then(res => {
-          console.log(res);
+      )
+    )
+      .then(() =>
+        dispatch({
+          type: UPDATE_NOTIFICATIONS_SUCCESS,
+          payload: getState().notifications.map(el => ({ ...el, seen: true }))
         })
-        .catch(err => dispatch({ type: UPDATE_NOTIFICATIONS_FAILED }));
-    });
-    dispatch({ type: UPDATE_NOTIFICATIONS_SUCCESS });
-    await dispatch(fetchNotifications());
+      )
+      .catch(err => dispatch({ type: UPDATE_NOTIFICATIONS_FAILED }));
   };
 };

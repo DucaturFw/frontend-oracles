@@ -12,12 +12,13 @@ import icongrey from './icongrey.png';
 import { Link } from 'react-router-dom';
 
 class Notifications extends React.Component {
-  state = {
-    showPopup: false,
-    eventText: ''
-  };
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showPopup: false,
+      eventText: ''
+    };
     this.props.fetchNotifications();
   }
 
@@ -34,7 +35,7 @@ class Notifications extends React.Component {
   };
 
   getEventText = item => {
-    let user_by = this.props.users.find(it => it.id == item.user_by);
+    let user_by = this.props.users.find(it => it.id === item.user_by);
     user_by = <Link to={`/users/${user_by}`}>{user_by.info.organization_name || 'Пользователь'}</Link>;
     switch (item.event_type) {
       case 'fin':
@@ -75,13 +76,13 @@ class Notifications extends React.Component {
             <RowNotificationIcon>{item.seen ? <img src={icongrey} /> : <img src={icon} />}</RowNotificationIcon>
             <RowNotificationText
               onClick={() => {
-                this.setState({ eventText: this.getEventText(item), showPopup: true });
+                this.setState({ eventText: this.getEventText(item), eventDate: date, showPopup: true });
               }}
             >
-              {eventtypes[item.event_type]}
+              {eventtypes[item.event_type]} (#{item.contract})
             </RowNotificationText>
           </RowNotification>
-          <RowDate>{date} </RowDate>
+          <RowDate>{date}</RowDate>
         </TableRow>
       );
     });
@@ -105,6 +106,7 @@ class Notifications extends React.Component {
             this.closePopup();
           }}
           showPopup={this.state.showPopup}
+          eventDate={this.state.eventDate}
         />
         <Title>
           <h2>ОПОВЕЩЕНИЯ</h2>

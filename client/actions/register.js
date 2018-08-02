@@ -4,6 +4,8 @@ import { push } from 'connected-react-router';
 import { USER_LOGIN_SUCCESS } from '../constant/login-consts';
 
 const host = require('../config').host;
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export const registerUser = user_info => {
   return dispatch => {

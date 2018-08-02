@@ -28,7 +28,7 @@ export default function notificationReducer(state = initialState, action) {
     case UPDATE_NOTIFICATIONS_START:
       return state;
     case UPDATE_NOTIFICATIONS_SUCCESS:
-      return state;
+      return { ...state, notifications: action.payload };
     case UPDATE_NOTIFICATIONS_FAILED:
       return state;
     case FETCH_NOTIF_USERS_SUCCESS:

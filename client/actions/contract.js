@@ -12,8 +12,10 @@ import {
   CASE_FINISH_SUCCESS
 } from '../constant/contract-consts';
 import disputes from '../utils/contract/disputes';
-import ipfs from '../utils/ipfs';
+
 const host = require('../config').host;
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export function fetchContract(id) {
   return dispatch => {

@@ -13,6 +13,8 @@ import disputes from '../utils/contract/disputes';
 import moment from 'moment';
 
 const host = require('../config').host;
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export const fetchUsers = () => {
   return dispatch => {

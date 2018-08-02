@@ -6,15 +6,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { push } from 'connected-react-router';
-import {
-  fetchContracts,
-  changeExecuterFilter,
-  changeStatusFilter
-} from '../../actions/mycontracts';
+import { fetchContracts, changeExecuterFilter, changeStatusFilter } from '../../actions/mycontracts';
 import { contractFilter } from '../../selectors/mycontracts';
 
+const partyFormatter = users => users.map(u => u.text).join('<br />');
+
 class ContractList extends React.Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this.props.fetchContracts();
   }
 
@@ -22,9 +21,6 @@ class ContractList extends React.Component {
     if (!prevProps.user_id && this.props.user_id) this.props.fetchContracts();
   }
 
-  changeClientFilter = (event, data) => {
-    this.props.changeClientFilter(data.value);
-  };
   changeExecuterFilter = (event, data) => {
     this.props.changeExecuterFilter(data.value);
   };
@@ -87,8 +83,8 @@ class ContractList extends React.Component {
             <TableHeaderColumn dataSort dataField="id" isKey={true}>
               ID
             </TableHeaderColumn>
-            <TableHeaderColumn dataField="executer" dataSort>
-              Исполнитель
+            <TableHeaderColumn dataField="party" dataSort dataFormat={partyFormatter}>
+              Участники
             </TableHeaderColumn>
             <TableHeaderColumn dataSort dataField="starttime">
               Начало
@@ -119,7 +115,6 @@ const mapStateToProps = state => ({
   executers: state.mycontracts.executers,
   statuses: state.mycontracts.statuses,
   user_id: state.userinfo.selfinfo.id,
-  client: state.mycontracts.client,
   executer: state.mycontracts.executer,
   status: state.mycontracts.status
 });

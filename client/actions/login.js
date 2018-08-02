@@ -2,6 +2,8 @@ import { USER_LOGIN_START, USER_LOGIN_FAILED, USER_LOGIN_SUCCESS } from '../cons
 import axios from 'axios';
 import { push } from 'connected-react-router';
 const host = require('../config').host;
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export function authorization(login, password) {
   return dispatch => {

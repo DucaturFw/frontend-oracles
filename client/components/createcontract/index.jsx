@@ -23,10 +23,8 @@ class CreateContract extends React.Component {
       filename: '',
       errorMsg: '',
       buffer: '',
-      myid: null,
       idclient: null,
-      idexecuter: null,
-      filename: ''
+      idexecuter: null
     };
   }
 
@@ -97,78 +95,83 @@ class CreateContract extends React.Component {
   };
 
   toggleclient = () => {
-    this.setState({ idclient: this.props.myid });
+    if (!this.state.idclient) {
+      this.setState({ idclient: true, client: +this.props.user_id });
+    } else {
+      this.setState({ idclient: false, client: '' });
+    }
   };
 
   toggleexcuter = () => {
-    this.setState({ idexecuter: this.props.myid });
+    if (!this.state.idexecuter) {
+      this.setState({ idexecuter: true, executer: +this.props.user_id });
+    } else {
+      this.setState({ idexecuter: false, executer: '' });
+    }
   };
 
-  createstage = () => {
-    return this.state.stages.map((item, index) => {
-      return (
-        <Fragment key={index}>
-          <Stage>
-            Этап {index + 1}
-            {(index && (
-              <span style={{ color: '#ffbbbb', cursor: 'pointer' }} onClick={() => this.deleteStage(index)}>
-                &nbsp;&nbsp;X
-              </span>
-            )) ||
-              ''}
-          </Stage>
-          <StagesContractBlock>
-            <ContractText>
-              <TitleField>Начало действия контракта</TitleField>
-              <TitleField>Дата допущения открытия диспута</TitleField>
-            </ContractText>
-            <TimeContract>
-              <StyledDateInput
-                key={1}
-                value={this.state.stages[index].start}
-                onChange={(event, { value }) => {
+  createstage = () =>
+    this.state.stages.map((item, index) => (
+      <Fragment key={index}>
+        <Stage>
+          Этап {index + 1}
+          {(index && (
+            <span style={{ color: '#ffbbbb', cursor: 'pointer' }} onClick={() => this.deleteStage(index)}>
+              &nbsp;&nbsp;X
+            </span>
+          )) ||
+            ''}
+        </Stage>
+        <StagesContractBlock>
+          <ContractText>
+            <TitleField>Начало действия контракта</TitleField>
+            <TitleField>Дата допущения открытия диспута</TitleField>
+          </ContractText>
+          <TimeContract>
+            <StyledDateInput
+              key={1}
+              value={this.state.stages[index].start}
+              onChange={(event, { value }) => {
+                let array = this.state.stages;
+                array[index].start = value;
+                this.setState({
+                  stages: array
+                });
+              }}
+            />
+            <StyledDateInput
+              key={2}
+              value={this.state.stages[index].dispute_start_allowed}
+              onChange={(event, { value }) => {
+                let array = this.state.stages;
+                array[index].dispute_start_allowed = value;
+                this.setState({
+                  stages: array
+                });
+              }}
+            />
+          </TimeContract>
+          <Responsible>
+            <Item>
+              <TitleField>Отвественный</TitleField>
+              <StyledDropdown2
+                size="mini"
+                search
+                selection
+                onChange={(event, data) => {
                   let array = this.state.stages;
-                  array[index].start = value;
+                  array[index].owner = data.value;
                   this.setState({
                     stages: array
                   });
                 }}
+                options={this.createArrayResponsible()}
               />
-              <StyledDateInput
-                key={2}
-                value={this.state.stages[index].dispute_start_allowed}
-                onChange={(event, { value }) => {
-                  let array = this.state.stages;
-                  array[index].dispute_start_allowed = value;
-                  this.setState({
-                    stages: array
-                  });
-                }}
-              />
-            </TimeContract>
-            <Responsible>
-              <Item>
-                <TitleField>Отвественный</TitleField>
-                <StyledDropdown2
-                  size="mini"
-                  search
-                  selection
-                  onChange={(event, data) => {
-                    let array = this.state.stages;
-                    array[index].owner = data.value;
-                    this.setState({
-                      stages: array
-                    });
-                  }}
-                  options={this.createArrayResponsible()}
-                />
-              </Item>
-            </Responsible>
-          </StagesContractBlock>
-        </Fragment>
-      );
-    });
-  };
+            </Item>
+          </Responsible>
+        </StagesContractBlock>
+      </Fragment>
+    ));
 
   render() {
     const { users } = this.props;
@@ -206,33 +209,33 @@ class CreateContract extends React.Component {
                     size="mini"
                     onChange={(event, data) => {
                       this.setState({
-                        client: data.value,
-                        idclient: data.value
+                        client: data.value
                       });
                     }}
-                    value={this.state.idclient}
+                    value={this.state.client}
                     search
                     selection
+                    disabled={this.state.idclient}
                     options={users}
                   />
-                  <StyledCheckbox onChange={this.toggleclient} label="Я заказчик" />
+                  <StyledCheckbox disabled={this.state.idexecuter} onChange={this.toggleclient} label="Я заказчик" />
                 </Client>
                 <Executor>
                   <TitleField>Исполнитель</TitleField>
                   <StyledDropdown
                     onChange={(event, data) => {
                       this.setState({
-                        executer: data.value,
-                        idexecuter: data.value
+                        executer: data.value
                       });
                     }}
-                    value={this.state.idexecuter}
+                    value={this.state.executer}
                     size="mini"
                     search
                     selection
+                    disabled={this.state.idexecuter}
                     options={users}
                   />
-                  <StyledCheckbox onChange={this.toggleexcuter} label="Я исполнитель" />
+                  <StyledCheckbox disabled={this.state.idclient} onChange={this.toggleexcuter} label="Я исполнитель" />
                 </Executor>
               </ClientExecutorBlock>
               <StagesBlock>
@@ -282,7 +285,7 @@ const mapStateToProps = state => ({
   users: state.createcontract.users,
   error: state.createcontract.error,
   loadingcontract: state.createcontract.loadingcontract,
-  myid: state.userinfo.userinfo.id,
+  user_id: state.userinfo.selfinfo.id,
   hash: state.ipfs.hash,
   erroripfs: state.ipfs.error,
   preloaderipfs: state.ipfs.preloader
