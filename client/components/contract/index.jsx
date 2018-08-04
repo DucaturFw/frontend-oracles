@@ -10,6 +10,7 @@ import { fetchIpfsFile } from '../../actions/ipfs';
 import moment from 'moment';
 import { Message, Dimmer, Loader } from 'semantic-ui-react';
 import { DELETE_MESSAGE } from '../../constant/contract-consts';
+import { Link } from 'react-router-dom';
 
 class Contract extends React.Component {
   componentWillMount() {
@@ -75,6 +76,11 @@ class Contract extends React.Component {
       );
     }
 
+    const getUser = stage => {
+      let user = this.props.users.find(u => u.key === stage.dispute_starter);
+      return user ? <Link to={`/users/${user.key}`}>{user.text}</Link> : '...';
+    };
+
     return (
       <Fragment>
         {this.props.msg && (
@@ -117,18 +123,20 @@ class Contract extends React.Component {
               <Item key={'ordered_by'}>
                 <TitleField>
                   <b>Заказчик: </b>
-                  {this.props.contract.in_party.length > 0
-                    ? `${this.props.contract.in_party[0].info.organization_name}
-                     (${this.props.contract.in_party[0].name} ${this.props.contract.in_party[0].family_name})`
-                    : ''}
+                  <Link to={`/users/${this.props.contract.in_party[0]}`}>
+                    {this.props.contract.in_party[0].info.organization_name} ({this.props.contract.in_party[0].name}{' '}
+                    {this.props.contract.in_party[0].family_name})
+                  </Link>
                 </TitleField>
               </Item>
               {this.props.contract.in_party.length > 1 && (
                 <Item key={'developed_by'}>
                   <TitleField>
                     <b>Испонитель: </b>
-                    {`${this.props.contract.in_party[1].info.organization_name}
-                     (${this.props.contract.in_party[1].name} ${this.props.contract.in_party[1].family_name})`}
+                    <Link to={`/users/${this.props.contract.in_party[1]}`}>
+                      {this.props.contract.in_party[1].info.organization_name} ({this.props.contract.in_party[1].name}{' '}
+                      {this.props.contract.in_party[1].family_name})
+                    </Link>
                   </TitleField>
                 </Item>
               )}
@@ -141,7 +149,11 @@ class Contract extends React.Component {
               return (
                 <Block key={idx}>
                   <Stage>Этап {idx + 1}</Stage>
-                  {stage.dispute_started && `Открыт диспут: ${stage.dispute_started} (${stage.dispute_starter})`}
+                  {stage.dispute_started && (
+                    <span>
+                      Открыт диспут: {stage.dispute_started} пользователем {getUser(stage)}
+                    </span>
+                  )}
                   <Item>
                     <TitleField>
                       <b>Начало действия: </b>
@@ -166,7 +178,7 @@ class Contract extends React.Component {
               <TitleSegment>МАТЕРИАЛЫ КОНТРАКТА</TitleSegment>
               <Answer>?</Answer>
             </StagesBlock>
-            <FilesBlock>{this.props.contract.files != '' ? this.getFiles() : ''}</FilesBlock>
+            <FilesBlock>{this.props.contract.files !== '' ? this.getFiles() : ''}</FilesBlock>
             <ButtonsBlock>
               <ButtonCloseContract onClick={() => this.props.finishCase(this.props.match.params.id)}>
                 Завершить контракт
@@ -188,7 +200,8 @@ const mapStateToProps = state => ({
   loading: state.contract.preloading,
   msg: state.contract.msg,
   file: state.ipfs.files,
-  preloaderipfs: state.ipfs.preloader
+  preloaderipfs: state.ipfs.preloader,
+  users: state.createcontract.users
 });
 
 export default connect(

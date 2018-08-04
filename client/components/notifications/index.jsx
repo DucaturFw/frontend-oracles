@@ -12,7 +12,6 @@ import icongrey from './icongrey.png';
 import { Link } from 'react-router-dom';
 
 class Notifications extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +22,11 @@ class Notifications extends React.Component {
   }
 
   componentDidMount() {
-    this.timeout = setTimeout(() => this.props.updateNotifications(), 5000);
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = 0;
+    }
+    this.timeout = setTimeout(this.props.updateNotifications, 5000);
   }
 
   componentWillUnmount() {
@@ -36,7 +39,11 @@ class Notifications extends React.Component {
 
   getEventText = item => {
     let user_by = this.props.users.find(it => it.id === item.user_by);
-    user_by = <Link to={`/users/${user_by}`}>{user_by.info.organization_name || 'Пользователь'}</Link>;
+    user_by = (
+      <Link to={`/users/${user_by.id}`}>
+        {`${user_by.info.organization_name} (${user_by.name} ${user_by.family_name})` || 'Пользователь'}
+      </Link>
+    );
     switch (item.event_type) {
       case 'fin':
         return (
@@ -63,7 +70,7 @@ class Notifications extends React.Component {
           </span>
         );
       default:
-        return <Link to={`/users/${user_by}`}>{user_by}</Link>;
+        return <span>Оповещение создано пользователем {user_by}</span>;
     }
   };
 

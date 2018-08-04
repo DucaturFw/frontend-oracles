@@ -14,9 +14,9 @@ const host = require('../config').host;
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-export const fetchUserInfo = id => {
+export const fetchUserInfo = (id, force = false) => {
   return async (dispatch, getState) => {
-    if (id === 'self' && getState().userinfo.selfinfo.id) {
+    if (!force && id === 'self' && getState().userinfo.selfinfo.id) {
       dispatch({
         type: FETCH_USERINFO_SUCCESS,
         payload: getState().userinfo.selfinfo,

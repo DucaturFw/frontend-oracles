@@ -8,8 +8,17 @@ import { fetchUserInfo, logout } from '../../actions/userinfo';
 import iconmenu from './iconmenu.png';
 
 class Header extends React.Component {
+  state = {
+    timeout: 0
+  };
   componentWillMount() {
     this.props.fetchUserInfo('self');
+    if (this.state.timeout) clearTimeout(this.state.timeout);
+    this.setState({ timeout: setInterval(() => this.props.fetchUserInfo('self', true), 2000) });
+  }
+
+  componentWillUnmount() {
+    if (this.state.timeout) clearTimeout(this.state.timeout);
   }
 
   render() {

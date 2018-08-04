@@ -12,6 +12,7 @@ import {
   CASE_FINISH_SUCCESS
 } from '../constant/contract-consts';
 import disputes from '../utils/contract/disputes';
+import { fetchUsers } from './createcontract';
 
 const host = require('../config').host;
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -20,9 +21,10 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 export function fetchContract(id) {
   return dispatch => {
     const hash = localStorage.getItem('hash');
+    fetchUsers()(dispatch);
     dispatch({ type: FETCH_CONTRACT_START });
     axios
-      .get(`${host}/contracts/${id}`, {
+      .get(`${host}/contracts/${id}/`, {
         headers: {
           Authorization: 'Basic ' + hash
         }
